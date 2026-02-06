@@ -66,14 +66,14 @@ planegcs-py/
 ## Steps
 
 - [x] 1. Create WRAPPER_PLAN.md
-- [ ] 2. Create project skeleton: pyproject.toml, CMakeLists.txt, LICENSE, README
-- [ ] 3. Write C++ wrapper class (src/wrapper.h)
-- [ ] 4. Write pybind11 bindings (src/bindings.cpp)
-- [ ] 5. Write Python Sketch class (python/planegcs/sketch.py + __init__.py)
-- [ ] 6. Build and verify `import planegcs` works
-- [ ] 7. Write tests
-- [ ] 8. Write Sphinx docs
-- [ ] 9. Initialize git, commit
+- [x] 2. Create project skeleton: pyproject.toml, CMakeLists.txt, LICENSE, README
+- [x] 3. Write C++ wrapper class (src/wrapper.h)
+- [x] 4. Write pybind11 bindings (src/bindings.cpp)
+- [x] 5. Write Python Sketch class (python/planegcs/sketch.py + __init__.py)
+- [x] 6. Build and verify `import planegcs` works
+- [x] 7. Write tests (29 tests, all passing)
+- [x] 8. Write Sphinx docs (conf.py, index, quickstart, api)
+- [x] 9. Initialize git, commit
 
 ## Geometry IDs
 Every geometry added returns an integer ID. Internally:
