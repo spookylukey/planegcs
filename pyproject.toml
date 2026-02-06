@@ -1,0 +1,41 @@
+[build-system]
+requires = ["scikit-build-core>=0.10", "pybind11>=2.12"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "planegcs"
+version = "0.1.0"
+description = "Python bindings for FreeCAD's PlaneGCS 2D geometric constraint solver"
+readme = "README.md"
+license = {text = "LGPL-2.1-or-later"}
+requires-python = ">=3.9"
+authors = [
+    {name = "planegcs contributors"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+]
+
+[project.urls]
+Homepage = "https://github.com/planegcs/planegcs-py"
+
+[tool.scikit-build]
+wheel.packages = ["python/planegcs"]
+
+[tool.scikit-build.cmake.define]
+CMAKE_BUILD_TYPE = "Release"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "sphinx>=7.0",
+    "sphinx-rtd-theme>=2.0",
+]

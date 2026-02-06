@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.so
+*.whl
+
+# Virtual environment
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Build artifacts
+docs/_build/
+.pytest_cache/
+
+# scikit-build
+_skbuild/

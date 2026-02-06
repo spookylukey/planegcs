@@ -1,0 +1,13 @@
+                  GNU LESSER GENERAL PUBLIC LICENSE
+                       Version 2.1, February 1999
+
+ Copyright (C) 1991, 1999 Free Software Foundation, Inc.
+ 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+See https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html for the full text.
+
+This package contains code from FreeCAD (https://www.freecad.org/),
+specifically the PlaneGCS geometric constraint solver from the Sketcher module.
+The original code is licensed under LGPL-2.1-or-later.
