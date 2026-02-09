@@ -47,7 +47,7 @@ test-requires = "pytest"
 test-command = "pytest {project}/tests -x"
 
 [tool.cibuildwheel.linux]
-before-all = "yum install -y eigen3-devel boost-devel || apt-get update && apt-get install -y libeigen3-dev libboost-dev"
+before-all = "sudo apt-get update && sudo apt-get install -y libeigen3-dev libboost-dev"
 
 [tool.cibuildwheel.windows]
 before-all = "vcpkg install eigen3:x64-windows boost-graph:x64-windows boost-math:x64-windows"
