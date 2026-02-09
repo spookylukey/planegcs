@@ -58,14 +58,10 @@ We follow `Semantic Versioning <https://semver.org/>`_:
 4. Run the release workflow
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Go to the repository on GitHub.
-2. Click **Actions** → **Build & Release** (in the left sidebar).
-3. Click **Run workflow**.
-4. Choose the ``main`` branch.
-5. Set **"Upload wheels to PyPI after building?"** to ``true`` if you are
-   ready to publish.  Set it to ``false`` for a dry-run that only builds the
-   wheels (useful for testing).
-6. Click **Run workflow**.
+1. Go to https://github.com/spookylukey/planegcs/actions/workflows/release.yml
+2. Click **Run workflow**.
+3. Choose the ``main`` branch.
+4. Click **Run workflow**.
 
 The workflow will:
 
@@ -95,8 +91,8 @@ requires one-time setup on PyPI:
 1. Go to https://pypi.org/manage/project/planegcs/settings/publishing/
 2. Add a new **GitHub** trusted publisher:
 
-   * **Owner:** ``planegcs``  (or your GitHub org/username)
-   * **Repository:** ``planegcs-py``
+   * **Owner:** ``<your GitHub username>``  (or your GitHub org/username)
+   * **Repository:** ``planegcs``
    * **Workflow name:** ``release.yml``
    * **Environment name:** ``pypi``
 
