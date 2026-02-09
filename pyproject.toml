@@ -39,3 +39,18 @@ dev = [
     "sphinx>=7.0",
     "sphinx-rtd-theme>=2.0",
 ]
+
+[tool.cibuildwheel]
+build = ["cp312-*", "cp313-*"]
+skip = ["*-musllinux_*", "*-manylinux_i686", "*-win32"]
+test-requires = "pytest"
+test-command = "pytest {project}/tests -x"
+
+[tool.cibuildwheel.linux]
+before-all = "yum install -y eigen3-devel boost-devel || apt-get update && apt-get install -y libeigen3-dev libboost-dev"
+
+[tool.cibuildwheel.windows]
+before-all = "vcpkg install eigen3:x64-windows boost-graph:x64-windows boost-math:x64-windows"
+
+[tool.cibuildwheel.windows.environment]
+CMAKE_PREFIX_PATH = "C:/vcpkg/installed/x64-windows"

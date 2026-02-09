@@ -33,10 +33,14 @@ target_link_libraries(_planegcs PRIVATE
 )
 
 # Suppress warnings from FreeCAD code
-target_compile_options(_planegcs PRIVATE
-    -Wno-unused-parameter
-    -Wno-missing-field-initializers
-    -Wno-sign-compare
-)
+if(MSVC)
+    target_compile_options(_planegcs PRIVATE /W0)
+else()
+    target_compile_options(_planegcs PRIVATE
+        -Wno-unused-parameter
+        -Wno-missing-field-initializers
+        -Wno-sign-compare
+    )
+endif()
 
 install(TARGETS _planegcs LIBRARY DESTINATION planegcs)
