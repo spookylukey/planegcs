@@ -1,7 +1,7 @@
 """Sphinx configuration for planegcs documentation."""
 
 project = "planegcs"
-copyright = "2024, planegcs contributors"
+copyright = "2026, planegcs contributors"
 author = "planegcs contributors"
 release = "0.1.0"
 
