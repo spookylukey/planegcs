@@ -22,7 +22,7 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/planegcs/planegcs-py"
+Homepage = "https://github.com/spookylukey/planegcs"
 
 [tool.scikit-build]
 wheel.packages = ["python/planegcs"]
