@@ -50,10 +50,12 @@ test-command = "pytest {project}/tests -x"
 before-all = """
 yum install -y boost-devel || apt-get update && apt-get install -y libboost-dev
 curl -L https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz | tar xz -C /opt
+cmake -S /opt/eigen-3.4.0 -B /opt/eigen-3.4.0/build -DCMAKE_INSTALL_PREFIX=/opt/eigen3-installed -DBUILD_TESTING=OFF
+cmake --install /opt/eigen-3.4.0/build
 """
 
 [tool.cibuildwheel.linux.environment]
-CMAKE_PREFIX_PATH = "/opt/eigen-3.4.0"
+CMAKE_PREFIX_PATH = "/opt/eigen3-installed"
 
 [tool.cibuildwheel.windows]
 before-all = "vcpkg install eigen3:x64-windows boost-graph:x64-windows boost-math:x64-windows"
