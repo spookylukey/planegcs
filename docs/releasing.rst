@@ -22,14 +22,15 @@ Step-by-step release process
 1. Bump the version number
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The version appears in **two** files — both must be updated:
+The version appears in **three** files — all must be updated:
 
 .. code-block:: bash
 
    # pyproject.toml  →  [project] version = "X.Y.Z"
    # python/planegcs/__init__.py  →  __version__ = "X.Y.Z"
+   # docs/conf.py → release = "X.Y.Z"
 
-Update both to the new version, e.g. ``0.2.0``.
+Update all to the new version, e.g. ``0.2.0``.
 
 We follow `Semantic Versioning <https://semver.org/>`_:
 
