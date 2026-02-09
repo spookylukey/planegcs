@@ -47,7 +47,13 @@ test-requires = "pytest"
 test-command = "pytest {project}/tests -x"
 
 [tool.cibuildwheel.linux]
-before-all = "sudo apt-get update && sudo apt-get install -y libeigen3-dev libboost-dev"
+before-all = """
+yum install -y boost-devel || apt-get update && apt-get install -y libboost-dev
+curl -L https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz | tar xz -C /opt
+"""
+
+[tool.cibuildwheel.linux.environment]
+CMAKE_PREFIX_PATH = "/opt/eigen-3.4.0"
 
 [tool.cibuildwheel.windows]
 before-all = "vcpkg install eigen3:x64-windows boost-graph:x64-windows boost-math:x64-windows"
