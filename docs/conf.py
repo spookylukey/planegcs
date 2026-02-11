@@ -3,7 +3,7 @@
 project = "planegcs"
 copyright = "2026, planegcs contributors"
 author = "planegcs contributors"
-release = "0.1.1"
+release = "0.1.2"
 
 extensions = [
     "sphinx.ext.autodoc",

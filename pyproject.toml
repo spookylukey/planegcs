@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "planegcs"
-version = "0.1.1"
+version = "0.1.2"
 description = "Python bindings for FreeCAD's PlaneGCS 2D geometric constraint solver"
 readme = "README.md"
 license = {text = "LGPL-2.1-or-later"}
