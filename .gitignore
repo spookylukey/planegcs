@@ -20,3 +20,6 @@ docs/_build/
 
 # scikit-build
 _skbuild/
+
+# Temporary files
+*~
