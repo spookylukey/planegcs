@@ -1,7 +1,7 @@
 """Tests for circle and arc constraints."""
 
 import math
-import pytest
+
 from planegcs import Sketch, SolveStatus
 
 
@@ -41,10 +41,10 @@ def test_tangent_line_circle():
     # Horizontal line at y=3 (tangent to circle of radius 3)
     lp1 = s.add_point(-5, 3)
     lp2 = s.add_point(5, 3)
-    l = s.add_line(lp1, lp2)
-    s.horizontal(l)
+    line = s.add_line(lp1, lp2)
+    s.horizontal(line)
 
-    s.tangent_line_circle(l, c)
+    s.tangent_line_circle(line, c)
 
     status = s.solve()
     assert status == SolveStatus.Success

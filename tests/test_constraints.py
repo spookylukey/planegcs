@@ -1,7 +1,7 @@
 """Broad constraint coverage tests."""
 
 import math
-import pytest
+
 from planegcs import Sketch, SketchSolver, SolveStatus
 
 
@@ -204,13 +204,13 @@ def test_p2l_distance():
     s = Sketch()
     lp1 = s.add_point(0, 0)
     lp2 = s.add_point(10, 0)
-    l = s.add_line(lp1, lp2)
+    line = s.add_line(lp1, lp2)
     s.fix_point(lp1, 0, 0)
     s.fix_point(lp2, 10, 0)
 
     pt = s.add_point(5, 3)
     d = s.add_param(7.0)
-    s.p2l_distance(pt, l, d)
+    s.p2l_distance(pt, line, d)
 
     # Also fix x of pt
     px = s.add_param(5.0)

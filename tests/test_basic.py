@@ -1,13 +1,14 @@
 """Basic tests for planegcs: import, points, lines, simple solving."""
 
 import math
-import pytest
-from planegcs import Sketch, SketchSolver, SolveStatus, Algorithm
+
+from planegcs import Algorithm, Sketch, SketchSolver, SolveStatus
 
 
 def test_import():
     """Module imports correctly."""
     from planegcs import _planegcs
+
     assert hasattr(_planegcs, "SketchSolver")
     assert hasattr(_planegcs, "SolveStatus")
 
@@ -47,9 +48,9 @@ def test_horizontal_line():
     s = Sketch()
     p1 = s.add_point(0, 0)
     p2 = s.add_point(5, 3)
-    l = s.add_line(p1, p2)
+    line = s.add_line(p1, p2)
     s.fix_point(p1, 0, 0)
-    s.horizontal(l)
+    s.horizontal(line)
     status = s.solve()
     assert status == SolveStatus.Success
     _, y1 = s.get_point(p1)
@@ -62,9 +63,9 @@ def test_vertical_line():
     s = Sketch()
     p1 = s.add_point(0, 0)
     p2 = s.add_point(3, 5)
-    l = s.add_line(p1, p2)
+    line = s.add_line(p1, p2)
     s.fix_point(p1, 0, 0)
-    s.vertical(l)
+    s.vertical(line)
     status = s.solve()
     assert status == SolveStatus.Success
     x1, _ = s.get_point(p1)
@@ -92,12 +93,12 @@ def test_point_on_line():
     s = Sketch()
     p1 = s.add_point(0, 0)
     p2 = s.add_point(10, 0)
-    l = s.add_line(p1, p2)
+    line = s.add_line(p1, p2)
     s.fix_point(p1, 0, 0)
-    s.horizontal(l)
+    s.horizontal(line)
 
     p3 = s.add_point(5, 5)  # starts off-line
-    s.point_on_line(p3, l)
+    s.point_on_line(p3, line)
     status = s.solve()
     assert status == SolveStatus.Success
     _, y3 = s.get_point(p3)
@@ -124,7 +125,7 @@ def test_distance_constraint():
 def test_clear():
     """Clear resets the solver."""
     s = Sketch()
-    p = s.add_point(1, 2)
+    s.add_point(1, 2)
     s.clear()
     # After clear, old IDs are invalid; adding a new point should work
     p2 = s.add_point(3, 4)
