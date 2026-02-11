@@ -22,15 +22,9 @@ Step-by-step release process
 1. Bump the version number
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The version appears in the following files — all must be updated:
+Use ``uv version --bump`` e.g. ``uv version --bump patch``
 
-.. code-block:: bash
-
-   # pyproject.toml  →  [project] version = "X.Y.Z"
-
-Update all to the new version, e.g. ``0.2.0``.
-
-We follow `Semantic Versioning <https://semver.org/>`_:
+We roughly follow `Semantic Versioning <https://semver.org/>`_:
 
 * **MAJOR** — incompatible API changes
 * **MINOR** — new functionality, backwards-compatible
