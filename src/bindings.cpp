@@ -100,8 +100,8 @@ PYBIND11_MODULE(_planegcs, m) {
              py::arg("start_angle"), py::arg("end_angle"),
              "Add an arc from center point, radius and angles. Returns arc ID.")
         .def("add_arc_from_start_end", &SketchSolver::add_arc_from_start_end,
-             py::arg("start_id"), py::arg("end_id"), py::arg("radius"),
-             "Add an arc from start/end points and radius. Automatically adds arc rules and coincident constraints. Returns arc ID.")
+             py::arg("start_id"), py::arg("end_id"), py::arg("radius_id"),
+             "Add an arc from start/end points and a radius parameter. Automatically adds arc rules and coincident constraints. Returns arc ID.")
 
         // Geometry: Arc accessors
         .def("get_arc_center", &SketchSolver::get_arc_center,

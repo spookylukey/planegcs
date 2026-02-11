@@ -20,7 +20,8 @@ def test_arc_from_start_end_basic():
     s.fix_point(p1, 0, 0)
     s.fix_point(p2, 3, 0)
 
-    s.add_arc_from_start_end(p1, p2, 3.0)
+    rad = s.add_param(3.0)
+    s.add_arc_from_start_end(p1, p2, rad)
     status = s.solve()
     assert status == SolveStatus.Success
 
@@ -36,15 +37,18 @@ def test_arc_tangent_to_line():
     s = Sketch()
     p1 = s.add_point(0, 0)
     p2 = s.add_point(5, 0)
-    p3 = s.add_point(5, 5)
+    # p3 at (10, 5) lies on a circle of radius 5 centered at (5, 5),
+    # which is the center when the arc is tangent to the horizontal line at p2.
+    p3 = s.add_point(10, 5)
 
     line = s.add_line(p1, p2)
     s.fix_point(p1, 0, 0)
     s.fix_point(p2, 5, 0)
-    s.fix_point(p3, 5, 5)
+    s.fix_point(p3, 10, 5)
     s.horizontal(line)
 
-    arc = s.add_arc_from_start_end(p2, p3, 5.0)
+    rad = s.add_param(5.0)
+    arc = s.add_arc_from_start_end(p2, p3, rad)
     s.tangent_line_arc(line, arc)
 
     status = s.solve()
@@ -52,8 +56,12 @@ def test_arc_tangent_to_line():
 
     # p2 and p3 should remain fixed
     assert abs(s.get_point(p2)[0] - 5.0) < 1e-6
-    assert abs(s.get_point(p3)[0] - 5.0) < 1e-6
+    assert abs(s.get_point(p2)[1] - 0.0) < 1e-6
+    assert abs(s.get_point(p3)[0] - 10.0) < 1e-6
     assert abs(s.get_point(p3)[1] - 5.0) < 1e-6
+
+    # Radius should remain exactly 5.0
+    assert abs(s.get_arc_radius(arc) - 5.0) < 1e-6
 
 
 def test_equilateral_triangle_rounded_corners():
@@ -96,9 +104,10 @@ def test_equilateral_triangle_rounded_corners():
     line_l = s.add_line(p_ls, p_le)
 
     # Three corner arcs
-    arc_bl = s.add_arc_from_start_end(p_le, p_bs, r)
-    arc_br = s.add_arc_from_start_end(p_be, p_rs, r)
-    arc_top = s.add_arc_from_start_end(p_re, p_ls, r)
+    rad = s.add_param(r)
+    arc_bl = s.add_arc_from_start_end(p_le, p_bs, rad)
+    arc_br = s.add_arc_from_start_end(p_be, p_rs, rad)
+    arc_top = s.add_arc_from_start_end(p_re, p_ls, rad)
 
     # Tangency: each arc tangent to its two adjacent lines
     s.tangent_line_arc(line_b, arc_bl)
