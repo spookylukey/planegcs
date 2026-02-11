@@ -2,11 +2,25 @@
 
 Python bindings for FreeCAD's PlaneGCS 2D geometric constraint solver.
 
+This project extracts the constraint solver system from FreeCAD's Sketcher
+component, changes the headers so that it can be used outside FreeCAD, and adds
+some thin C++ and Python wrappers so it can be used as a Python library.
+
 ## Installation
 
 ```bash
 pip install planegcs
 ```
+
+or:
+```bash
+uv add planegcs
+```
+
+If wheels aren't available, you'll need C++ tools and some development headers:
+
+- eigen3
+- boost
 
 ## Quick Start
 
@@ -46,6 +60,11 @@ print(s.get_point(p1))  # (0.0, 0.0)
 print(s.get_point(p2))  # (5.0, 0.0)
 print(s.get_point(p3))  # (~2.5, ~4.33)
 ```
+
+## Docs
+
+Full documentation at [readthedocs](https://planegcs.readthedocs.io/en/latest/),
+and in the `docs/` folder (requires Sphinx to build).
 
 ## License
 
