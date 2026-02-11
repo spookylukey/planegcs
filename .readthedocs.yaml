@@ -8,6 +8,10 @@ build:
    tools:
       python: "3.13"
 
+   apt_packages:
+     - libeigen3-dev
+     - libboost-dev
+
    jobs:
       pre_create_environment:
          - asdf plugin add uv
@@ -16,7 +20,4 @@ build:
       create_environment:
          - uv venv "${READTHEDOCS_VIRTUALENV_PATH}"
       install:
-        # Building the project in readthedocs is a pain, we
-        # fake it by installing the latest version TODO better solution
-         - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" uv sync --no-install-project
-         - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" uv pip install planegcs
+         - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" uv sync
