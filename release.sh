@@ -49,7 +49,7 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 info "Bumping version (uv version --bump $BUMP) …"
 uv version --bump "$BUMP"
-NEW_VERSION=$(uv version)          # reads back the version from pyproject.toml
+NEW_VERSION=$(uv version --short)          # reads back the version from pyproject.toml
 TAG="v${NEW_VERSION}"
 
 info "New version: $NEW_VERSION  (tag: $TAG)"
