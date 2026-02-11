@@ -1,6 +1,7 @@
 """High-level Pythonic interface for the PlaneGCS constraint solver."""
 
-from typing import NamedTuple, NewType
+from dataclasses import dataclass
+from typing import NewType
 
 from planegcs._planegcs import Algorithm, SketchSolver, SolveStatus
 
@@ -31,7 +32,8 @@ ConstraintTag = NewType("ConstraintTag", int)
 """Tag for a constraint (returned by constraint methods)."""
 
 
-class ArcInfo(NamedTuple):
+@dataclass(frozen=True, slots=True)
+class ArcInfo:
     """Properties of an arc, returned by :meth:`Sketch.get_arc`."""
 
     center: tuple[float, float]
@@ -185,7 +187,7 @@ class Sketch:
     def get_arc(self, arc_id: ArcId) -> ArcInfo:
         """Get all properties of an arc.
 
-        Returns an :class:`ArcInfo` named tuple with ``center``,
+        Returns an :class:`ArcInfo` dataclass with ``center``,
         ``radius``, ``start_angle``, ``end_angle``, ``start_point``,
         and ``end_point`` fields.
         """
