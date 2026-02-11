@@ -23,6 +23,9 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://github.com/spookylukey/planegcs"
+Documentation = "https://planegcs.readthedocs.io/en/latest/"
+Repository = "https://github.com/spookylukey/planegcs"
+Tracker = "https://github.com/spookylukey/planegcs/issues"
 
 [tool.scikit-build]
 wheel.packages = ["python/planegcs"]
