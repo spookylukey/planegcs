@@ -29,8 +29,7 @@ Create a sketch, add geometry and constraints, then solve:
    s.horizontal(l1)
 
    # Fix side length
-   d = s.add_param(5.0)
-   s.p2p_distance(p1, p2, d)
+   s.set_p2p_distance(p1, p2, 5.0)
 
    # Solve
    status = s.solve()
@@ -47,6 +46,10 @@ Key Concepts
 **IDs**: Every geometry element and parameter is identified by an integer ID
 returned by ``add_*`` methods.
 
+**Typed IDs**: Each ``add_*`` method returns a typed ID (``PointId``,
+``LineId``, ``ParamId``, etc.). These are ``NewType`` wrappers around
+``int`` — no runtime cost, but static type checkers will catch mix-ups.
+
 **Parameters**: Standalone doubles used as constraint values (distances, angles,
 radii). Created with ``add_param(value, fixed=True)``.
 
@@ -54,7 +57,12 @@ radii). Created with ``add_param(value, fixed=True)``.
   (driving constraint).
 - ``fixed=False``: The solver may adjust this value.
 
-**Constraints**: Return a tag (integer) that can be used to query errors
+Many constraints also have ``set_*`` convenience methods that accept a
+float directly and create the parameter internally (e.g.
+``set_p2p_distance(p1, p2, 5.0)`` instead of
+``d = add_param(5.0); p2p_distance(p1, p2, d)``).
+
+**Constraints**: Return a ``ConstraintTag`` that can be used to query errors
 or remove the constraint.
 
 **Solving**: Call ``solve()`` to find a solution. Returns a
@@ -73,8 +81,7 @@ Circles and Arcs
    c = s.add_circle(center, 5.0)
 
    # Constrain radius
-   r = s.add_param(5.0)
-   s.circle_radius(c, r)
+   s.set_circle_radius(c, 5.0)
 
    # Put a point on the circle
    pt = s.add_point(5, 0)

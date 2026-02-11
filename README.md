@@ -52,8 +52,7 @@ s.fix_point(p1, 0, 0)
 s.horizontal(l1)
 
 # Fix the side length to 5
-d = s.add_param(5.0)
-s.p2p_distance(p1, p2, d)
+s.set_p2p_distance(p1, p2, 5.0)
 
 # Solve
 status = s.solve()
