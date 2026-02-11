@@ -1,0 +1,22 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.21.2
+    hooks:
+      - id: pyupgrade
+        args: [--py39-plus]
+
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty (type check)
+        entry: uv run ty check
+        language: system
+        types: [python]
+        pass_filenames: false

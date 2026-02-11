@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-import math
-from typing import Tuple, Optional
-
-from planegcs._planegcs import SketchSolver, SolveStatus, Algorithm
+from planegcs._planegcs import Algorithm, SketchSolver, SolveStatus
 
 
 class Sketch:
@@ -73,7 +70,7 @@ class Sketch:
         """Add a point at (x, y). Returns point ID."""
         return self._solver.add_point(x, y)
 
-    def get_point(self, point_id: int) -> Tuple[float, float]:
+    def get_point(self, point_id: int) -> tuple[float, float]:
         """Get current (x, y) of a point."""
         return self._solver.get_point(point_id)
 
@@ -99,9 +96,7 @@ class Sketch:
         """Add an arc. Returns arc ID."""
         return self._solver.add_arc(center_id, radius, start_angle, end_angle)
 
-    def add_ellipse(
-        self, center_id: int, focus1_id: int, radmin: float
-    ) -> int:
+    def add_ellipse(self, center_id: int, focus1_id: int, radmin: float) -> int:
         """Add an ellipse. Returns ellipse ID."""
         return self._solver.add_ellipse(center_id, focus1_id, radmin)
 
@@ -111,7 +106,9 @@ class Sketch:
         """Make two points coincident. Returns constraint tag."""
         return self._solver.coincident(pt1_id, pt2_id, driving)
 
-    def fix_point(self, pt_id: int, x: float, y: float, *, driving: bool = True) -> Tuple[int, int]:
+    def fix_point(
+        self, pt_id: int, x: float, y: float, *, driving: bool = True
+    ) -> tuple[int, int]:
         """Fix a point to (x, y). Returns (tag_x, tag_y)."""
         px = self.add_param(x, fixed=True)
         py = self.add_param(y, fixed=True)
@@ -135,11 +132,15 @@ class Sketch:
         """Constrain two points to be at the same X."""
         return self._solver.vertical_points(p1_id, p2_id, driving)
 
-    def p2p_distance(self, pt1_id: int, pt2_id: int, distance_id: int, *, driving: bool = True) -> int:
+    def p2p_distance(
+        self, pt1_id: int, pt2_id: int, distance_id: int, *, driving: bool = True
+    ) -> int:
         """Constrain point-to-point distance."""
         return self._solver.p2p_distance(pt1_id, pt2_id, distance_id, driving)
 
-    def p2l_distance(self, pt_id: int, line_id: int, distance_id: int, *, driving: bool = True) -> int:
+    def p2l_distance(
+        self, pt_id: int, line_id: int, distance_id: int, *, driving: bool = True
+    ) -> int:
         """Constrain point-to-line distance."""
         return self._solver.p2l_distance(pt_id, line_id, distance_id, driving)
 
@@ -187,7 +188,9 @@ class Sketch:
         """Constrain points symmetric about a line."""
         return self._solver.symmetric_points_line(p1_id, p2_id, line_id, driving)
 
-    def symmetric_point(self, p1_id: int, p2_id: int, center_id: int, *, driving: bool = True) -> int:
+    def symmetric_point(
+        self, p1_id: int, p2_id: int, center_id: int, *, driving: bool = True
+    ) -> int:
         """Constrain points symmetric about a center point."""
         return self._solver.symmetric_points_point(p1_id, p2_id, center_id, driving)
 

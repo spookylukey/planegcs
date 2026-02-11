@@ -35,9 +35,13 @@ testpaths = ["tests"]
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.3.0",
     "pytest>=8.0",
+    "pyupgrade>=3.21.0",
+    "ruff>=0.15.0",
     "sphinx>=7.0",
     "sphinx-rtd-theme>=2.0",
+    "ty>=0.0.16",
 ]
 
 [tool.cibuildwheel]
@@ -62,3 +66,34 @@ before-all = "vcpkg install eigen3:x64-windows boost-graph:x64-windows boost-mat
 
 [tool.cibuildwheel.windows.environment]
 CMAKE_PREFIX_PATH = "C:/vcpkg/installed/x64-windows"
+
+[tool.ruff]
+target-version = "py39"
+line-length = 99
+src = ["python", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pyupgrade]
+py39-plus = true
+
+[tool.ty.environment]
+python-version = "3.9"
+
+[[tool.ty.overrides]]
+include = ["python/planegcs/*.py"]
+
+[tool.ty.overrides.rules]
+unresolved-import = "ignore"  # _planegcs is a C extension built at install time

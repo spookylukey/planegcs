@@ -1,11 +1,11 @@
 """planegcs — Python bindings for FreeCAD's PlaneGCS 2D geometric constraint solver."""
 
 from planegcs._planegcs import (
-    SketchSolver,
-    SolveStatus,
     Algorithm,
     DebugMode,
     InternalAlignmentType,
+    SketchSolver,
+    SolveStatus,
 )
 from planegcs.sketch import Sketch
 

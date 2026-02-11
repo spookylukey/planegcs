@@ -1,7 +1,7 @@
 """Tests demonstrating equilateral and right triangle constraint solving."""
 
 import math
-import pytest
+
 from planegcs import Sketch, SolveStatus
 
 
@@ -72,7 +72,7 @@ def test_right_triangle():
 
     l_base = s.add_line(p1, p2)
     l_height = s.add_line(p1, p3)
-    l_hyp = s.add_line(p2, p3)
+    s.add_line(p2, p3)  # hypotenuse
 
     # Fix p1 at origin
     s.fix_point(p1, 0, 0)
