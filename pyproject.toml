@@ -45,7 +45,7 @@ dev = [
 ]
 
 [tool.cibuildwheel]
-build = ["cp312-*", "cp313-*"]
+build = ["cp312-*", "cp313-*", "cp314-*"]
 skip = ["*-musllinux_*", "*-manylinux_i686", "*-win32"]
 test-requires = "pytest"
 test-command = "pytest {project}/tests -x"
