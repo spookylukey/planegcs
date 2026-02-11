@@ -27,9 +27,17 @@ jobs:
       - name: Build and install
         run: uv sync
 
-      - name: Lint and type check
+      - name: Cache pre-commit deps
         if: ${{ matrix.python-version == '3.12' }}
-        uses: pre-commit/action@v3.0.1
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit/
+          key: pre-commit|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: pre-commit
+        if: ${{ matrix.python-version == '3.12' }}
+        run: |
+          pre-commit run --all-files --show-diff-on-failure --color=always
 
       - name: Run tests
         run: pytest tests -x -v
