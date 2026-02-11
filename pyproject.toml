@@ -8,7 +8,7 @@ version = "0.1.1"
 description = "Python bindings for FreeCAD's PlaneGCS 2D geometric constraint solver"
 readme = "README.md"
 license = {text = "LGPL-2.1-or-later"}
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 authors = [
     {name = "planegcs contributors"},
 ]
@@ -68,7 +68,7 @@ before-all = "vcpkg install eigen3:x64-windows boost-graph:x64-windows boost-mat
 CMAKE_PREFIX_PATH = "C:/vcpkg/installed/x64-windows"
 
 [tool.ruff]
-target-version = "py39"
+target-version = "py312"
 line-length = 99
 src = ["python", "tests"]
 
@@ -87,10 +87,10 @@ select = [
 quote-style = "double"
 
 [tool.pyupgrade]
-py39-plus = true
+py312-plus = true
 
 [tool.ty.environment]
-python-version = "3.9"
+python-version = "3.12"
 
 [[tool.ty.overrides]]
 include = ["python/planegcs/*.py"]

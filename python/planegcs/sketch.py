@@ -1,7 +1,5 @@
 """High-level Pythonic interface for the PlaneGCS constraint solver."""
 
-from __future__ import annotations
-
 from planegcs._planegcs import Algorithm, SketchSolver, SolveStatus
 
 
