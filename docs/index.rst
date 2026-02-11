@@ -11,6 +11,7 @@ find a configuration satisfying all constraints.
    :caption: Contents:
 
    quickstart
+   examples
    api
    history
    releasing

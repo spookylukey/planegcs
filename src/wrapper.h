@@ -99,7 +99,7 @@ public:
     }
 
     // ── Geometry: Arcs ──────────────────────────────────────────────
-    int add_arc(int center_id, double radius, double start_angle, double end_angle) {
+    int add_arc_from_center(int center_id, double radius, double start_angle, double end_angle) {
         int rad_id = add_param(radius);
         int sa_id = add_param(start_angle);
         int ea_id = add_param(end_angle);
@@ -118,6 +118,68 @@ public:
         a.start = points_.at(sp);
         a.end = points_.at(ep);
         arcs_[id] = a;
+        return id;
+    }
+
+    int add_arc_from_start_end(int start_id, int end_id, double radius) {
+        // get start/end coords
+        double sx = *points_.at(start_id).x;
+        double sy = *points_.at(start_id).y;
+        double ex = *points_.at(end_id).x;
+        double ey = *points_.at(end_id).y;
+
+        double dx = ex - sx;
+        double dy = ey - sy;
+        double half_chord = std::sqrt(dx*dx + dy*dy) / 2.0;
+
+        // Clamp radius
+        double r = std::abs(radius);
+        if (r < half_chord) r = half_chord;
+
+        double h = std::sqrt(r*r - half_chord*half_chord);
+
+        // Midpoint
+        double mx = (sx + ex) / 2.0;
+        double my = (sy + ey) / 2.0;
+
+        // Perpendicular direction (normalized), choosing left side for CCW
+        double perp_x = -dy / (2.0 * half_chord);
+        double perp_y =  dx / (2.0 * half_chord);
+
+        // Center
+        double cx = mx + h * perp_x;
+        double cy = my + h * perp_y;
+
+        int center = add_point(cx, cy);
+
+        double start_angle = std::atan2(sy - cy, sx - cx);
+        double end_angle = std::atan2(ey - cy, ex - cx);
+
+        int rad_id = add_param(r);
+        int sa_id = add_param(start_angle);
+        int ea_id = add_param(end_angle);
+
+        // Create arc start/end points (these are the arc's internal computed points)
+        int sp = add_point(sx, sy);
+        int ep = add_point(ex, ey);
+
+        int id = next_geo_id_++;
+        GCS::Arc a;
+        a.center = points_.at(center);
+        a.rad = param_ptr(rad_id);
+        a.startAngle = param_ptr(sa_id);
+        a.endAngle = param_ptr(ea_id);
+        a.start = points_.at(sp);
+        a.end = points_.at(ep);
+        arcs_[id] = a;
+
+        // Add arc rules so start/end are computed from center+radius+angles
+        arc_rules(id);
+
+        // Coincident: arc's start/end match the user-provided points
+        coincident(sp, start_id);
+        coincident(ep, end_id);
+
         return id;
     }
 

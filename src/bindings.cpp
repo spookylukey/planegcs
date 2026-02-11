@@ -84,10 +84,13 @@ PYBIND11_MODULE(_planegcs, m) {
              "Add a circle. Returns circle ID.")
 
         // Geometry: Arcs
-        .def("add_arc", &SketchSolver::add_arc,
+        .def("add_arc_from_center", &SketchSolver::add_arc_from_center,
              py::arg("center_id"), py::arg("radius"),
              py::arg("start_angle"), py::arg("end_angle"),
-             "Add an arc. Returns arc ID.")
+             "Add an arc from center point, radius and angles. Returns arc ID.")
+        .def("add_arc_from_start_end", &SketchSolver::add_arc_from_start_end,
+             py::arg("start_id"), py::arg("end_id"), py::arg("radius"),
+             "Add an arc from start/end points and radius. Automatically adds arc rules and coincident constraints. Returns arc ID.")
 
         // Geometry: Ellipses
         .def("add_ellipse", &SketchSolver::add_ellipse,

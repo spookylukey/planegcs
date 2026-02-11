@@ -21,7 +21,8 @@ CircleId = NewType("CircleId", int)
 """ID for a circle (returned by :meth:`Sketch.add_circle`)."""
 
 ArcId = NewType("ArcId", int)
-"""ID for an arc (returned by :meth:`Sketch.add_arc`)."""
+"""ID for an arc (returned by :meth:`Sketch.add_arc_from_center`
+or :meth:`Sketch.add_arc_from_start_end`)."""
 
 EllipseId = NewType("EllipseId", int)
 """ID for an ellipse (returned by :meth:`Sketch.add_ellipse`)."""
@@ -128,15 +129,36 @@ class Sketch:
         """Add a circle. Returns circle ID."""
         return CircleId(self._solver.add_circle(center_id, radius))
 
-    def add_arc(
+    def add_arc_from_center(
         self,
         center_id: PointId,
         radius: float,
         start_angle: float,
         end_angle: float,
     ) -> ArcId:
-        """Add an arc. Returns arc ID."""
-        return ArcId(self._solver.add_arc(center_id, radius, start_angle, end_angle))
+        """Add an arc from center point, radius and angles. Returns arc ID."""
+        return ArcId(self._solver.add_arc_from_center(center_id, radius, start_angle, end_angle))
+
+    def add_arc_from_start_end(
+        self,
+        start_id: PointId,
+        end_id: PointId,
+        radius: float,
+    ) -> ArcId:
+        """Add an arc from start/end points and radius.
+
+        Automatically adds arc rules and coincident constraints so that the
+        arc passes through the given start and end points.
+
+        Args:
+            start_id: Start point of the arc.
+            end_id: End point of the arc.
+            radius: Radius of the arc.
+
+        Returns:
+            Arc ID.
+        """
+        return ArcId(self._solver.add_arc_from_start_end(start_id, end_id, radius))
 
     def add_ellipse(self, center_id: PointId, focus1_id: PointId, radmin: float) -> EllipseId:
         """Add an ellipse. Returns ellipse ID."""
@@ -308,6 +330,12 @@ class Sketch:
     ) -> ConstraintTag:
         """Circle tangent to circle."""
         return ConstraintTag(self._solver.tangent_circle_circle(c1_id, c2_id, driving))
+
+    def tangent_line_arc(
+        self, line_id: LineId, arc_id: ArcId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Line tangent to arc."""
+        return ConstraintTag(self._solver.tangent_line_arc(line_id, arc_id, driving))
 
     def symmetric_line(
         self, p1_id: PointId, p2_id: PointId, line_id: LineId, *, driving: bool = True
