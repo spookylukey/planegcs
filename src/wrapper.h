@@ -121,7 +121,7 @@ public:
         return id;
     }
 
-    int add_arc_from_start_end(int start_id, int end_id, double radius) {
+    int add_arc_from_start_end(int start_id, int end_id, int radius_id) {
         // get start/end coords
         double sx = *points_.at(start_id).x;
         double sy = *points_.at(start_id).y;
@@ -132,8 +132,8 @@ public:
         double dy = ey - sy;
         double half_chord = std::sqrt(dx*dx + dy*dy) / 2.0;
 
-        // Clamp radius
-        double r = std::abs(radius);
+        // Read radius from the user-provided parameter
+        double r = std::abs(*param_ptr(radius_id));
         if (r < half_chord) r = half_chord;
 
         double h = std::sqrt(r*r - half_chord*half_chord);
@@ -155,7 +155,7 @@ public:
         double start_angle = std::atan2(sy - cy, sx - cx);
         double end_angle = std::atan2(ey - cy, ex - cx);
 
-        int rad_id = add_param(r);
+        int rad_id = radius_id;
         int sa_id = add_param(start_angle);
         int ea_id = add_param(end_angle);
 

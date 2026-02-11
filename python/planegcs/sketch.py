@@ -214,22 +214,26 @@ class Sketch:
         self,
         start_id: PointId,
         end_id: PointId,
-        radius: float,
+        radius_id: ParamId,
     ) -> ArcId:
-        """Add an arc from start/end points and radius.
+        """Add an arc from start/end points and a radius parameter.
 
         Automatically adds arc rules and coincident constraints so that the
         arc passes through the given start and end points.
 
+        The caller supplies a :class:`ParamId` for the radius (created via
+        :meth:`add_param`).  Use ``fixed=True`` (the default) to lock the
+        radius, or ``fixed=False`` to let the solver adjust it.
+
         Args:
             start_id: Start point of the arc.
             end_id: End point of the arc.
-            radius: Radius of the arc.
+            radius_id: Parameter ID for the radius (from :meth:`add_param`).
 
         Returns:
             Arc ID.
         """
-        return ArcId(self._solver.add_arc_from_start_end(start_id, end_id, radius))
+        return ArcId(self._solver.add_arc_from_start_end(start_id, end_id, radius_id))
 
     def get_arc(self, arc_id: ArcId) -> ArcInfo:
         """Get all properties of an arc.

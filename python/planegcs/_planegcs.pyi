@@ -258,10 +258,10 @@ class SketchSolver:
         self,
         start_id: typing.SupportsInt,
         end_id: typing.SupportsInt,
-        radius: typing.SupportsFloat,
+        radius_id: typing.SupportsInt,
     ) -> int:
         """
-        Add an arc from start/end points and radius. Automatically adds arc rules and coincident constraints. Returns arc ID.
+        Add an arc from start/end points and a radius parameter. Automatically adds arc rules and coincident constraints. Returns arc ID.
         """
     def add_arc_of_ellipse(
         self,

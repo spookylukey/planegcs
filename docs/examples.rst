@@ -64,10 +64,13 @@ tangent to its two adjacent line segments.
     line_r = s.add_line(p_rs, p_re)   # right
     line_l = s.add_line(p_ls, p_le)   # left
 
+    # Radius parameter – fixed by default, shared by all three arcs
+    rad = s.add_param(r)
+
     # Three corner arcs
-    arc_bl  = s.add_arc_from_start_end(p_le, p_bs, r)   # bottom-left
-    arc_br  = s.add_arc_from_start_end(p_be, p_rs, r)   # bottom-right
-    arc_top = s.add_arc_from_start_end(p_re, p_ls, r)   # top
+    arc_bl  = s.add_arc_from_start_end(p_le, p_bs, rad)   # bottom-left
+    arc_br  = s.add_arc_from_start_end(p_be, p_rs, rad)   # bottom-right
+    arc_top = s.add_arc_from_start_end(p_re, p_ls, rad)   # top
 
     # ── Tangency constraints ────────────────────────────────────
     # Each arc must be tangent to its two adjacent lines.
@@ -120,10 +123,13 @@ Key API methods used
 
 :meth:`~planegcs.Sketch.add_arc_from_start_end`
     Creates an arc that passes through two existing points with a given
-    radius.  Internally this computes the arc center and angles, adds
-    ``arc_rules`` constraints (so the arc's start/end points stay
-    consistent with center + radius + angles), and adds ``coincident``
-    constraints tying the arc endpoints to the supplied points.
+    radius parameter.  The radius is supplied as a :class:`~planegcs.ParamId`
+    created via :meth:`~planegcs.Sketch.add_param`, giving you explicit
+    control over whether it is fixed or free.  Internally this computes the
+    arc center and angles, adds ``arc_rules`` constraints (so the arc's
+    start/end points stay consistent with center + radius + angles), and adds
+    ``coincident`` constraints tying the arc endpoints to the supplied points.
+    Multiple arcs can share the same radius parameter.
 
 :meth:`~planegcs.Sketch.tangent_line_arc`
     Constrains a line to be tangent to an arc.  Under the hood this is a
