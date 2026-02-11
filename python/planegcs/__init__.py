@@ -17,5 +17,3 @@ __all__ = [
     "DebugMode",
     "InternalAlignmentType",
 ]
-
-__version__ = "0.1.2"
