@@ -12,6 +12,7 @@ find a configuration satisfying all constraints.
 
    quickstart
    api
+   history
    releasing
 
 Installation
