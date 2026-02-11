@@ -62,17 +62,6 @@ The workflow will:
 * Run the test suite against each wheel.
 * If ``upload_to_pypi`` was ``true``, publish everything to PyPI.
 
-5. Create a GitHub Release (optional but recommended)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-After the workflow succeeds:
-
-1. Go to **Releases** → **Draft a new release**.
-2. Select the ``vX.Y.Z`` tag.
-3. Write release notes (or click **Generate release notes**).
-4. Download the wheel and sdist artifacts from the workflow run and attach
-   them to the release.
-5. Click **Publish release**.
 
 PyPI authentication
 -------------------
