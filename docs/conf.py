@@ -1,9 +1,18 @@
 """Sphinx configuration for planegcs documentation."""
 
+from pathlib import Path
+
+import toml
+
+THIS_FILE = Path(__file__).resolve()
+
+pyproject = toml.load(THIS_FILE.parent.parent / "pyproject.toml")
+
+
 project = "planegcs"
 copyright = "2026, planegcs contributors"
 author = "planegcs contributors"
-release = "0.1.2"
+release = pyproject["project"]["version"]
 
 extensions = [
     "sphinx.ext.autodoc",

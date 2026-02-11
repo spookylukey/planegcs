@@ -27,7 +27,6 @@ The version appears in the following files — all must be updated:
 .. code-block:: bash
 
    # pyproject.toml  →  [project] version = "X.Y.Z"
-   # docs/conf.py → release = "X.Y.Z"
 
 Update all to the new version, e.g. ``0.2.0``.
 
