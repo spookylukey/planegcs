@@ -122,6 +122,46 @@ def test_distance_constraint():
     assert abs(dist - 7.0) < 1e-8
 
 
+def test_add_fixed_point():
+    """add_fixed_point creates and fixes a point in one call."""
+    s = Sketch()
+    p = s.add_fixed_point(3.0, 4.0)
+    status = s.solve()
+    assert status == SolveStatus.Success
+    x, y = s.get_point(p)
+    assert abs(x - 3.0) < 1e-8
+    assert abs(y - 4.0) < 1e-8
+
+
+def test_add_fixed_point_with_other_geometry():
+    """add_fixed_point works alongside other constraints."""
+    s = Sketch()
+    p1 = s.add_fixed_point(0.0, 0.0)
+    p2 = s.add_point(5.0, 3.0)
+    line = s.add_line(p1, p2)
+    s.horizontal(line)
+    d = s.add_param(7.0)
+    s.p2p_distance(p1, p2, d)
+    status = s.solve()
+    assert status == SolveStatus.Success
+    x2, y2 = s.get_point(p2)
+    assert abs(x2 - 7.0) < 1e-8
+    assert abs(y2 - 0.0) < 1e-8
+
+
+def test_add_fixed_point_returns_valid_point_id():
+    """The returned ID is usable as a normal point."""
+    s = Sketch()
+    p1 = s.add_fixed_point(1.0, 2.0)
+    p2 = s.add_fixed_point(4.0, 6.0)
+    s.coincident(p1, p2)  # conflicting, but tests that IDs are valid point IDs
+    # With driving=True on fix, this is overconstrained; just check the IDs work
+    x1, y1 = s.get_point(p1)
+    x2, y2 = s.get_point(p2)
+    assert isinstance(x1, float)
+    assert isinstance(x2, float)
+
+
 def test_clear():
     """Clear resets the solver."""
     s = Sketch()
