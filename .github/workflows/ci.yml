@@ -40,4 +40,4 @@ jobs:
           uv run pre-commit run --all-files --show-diff-on-failure --color=always
 
       - name: Run tests
-        run: uv run pytest tests -x -v
+        run: uv run pytest tests -v
