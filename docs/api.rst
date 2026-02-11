@@ -8,6 +8,13 @@ Sketch (High-Level)
    :members:
    :undoc-members:
 
+Diagnosis
+---------
+
+.. autoclass:: planegcs.Diagnosis
+   :members:
+   :undoc-members:
+
 SketchSolver (Low-Level)
 ------------------------
 
