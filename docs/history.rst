@@ -6,6 +6,7 @@
 * 0.2 (2026-02-11)
 
   - Added `add_fixed_point` convenience method
+  - Added `add_fixed_param` convenience method
 
 * 0.1.2 (2026-02-11)
 
