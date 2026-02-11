@@ -65,7 +65,7 @@ We follow `Semantic Versioning <https://semver.org/>`_:
 
 The workflow will:
 
-* Build wheels for Linux and Windows (Python 3.12 + 3.13).
+* Build wheels for Linux and Windows.
 * Build a source distribution.
 * Run the test suite against each wheel.
 * If ``upload_to_pypi`` was ``true``, publish everything to PyPI.
