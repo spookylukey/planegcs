@@ -2,9 +2,13 @@
 
 Python bindings for FreeCAD's PlaneGCS 2D geometric constraint solver.
 
-This project extracts the constraint solver system from FreeCAD's Sketcher
-component, changes the headers so that it can be used outside FreeCAD, and adds
-some thin C++ and Python wrappers so it can be used as a Python library.
+This project extracts the constraint solver system from
+[FreeCAD](https://www.freecad.org/)'s
+[Sketcher](https://wiki.freecad.org/Sketcher_Workbench) component, changes the
+headers so that it can be used outside FreeCAD, and adds some thin C++ and
+Python wrappers so it can be used as a Python library. As per the [FreeCAD
+licence requirements](https://wiki.freecad.org/License), the result is licenced
+under the LPGL 2.1 or later.
 
 ## Installation
 
