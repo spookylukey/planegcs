@@ -152,6 +152,19 @@ class Sketch:
         """
         return ParamId(self._solver.add_param(value, fixed))
 
+    def add_fixed_param(self, value: float) -> ParamId:
+        """Allocate a fixed parameter with the given value.
+
+        This is a convenience shorthand for ``add_param(value, fixed=True)``.
+
+        Args:
+            value: The fixed value for the parameter.
+
+        Returns:
+            Parameter ID.
+        """
+        return self.add_param(value, fixed=True)
+
     def get_param(self, param_id: ParamId) -> float:
         """Read current value of a parameter."""
         return self._solver.get_param(param_id)

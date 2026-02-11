@@ -149,6 +149,31 @@ def test_add_fixed_point_with_other_geometry():
     assert abs(y2 - 0.0) < 1e-8
 
 
+def test_add_fixed_param():
+    """add_fixed_param creates a fixed parameter in one call."""
+    s = Sketch()
+    p1 = s.add_fixed_point(0.0, 0.0)
+    p2 = s.add_point(5.0, 0.0)
+    line = s.add_line(p1, p2)
+    s.horizontal(line)
+    d = s.add_fixed_param(7.0)
+    s.p2p_distance(p1, p2, d)
+    status = s.solve()
+    assert status == SolveStatus.Success
+    x2, y2 = s.get_point(p2)
+    assert abs(x2 - 7.0) < 1e-8
+    assert abs(y2 - 0.0) < 1e-8
+
+
+def test_add_fixed_param_value_is_fixed():
+    """The parameter created by add_fixed_param is not changed by the solver."""
+    s = Sketch()
+    param = s.add_fixed_param(42.0)
+    assert abs(s.get_param(param) - 42.0) < 1e-12
+    s.solve()
+    assert abs(s.get_param(param) - 42.0) < 1e-12
+
+
 def test_add_fixed_point_returns_valid_point_id():
     """The returned ID is usable as a normal point."""
     s = Sketch()
