@@ -13,7 +13,7 @@ Create a sketch, add geometry and constraints, then solve:
    s = Sketch()
 
    # Add three points
-   p1 = s.add_point(0, 0)
+   p1 = s.add_fixed_point(0, 0)
    p2 = s.add_point(5, 0)
    p3 = s.add_point(2.5, 4)
 
@@ -25,7 +25,6 @@ Create a sketch, add geometry and constraints, then solve:
    # Constraints: equilateral triangle
    s.equal_length(l1, l2)
    s.equal_length(l2, l3)
-   s.fix_point(p1, 0, 0)
    s.horizontal(l1)
 
    # Fix side length
