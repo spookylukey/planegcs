@@ -72,6 +72,24 @@ class Sketch:
         """Get current (x, y) of a point."""
         return self._solver.get_point(point_id)
 
+    def add_fixed_point(self, x: float, y: float, *, driving: bool = True) -> int:
+        """Add a point and fix it at (x, y) in one step.
+
+        This is a convenience method equivalent to calling :meth:`add_point`
+        followed by :meth:`fix_point`.
+
+        Args:
+            x: X coordinate.
+            y: Y coordinate.
+            driving: Whether the fix constraints are driving.
+
+        Returns:
+            Point ID.
+        """
+        pt_id = self.add_point(x, y)
+        self.fix_point(pt_id, x, y, driving=driving)
+        return pt_id
+
     def add_line(self, p1_id: int, p2_id: int) -> int:
         """Add a line between two existing points. Returns line ID."""
         return self._solver.add_line(p1_id, p2_id)
