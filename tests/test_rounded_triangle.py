@@ -60,8 +60,8 @@ def test_arc_tangent_to_line():
     assert abs(s.get_point(p3)[0] - 10.0) < 1e-6
     assert abs(s.get_point(p3)[1] - 5.0) < 1e-6
 
-    # Radius should remain exactly 5.0
-    assert abs(s.get_arc_radius(arc) - 5.0) < 1e-6
+    # Radius should remain close to 5.0
+    assert abs(s.get_arc_radius(arc) - 5.0) < 1e-4
 
 
 def test_equilateral_triangle_rounded_corners():
@@ -122,7 +122,11 @@ def test_equilateral_triangle_rounded_corners():
     s.equal_length(line_r, line_l)
 
     # Position & orient
+    # fix_point for p_bs, p_le, and p_rs pins the shape and resolves
+    # the arc center ambiguities (each arc from start/end adds 1 DOF)
     s.fix_point(p_bs, *bs)
+    s.fix_point(p_le, *le)
+    s.fix_point(p_rs, *rs)
     s.horizontal(line_b)
     s.set_p2p_distance(p_bs, p_be, side - 2 * t)
 

@@ -45,6 +45,16 @@ fi
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 [[ "$BRANCH" == "main" ]] || die "You are on '$BRANCH' — switch to 'main' first"
 
+# --- run tests and type checking --------------------------------------------
+
+info "Running tests …"
+uv run pytest -x -q \
+    || die "Tests failed — fix before releasing"
+
+info "Running ty type checker …"
+ty check \
+    || die "Type checking failed — fix before releasing"
+
 # --- verify type stubs are up to date ---------------------------------------
 
 info "Checking _planegcs.pyi is up to date …"
