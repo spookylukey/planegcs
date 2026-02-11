@@ -1,48 +1,73 @@
-"""Type stubs for the _planegcs C extension module."""
+"""
+Python bindings for FreeCAD's PlaneGCS 2D geometric constraint solver
+"""
 
-from typing import overload
+from __future__ import annotations
 
-# ── Enums ──────────────────────────────────────────────────────────
+import typing
 
-class SolveStatus:
-    """Result of a solver run."""
-
-    Success: SolveStatus
-    Converged: SolveStatus
-    Failed: SolveStatus
-    SuccessfulSolutionInvalid: SolveStatus
-
-    __members__: dict[str, SolveStatus]
-
-    def __init__(self, value: int) -> None: ...
-    def __eq__(self, other: object) -> bool: ...
-    def __ne__(self, other: object) -> bool: ...
-    def __hash__(self) -> int: ...
-    def __int__(self) -> int: ...
-    def __index__(self) -> int: ...
-    def __repr__(self) -> str: ...
-    def __str__(self) -> str: ...
-    @property
-    def name(self) -> str: ...
-    @property
-    def value(self) -> int: ...
+__all__: list[str] = [
+    "Algorithm",
+    "BFGS",
+    "Converged",
+    "DebugMode",
+    "DogLeg",
+    "EllipseFocus2X",
+    "EllipseFocus2Y",
+    "EllipseNegativeMajorX",
+    "EllipseNegativeMajorY",
+    "EllipseNegativeMinorX",
+    "EllipseNegativeMinorY",
+    "EllipsePositiveMajorX",
+    "EllipsePositiveMajorY",
+    "EllipsePositiveMinorX",
+    "EllipsePositiveMinorY",
+    "Failed",
+    "HyperbolaNegativeMajorX",
+    "HyperbolaNegativeMajorY",
+    "HyperbolaNegativeMinorX",
+    "HyperbolaNegativeMinorY",
+    "HyperbolaPositiveMajorX",
+    "HyperbolaPositiveMajorY",
+    "HyperbolaPositiveMinorX",
+    "HyperbolaPositiveMinorY",
+    "InternalAlignmentType",
+    "IterationLevel",
+    "LevenbergMarquardt",
+    "Minimal",
+    "NoDebug",
+    "SketchSolver",
+    "SolveStatus",
+    "Success",
+    "SuccessfulSolutionInvalid",
+]
 
 class Algorithm:
-    """Solver algorithm."""
+    """
+    Members:
 
-    BFGS: Algorithm
-    LevenbergMarquardt: Algorithm
-    DogLeg: Algorithm
+      BFGS
 
-    __members__: dict[str, Algorithm]
+      LevenbergMarquardt
 
-    def __init__(self, value: int) -> None: ...
-    def __eq__(self, other: object) -> bool: ...
-    def __ne__(self, other: object) -> bool: ...
+      DogLeg
+    """
+
+    BFGS: typing.ClassVar[Algorithm]  # value = <Algorithm.BFGS: 0>
+    DogLeg: typing.ClassVar[Algorithm]  # value = <Algorithm.DogLeg: 2>
+    LevenbergMarquardt: typing.ClassVar[Algorithm]  # value = <Algorithm.LevenbergMarquardt: 1>
+    __members__: typing.ClassVar[
+        dict[str, Algorithm]
+    ]  # value = {'BFGS': <Algorithm.BFGS: 0>, 'LevenbergMarquardt': <Algorithm.LevenbergMarquardt: 1>, 'DogLeg': <Algorithm.DogLeg: 2>}
+    def __eq__(self, other: typing.Any) -> bool: ...
+    def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
-    def __int__(self) -> int: ...
     def __index__(self) -> int: ...
+    def __init__(self, value: typing.SupportsInt) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self, other: typing.Any) -> bool: ...
     def __repr__(self) -> str: ...
+    def __setstate__(self, state: typing.SupportsInt) -> None: ...
     def __str__(self) -> str: ...
     @property
     def name(self) -> str: ...
@@ -50,21 +75,31 @@ class Algorithm:
     def value(self) -> int: ...
 
 class DebugMode:
-    """Debug verbosity level."""
+    """
+    Members:
 
-    NoDebug: DebugMode
-    Minimal: DebugMode
-    IterationLevel: DebugMode
+      NoDebug
 
-    __members__: dict[str, DebugMode]
+      Minimal
 
-    def __init__(self, value: int) -> None: ...
-    def __eq__(self, other: object) -> bool: ...
-    def __ne__(self, other: object) -> bool: ...
+      IterationLevel
+    """
+
+    IterationLevel: typing.ClassVar[DebugMode]  # value = <DebugMode.IterationLevel: 2>
+    Minimal: typing.ClassVar[DebugMode]  # value = <DebugMode.Minimal: 1>
+    NoDebug: typing.ClassVar[DebugMode]  # value = <DebugMode.NoDebug: 0>
+    __members__: typing.ClassVar[
+        dict[str, DebugMode]
+    ]  # value = {'NoDebug': <DebugMode.NoDebug: 0>, 'Minimal': <DebugMode.Minimal: 1>, 'IterationLevel': <DebugMode.IterationLevel: 2>}
+    def __eq__(self, other: typing.Any) -> bool: ...
+    def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
-    def __int__(self) -> int: ...
     def __index__(self) -> int: ...
+    def __init__(self, value: typing.SupportsInt) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self, other: typing.Any) -> bool: ...
     def __repr__(self) -> str: ...
+    def __setstate__(self, state: typing.SupportsInt) -> None: ...
     def __str__(self) -> str: ...
     @property
     def name(self) -> str: ...
@@ -72,328 +107,667 @@ class DebugMode:
     def value(self) -> int: ...
 
 class InternalAlignmentType:
-    """Internal alignment type for ellipse/hyperbola constraints."""
+    """
+    Members:
 
-    EllipsePositiveMajorX: InternalAlignmentType
-    EllipsePositiveMajorY: InternalAlignmentType
-    EllipseNegativeMajorX: InternalAlignmentType
-    EllipseNegativeMajorY: InternalAlignmentType
-    EllipsePositiveMinorX: InternalAlignmentType
-    EllipsePositiveMinorY: InternalAlignmentType
-    EllipseNegativeMinorX: InternalAlignmentType
-    EllipseNegativeMinorY: InternalAlignmentType
-    EllipseFocus2X: InternalAlignmentType
-    EllipseFocus2Y: InternalAlignmentType
-    HyperbolaPositiveMajorX: InternalAlignmentType
-    HyperbolaPositiveMajorY: InternalAlignmentType
-    HyperbolaNegativeMajorX: InternalAlignmentType
-    HyperbolaNegativeMajorY: InternalAlignmentType
-    HyperbolaPositiveMinorX: InternalAlignmentType
-    HyperbolaPositiveMinorY: InternalAlignmentType
-    HyperbolaNegativeMinorX: InternalAlignmentType
-    HyperbolaNegativeMinorY: InternalAlignmentType
+      EllipsePositiveMajorX
 
-    __members__: dict[str, InternalAlignmentType]
+      EllipsePositiveMajorY
 
-    def __init__(self, value: int) -> None: ...
-    def __eq__(self, other: object) -> bool: ...
-    def __ne__(self, other: object) -> bool: ...
+      EllipseNegativeMajorX
+
+      EllipseNegativeMajorY
+
+      EllipsePositiveMinorX
+
+      EllipsePositiveMinorY
+
+      EllipseNegativeMinorX
+
+      EllipseNegativeMinorY
+
+      EllipseFocus2X
+
+      EllipseFocus2Y
+
+      HyperbolaPositiveMajorX
+
+      HyperbolaPositiveMajorY
+
+      HyperbolaNegativeMajorX
+
+      HyperbolaNegativeMajorY
+
+      HyperbolaPositiveMinorX
+
+      HyperbolaPositiveMinorY
+
+      HyperbolaNegativeMinorX
+
+      HyperbolaNegativeMinorY
+    """
+
+    EllipseFocus2X: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.EllipseFocus2X: 8>
+    EllipseFocus2Y: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.EllipseFocus2Y: 9>
+    EllipseNegativeMajorX: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.EllipseNegativeMajorX: 2>
+    EllipseNegativeMajorY: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.EllipseNegativeMajorY: 3>
+    EllipseNegativeMinorX: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.EllipseNegativeMinorX: 6>
+    EllipseNegativeMinorY: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.EllipseNegativeMinorY: 7>
+    EllipsePositiveMajorX: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.EllipsePositiveMajorX: 0>
+    EllipsePositiveMajorY: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.EllipsePositiveMajorY: 1>
+    EllipsePositiveMinorX: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.EllipsePositiveMinorX: 4>
+    EllipsePositiveMinorY: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.EllipsePositiveMinorY: 5>
+    HyperbolaNegativeMajorX: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.HyperbolaNegativeMajorX: 12>
+    HyperbolaNegativeMajorY: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.HyperbolaNegativeMajorY: 13>
+    HyperbolaNegativeMinorX: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.HyperbolaNegativeMinorX: 16>
+    HyperbolaNegativeMinorY: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.HyperbolaNegativeMinorY: 17>
+    HyperbolaPositiveMajorX: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.HyperbolaPositiveMajorX: 10>
+    HyperbolaPositiveMajorY: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.HyperbolaPositiveMajorY: 11>
+    HyperbolaPositiveMinorX: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.HyperbolaPositiveMinorX: 14>
+    HyperbolaPositiveMinorY: typing.ClassVar[
+        InternalAlignmentType
+    ]  # value = <InternalAlignmentType.HyperbolaPositiveMinorY: 15>
+    __members__: typing.ClassVar[
+        dict[str, InternalAlignmentType]
+    ]  # value = {'EllipsePositiveMajorX': <InternalAlignmentType.EllipsePositiveMajorX: 0>, 'EllipsePositiveMajorY': <InternalAlignmentType.EllipsePositiveMajorY: 1>, 'EllipseNegativeMajorX': <InternalAlignmentType.EllipseNegativeMajorX: 2>, 'EllipseNegativeMajorY': <InternalAlignmentType.EllipseNegativeMajorY: 3>, 'EllipsePositiveMinorX': <InternalAlignmentType.EllipsePositiveMinorX: 4>, 'EllipsePositiveMinorY': <InternalAlignmentType.EllipsePositiveMinorY: 5>, 'EllipseNegativeMinorX': <InternalAlignmentType.EllipseNegativeMinorX: 6>, 'EllipseNegativeMinorY': <InternalAlignmentType.EllipseNegativeMinorY: 7>, 'EllipseFocus2X': <InternalAlignmentType.EllipseFocus2X: 8>, 'EllipseFocus2Y': <InternalAlignmentType.EllipseFocus2Y: 9>, 'HyperbolaPositiveMajorX': <InternalAlignmentType.HyperbolaPositiveMajorX: 10>, 'HyperbolaPositiveMajorY': <InternalAlignmentType.HyperbolaPositiveMajorY: 11>, 'HyperbolaNegativeMajorX': <InternalAlignmentType.HyperbolaNegativeMajorX: 12>, 'HyperbolaNegativeMajorY': <InternalAlignmentType.HyperbolaNegativeMajorY: 13>, 'HyperbolaPositiveMinorX': <InternalAlignmentType.HyperbolaPositiveMinorX: 14>, 'HyperbolaPositiveMinorY': <InternalAlignmentType.HyperbolaPositiveMinorY: 15>, 'HyperbolaNegativeMinorX': <InternalAlignmentType.HyperbolaNegativeMinorX: 16>, 'HyperbolaNegativeMinorY': <InternalAlignmentType.HyperbolaNegativeMinorY: 17>}
+    def __eq__(self, other: typing.Any) -> bool: ...
+    def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
-    def __int__(self) -> int: ...
     def __index__(self) -> int: ...
+    def __init__(self, value: typing.SupportsInt) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self, other: typing.Any) -> bool: ...
     def __repr__(self) -> str: ...
+    def __setstate__(self, state: typing.SupportsInt) -> None: ...
     def __str__(self) -> str: ...
     @property
     def name(self) -> str: ...
     @property
     def value(self) -> int: ...
 
-# ── SketchSolver ───────────────────────────────────────────────────
-
 class SketchSolver:
-    """Low-level wrapper around the PlaneGCS solver."""
-
     def __init__(self) -> None: ...
-
-    # Parameters
-    def add_param(self, value: float = 0.0, fixed: bool = False) -> int:
-        """Allocate a parameter. fixed=True for driving constraint values. Returns param ID."""
-        ...
-    def is_param_fixed(self, param_id: int) -> bool:
-        """Check if a parameter is fixed (not an unknown)."""
-        ...
-    def set_param_fixed(self, param_id: int, fixed: bool) -> None:
-        """Set whether a parameter is fixed."""
-        ...
-    def get_param(self, param_id: int) -> float:
-        """Get the current value of a parameter."""
-        ...
-    def set_param(self, param_id: int, value: float) -> None:
-        """Set the value of a parameter."""
-        ...
-
-    # Geometry: Points
-    def add_point(self, x: float, y: float) -> int:
-        """Add a point. Returns point ID."""
-        ...
-    def get_point(self, point_id: int) -> tuple[float, float]:
-        """Get the (x, y) of a point."""
-        ...
-
-    # Geometry: Lines
-    @overload
-    def add_line(self, p1_id: int, p2_id: int) -> int:
-        """Add a line between two existing points. Returns line ID."""
-        ...
-    @overload
-    def add_line(self, x1: float, y1: float, x2: float, y2: float) -> int:
-        """Add a line with endpoint coordinates. Returns line ID."""
-        ...
-    def add_line(self, *args: float | int) -> int: ...
-
-    # Geometry: Circles
-    def add_circle(self, center_id: int, radius: float) -> int:
-        """Add a circle. Returns circle ID."""
-        ...
-
-    # Geometry: Arcs
-    def add_arc(self, center_id: int, radius: float, start_angle: float, end_angle: float) -> int:
-        """Add an arc. Returns arc ID."""
-        ...
-
-    # Geometry: Ellipses
-    def add_ellipse(self, center_id: int, focus1_id: int, radmin: float) -> int:
-        """Add an ellipse. Returns ellipse ID."""
-        ...
-
-    # Geometry: ArcOfEllipse
+    def add_arc(
+        self,
+        center_id: typing.SupportsInt,
+        radius: typing.SupportsFloat,
+        start_angle: typing.SupportsFloat,
+        end_angle: typing.SupportsFloat,
+    ) -> int:
+        """
+        Add an arc. Returns arc ID.
+        """
     def add_arc_of_ellipse(
         self,
-        center_id: int,
-        focus1_id: int,
-        radmin: float,
-        start_angle: float,
-        end_angle: float,
-        start_id: int,
-        end_id: int,
+        center_id: typing.SupportsInt,
+        focus1_id: typing.SupportsInt,
+        radmin: typing.SupportsFloat,
+        start_angle: typing.SupportsFloat,
+        end_angle: typing.SupportsFloat,
+        start_id: typing.SupportsInt,
+        end_id: typing.SupportsInt,
     ) -> int:
-        """Add an arc of ellipse. Returns ID."""
-        ...
-
-    # Geometry: Hyperbola
-    def add_hyperbola(self, center_id: int, focus1_id: int, radmin: float) -> int:
-        """Add a hyperbola. Returns ID."""
-        ...
-
-    # Geometry: ArcOfHyperbola
+        """
+        Add an arc of ellipse. Returns ID.
+        """
     def add_arc_of_hyperbola(
         self,
-        center_id: int,
-        focus1_id: int,
-        radmin: float,
-        start_angle: float,
-        end_angle: float,
-        start_id: int,
-        end_id: int,
+        center_id: typing.SupportsInt,
+        focus1_id: typing.SupportsInt,
+        radmin: typing.SupportsFloat,
+        start_angle: typing.SupportsFloat,
+        end_angle: typing.SupportsFloat,
+        start_id: typing.SupportsInt,
+        end_id: typing.SupportsInt,
     ) -> int:
-        """Add an arc of hyperbola. Returns ID."""
-        ...
-
-    # Geometry: Parabola
-    def add_parabola(self, vertex_id: int, focus1_id: int) -> int:
-        """Add a parabola. Returns ID."""
-        ...
-
-    # Geometry: ArcOfParabola
+        """
+        Add an arc of hyperbola. Returns ID.
+        """
     def add_arc_of_parabola(
         self,
-        vertex_id: int,
-        focus1_id: int,
-        start_angle: float,
-        end_angle: float,
-        start_id: int,
-        end_id: int,
+        vertex_id: typing.SupportsInt,
+        focus1_id: typing.SupportsInt,
+        start_angle: typing.SupportsFloat,
+        end_angle: typing.SupportsFloat,
+        start_id: typing.SupportsInt,
+        end_id: typing.SupportsInt,
     ) -> int:
-        """Add an arc of parabola. Returns ID."""
-        ...
-
-    # Solving
-    def solve(self, algorithm: Algorithm = ...) -> SolveStatus:
-        """Solve the system. Returns SolveStatus."""
-        ...
-    def clear(self) -> None:
-        """Clear all geometry, constraints, and parameters."""
-        ...
-
-    # Constraints (all return int constraint tag)
-    def coincident(self, pt1_id: int, pt2_id: int, driving: bool = True) -> int:
-        """Add coincident constraint between two points."""
-        ...
-    def equal(self, param1_id: int, param2_id: int, driving: bool = True) -> int:
-        """Add equality constraint between two parameters."""
-        ...
-    def proportional(
-        self, param1_id: int, param2_id: int, ratio: float, driving: bool = True
+        """
+        Add an arc of parabola. Returns ID.
+        """
+    def add_circle(self, center_id: typing.SupportsInt, radius: typing.SupportsFloat) -> int:
+        """
+        Add a circle. Returns circle ID.
+        """
+    def add_ellipse(
+        self,
+        center_id: typing.SupportsInt,
+        focus1_id: typing.SupportsInt,
+        radmin: typing.SupportsFloat,
     ) -> int:
-        """Add proportional constraint."""
-        ...
-    def difference(
-        self, param1_id: int, param2_id: int, diff_id: int, driving: bool = True
+        """
+        Add an ellipse. Returns ellipse ID.
+        """
+    def add_hyperbola(
+        self,
+        center_id: typing.SupportsInt,
+        focus1_id: typing.SupportsInt,
+        radmin: typing.SupportsFloat,
     ) -> int:
-        """Add difference constraint."""
-        ...
-    def p2p_distance(
-        self, pt1_id: int, pt2_id: int, distance_id: int, driving: bool = True
+        """
+        Add a hyperbola. Returns ID.
+        """
+    @typing.overload
+    def add_line(self, p1_id: typing.SupportsInt, p2_id: typing.SupportsInt) -> int:
+        """
+        Add a line between two existing points. Returns line ID.
+        """
+    @typing.overload
+    def add_line(
+        self,
+        x1: typing.SupportsFloat,
+        y1: typing.SupportsFloat,
+        x2: typing.SupportsFloat,
+        y2: typing.SupportsFloat,
     ) -> int:
-        """Add point-to-point distance constraint."""
-        ...
-    def p2p_angle(self, pt1_id: int, pt2_id: int, angle_id: int, driving: bool = True) -> int:
-        """Add point-to-point angle constraint."""
-        ...
-    def p2l_distance(
-        self, pt_id: int, line_id: int, distance_id: int, driving: bool = True
+        """
+        Add a line with endpoint coordinates. Returns line ID.
+        """
+    def add_parabola(self, vertex_id: typing.SupportsInt, focus1_id: typing.SupportsInt) -> int:
+        """
+        Add a parabola. Returns ID.
+        """
+    def add_param(self, value: typing.SupportsFloat = 0.0, fixed: bool = False) -> int:
+        """
+        Allocate a parameter. fixed=True for driving constraint values. Returns param ID.
+        """
+    def add_point(self, x: typing.SupportsFloat, y: typing.SupportsFloat) -> int:
+        """
+        Add a point. Returns point ID.
+        """
+    def arc_diameter(
+        self, arc_id: typing.SupportsInt, diameter_id: typing.SupportsInt, driving: bool = True
     ) -> int:
-        """Add point-to-line distance constraint."""
-        ...
-    def point_on_line(self, pt_id: int, line_id: int, driving: bool = True) -> int:
-        """Constrain point to lie on line."""
-        ...
-    def point_on_perp_bisector(self, pt_id: int, line_id: int, driving: bool = True) -> int:
-        """Constrain point to lie on perpendicular bisector of line."""
-        ...
-    def parallel(self, l1_id: int, l2_id: int, driving: bool = True) -> int:
-        """Add parallel constraint."""
-        ...
-    def perpendicular(self, l1_id: int, l2_id: int, driving: bool = True) -> int:
-        """Add perpendicular constraint."""
-        ...
-    def l2l_angle(self, l1_id: int, l2_id: int, angle_id: int, driving: bool = True) -> int:
-        """Add line-to-line angle constraint."""
-        ...
-    def midpoint_on_line(self, l1_id: int, l2_id: int, driving: bool = True) -> int:
-        """Constrain midpoint of l1 to lie on l2."""
-        ...
-    def horizontal_line(self, line_id: int, driving: bool = True) -> int:
-        """Constrain line to be horizontal."""
-        ...
-    def horizontal_points(self, p1_id: int, p2_id: int, driving: bool = True) -> int:
-        """Constrain two points to have same Y."""
-        ...
-    def vertical_line(self, line_id: int, driving: bool = True) -> int:
-        """Constrain line to be vertical."""
-        ...
-    def vertical_points(self, p1_id: int, p2_id: int, driving: bool = True) -> int:
-        """Constrain two points to have same X."""
-        ...
-    def coordinate_x(self, pt_id: int, x_id: int, driving: bool = True) -> int:
-        """Fix the X coordinate of a point."""
-        ...
-    def coordinate_y(self, pt_id: int, y_id: int, driving: bool = True) -> int:
-        """Fix the Y coordinate of a point."""
-        ...
-    def point_on_circle(self, pt_id: int, circle_id: int, driving: bool = True) -> int:
-        """Constrain point to lie on circle."""
-        ...
-    def point_on_ellipse(self, pt_id: int, ellipse_id: int, driving: bool = True) -> int:
-        """Constrain point to lie on ellipse."""
-        ...
-    def point_on_arc(self, pt_id: int, arc_id: int, driving: bool = True) -> int:
-        """Constrain point to lie on arc."""
-        ...
-    def arc_rules(self, arc_id: int, driving: bool = True) -> int:
-        """Add arc rules constraint."""
-        ...
-    def tangent_line_circle(self, line_id: int, circle_id: int, driving: bool = True) -> int:
-        """Add line-circle tangent constraint."""
-        ...
-    def tangent_line_ellipse(self, line_id: int, ellipse_id: int, driving: bool = True) -> int:
-        """Add line-ellipse tangent constraint."""
-        ...
-    def tangent_line_arc(self, line_id: int, arc_id: int, driving: bool = True) -> int:
-        """Add line-arc tangent constraint."""
-        ...
-    def tangent_circle_circle(self, c1_id: int, c2_id: int, driving: bool = True) -> int:
-        """Add circle-circle tangent constraint."""
-        ...
-    def tangent_arc_arc(self, a1_id: int, a2_id: int, driving: bool = True) -> int:
-        """Add arc-arc tangent constraint."""
-        ...
-    def tangent_circle_arc(self, circle_id: int, arc_id: int, driving: bool = True) -> int:
-        """Add circle-arc tangent constraint."""
-        ...
-    def circle_radius(self, circle_id: int, radius_id: int, driving: bool = True) -> int:
-        """Set circle radius."""
-        ...
-    def arc_radius(self, arc_id: int, radius_id: int, driving: bool = True) -> int:
-        """Set arc radius."""
-        ...
-    def circle_diameter(self, circle_id: int, diameter_id: int, driving: bool = True) -> int:
-        """Set circle diameter."""
-        ...
-    def arc_diameter(self, arc_id: int, diameter_id: int, driving: bool = True) -> int:
-        """Set arc diameter."""
-        ...
-    def equal_length(self, l1_id: int, l2_id: int, driving: bool = True) -> int:
-        """Constrain two lines to have equal length."""
-        ...
-    def equal_radius_cc(self, c1_id: int, c2_id: int, driving: bool = True) -> int:
-        """Constrain two circles to have equal radius."""
-        ...
-    def equal_radius_ca(self, circle_id: int, arc_id: int, driving: bool = True) -> int:
-        """Constrain circle and arc to have equal radius."""
-        ...
-    def equal_radius_aa(self, a1_id: int, a2_id: int, driving: bool = True) -> int:
-        """Constrain two arcs to have equal radius."""
-        ...
-    def symmetric_points_line(
-        self, p1_id: int, p2_id: int, line_id: int, driving: bool = True
+        """
+        Set arc diameter.
+        """
+    def arc_length(
+        self, arc_id: typing.SupportsInt, dist_id: typing.SupportsInt, driving: bool = True
     ) -> int:
-        """Constrain points symmetric about a line."""
-        ...
-    def symmetric_points_point(
-        self, p1_id: int, p2_id: int, center_id: int, driving: bool = True
+        """
+        Constrain arc length.
+        """
+    def arc_radius(
+        self, arc_id: typing.SupportsInt, radius_id: typing.SupportsInt, driving: bool = True
     ) -> int:
-        """Constrain points symmetric about a center point."""
-        ...
-    def p2c_distance(
-        self, pt_id: int, circle_id: int, distance_id: int, driving: bool = True
+        """
+        Set arc radius.
+        """
+    def arc_rules(self, arc_id: typing.SupportsInt, driving: bool = True) -> int:
+        """
+        Add arc rules constraint (start/end computed from center+radius+angles).
+        """
+    def c2c_distance(
+        self,
+        c1_id: typing.SupportsInt,
+        c2_id: typing.SupportsInt,
+        dist_id: typing.SupportsInt,
+        driving: bool = True,
     ) -> int:
-        """Add point-to-circle distance constraint."""
-        ...
-    def c2c_distance(self, c1_id: int, c2_id: int, dist_id: int, driving: bool = True) -> int:
-        """Add circle-to-circle distance constraint."""
-        ...
+        """
+        Add circle-to-circle distance constraint.
+        """
     def c2l_distance(
-        self, circle_id: int, line_id: int, dist_id: int, driving: bool = True
+        self,
+        circle_id: typing.SupportsInt,
+        line_id: typing.SupportsInt,
+        dist_id: typing.SupportsInt,
+        driving: bool = True,
     ) -> int:
-        """Add circle-to-line distance constraint."""
-        ...
-    def arc_length(self, arc_id: int, dist_id: int, driving: bool = True) -> int:
-        """Constrain arc length."""
-        ...
+        """
+        Add circle-to-line distance constraint.
+        """
+    def circle_diameter(
+        self, circle_id: typing.SupportsInt, diameter_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Set circle diameter.
+        """
+    def circle_radius(
+        self, circle_id: typing.SupportsInt, radius_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Set circle radius.
+        """
+    def clear(self) -> None:
+        """
+        Clear all geometry, constraints, and parameters.
+        """
+    def clear_by_tag(self, tag: typing.SupportsInt) -> None:
+        """
+        Clear all constraints with the given tag.
+        """
+    def coincident(
+        self, pt1_id: typing.SupportsInt, pt2_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Add coincident constraint between two points.
+        """
+    def constraint_error(self, tag: typing.SupportsInt) -> float:
+        """
+        Calculate RMS error of all constraints with given tag.
+        """
+    def coordinate_x(
+        self, pt_id: typing.SupportsInt, x_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Fix the X coordinate of a point.
+        """
+    def coordinate_y(
+        self, pt_id: typing.SupportsInt, y_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Fix the Y coordinate of a point.
+        """
+    def difference(
+        self,
+        param1_id: typing.SupportsInt,
+        param2_id: typing.SupportsInt,
+        diff_id: typing.SupportsInt,
+        driving: bool = True,
+    ) -> int:
+        """
+        Add difference constraint.
+        """
+    def equal(
+        self, param1_id: typing.SupportsInt, param2_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Add equality constraint between two parameters.
+        """
+    def equal_length(
+        self, l1_id: typing.SupportsInt, l2_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Constrain two lines to have equal length.
+        """
+    def equal_radius_aa(
+        self, a1_id: typing.SupportsInt, a2_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Constrain two arcs to have equal radius.
+        """
+    def equal_radius_ca(
+        self, circle_id: typing.SupportsInt, arc_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Constrain circle and arc to have equal radius.
+        """
+    def equal_radius_cc(
+        self, c1_id: typing.SupportsInt, c2_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Constrain two circles to have equal radius.
+        """
+    def get_param(self, param_id: typing.SupportsInt) -> float:
+        """
+        Get the current value of a parameter.
+        """
+    def get_point(self, point_id: typing.SupportsInt) -> tuple[float, float]:
+        """
+        Get the (x, y) of a point.
+        """
+    def horizontal_line(self, line_id: typing.SupportsInt, driving: bool = True) -> int:
+        """
+        Constrain line to be horizontal.
+        """
+    def horizontal_points(
+        self, p1_id: typing.SupportsInt, p2_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Constrain two points to have same Y.
+        """
     def internal_alignment_point2ellipse(
         self,
-        ellipse_id: int,
-        pt_id: int,
+        ellipse_id: typing.SupportsInt,
+        pt_id: typing.SupportsInt,
         alignment_type: InternalAlignmentType,
         driving: bool = True,
     ) -> int:
-        """Internal alignment: point to ellipse."""
-        ...
+        """
+        Internal alignment: point to ellipse.
+        """
+    def is_param_fixed(self, param_id: typing.SupportsInt) -> bool:
+        """
+        Check if a parameter is fixed (not an unknown).
+        """
+    def l2l_angle(
+        self,
+        l1_id: typing.SupportsInt,
+        l2_id: typing.SupportsInt,
+        angle_id: typing.SupportsInt,
+        driving: bool = True,
+    ) -> int:
+        """
+        Add line-to-line angle constraint.
+        """
+    def midpoint_on_line(
+        self, l1_id: typing.SupportsInt, l2_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Constrain midpoint of l1 to lie on l2.
+        """
+    def p2c_distance(
+        self,
+        pt_id: typing.SupportsInt,
+        circle_id: typing.SupportsInt,
+        distance_id: typing.SupportsInt,
+        driving: bool = True,
+    ) -> int:
+        """
+        Add point-to-circle distance constraint.
+        """
+    def p2l_distance(
+        self,
+        pt_id: typing.SupportsInt,
+        line_id: typing.SupportsInt,
+        distance_id: typing.SupportsInt,
+        driving: bool = True,
+    ) -> int:
+        """
+        Add point-to-line distance constraint.
+        """
+    def p2p_angle(
+        self,
+        pt1_id: typing.SupportsInt,
+        pt2_id: typing.SupportsInt,
+        angle_id: typing.SupportsInt,
+        driving: bool = True,
+    ) -> int:
+        """
+        Add point-to-point angle constraint.
+        """
+    def p2p_distance(
+        self,
+        pt1_id: typing.SupportsInt,
+        pt2_id: typing.SupportsInt,
+        distance_id: typing.SupportsInt,
+        driving: bool = True,
+    ) -> int:
+        """
+        Add point-to-point distance constraint.
+        """
+    def parallel(
+        self, l1_id: typing.SupportsInt, l2_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Add parallel constraint.
+        """
+    def perpendicular(
+        self, l1_id: typing.SupportsInt, l2_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Add perpendicular constraint.
+        """
+    def point_on_arc(
+        self, pt_id: typing.SupportsInt, arc_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Constrain point to lie on arc.
+        """
+    def point_on_circle(
+        self, pt_id: typing.SupportsInt, circle_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Constrain point to lie on circle.
+        """
+    def point_on_ellipse(
+        self, pt_id: typing.SupportsInt, ellipse_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Constrain point to lie on ellipse.
+        """
+    def point_on_line(
+        self, pt_id: typing.SupportsInt, line_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Constrain point to lie on line.
+        """
+    def point_on_perp_bisector(
+        self, pt_id: typing.SupportsInt, line_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Constrain point to lie on perpendicular bisector of line.
+        """
+    def proportional(
+        self,
+        param1_id: typing.SupportsInt,
+        param2_id: typing.SupportsInt,
+        ratio: typing.SupportsFloat,
+        driving: bool = True,
+    ) -> int:
+        """
+        Add proportional constraint.
+        """
+    def set_param(self, param_id: typing.SupportsInt, value: typing.SupportsFloat) -> None:
+        """
+        Set the value of a parameter.
+        """
+    def set_param_fixed(self, param_id: typing.SupportsInt, fixed: bool) -> None:
+        """
+        Set whether a parameter is fixed.
+        """
+    def solve(self, algorithm: Algorithm = Algorithm.DogLeg) -> SolveStatus:
+        """
+        Solve the system. Returns SolveStatus.
+        """
+    def symmetric_points_line(
+        self,
+        p1_id: typing.SupportsInt,
+        p2_id: typing.SupportsInt,
+        line_id: typing.SupportsInt,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain points symmetric about a line.
+        """
+    def symmetric_points_point(
+        self,
+        p1_id: typing.SupportsInt,
+        p2_id: typing.SupportsInt,
+        center_id: typing.SupportsInt,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain points symmetric about a center point.
+        """
+    def tangent_arc_arc(
+        self, a1_id: typing.SupportsInt, a2_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Add arc-arc tangent constraint.
+        """
+    def tangent_circle_arc(
+        self, circle_id: typing.SupportsInt, arc_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Add circle-arc tangent constraint.
+        """
+    def tangent_circle_circle(
+        self, c1_id: typing.SupportsInt, c2_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Add circle-circle tangent constraint.
+        """
     def tangent_circumf(
         self,
-        p1_id: int,
-        p2_id: int,
-        rd1_id: int,
-        rd2_id: int,
+        p1_id: typing.SupportsInt,
+        p2_id: typing.SupportsInt,
+        rd1_id: typing.SupportsInt,
+        rd2_id: typing.SupportsInt,
         internal: bool = False,
         driving: bool = True,
     ) -> int:
-        """Tangent circumference constraint."""
-        ...
-    def clear_by_tag(self, tag: int) -> None:
-        """Clear all constraints with the given tag."""
-        ...
-    def constraint_error(self, tag: int) -> float:
-        """Calculate RMS error of all constraints with given tag."""
-        ...
+        """
+        Tangent circumference constraint.
+        """
+    def tangent_line_arc(
+        self, line_id: typing.SupportsInt, arc_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Add line-arc tangent constraint.
+        """
+    def tangent_line_circle(
+        self, line_id: typing.SupportsInt, circle_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Add line-circle tangent constraint.
+        """
+    def tangent_line_ellipse(
+        self, line_id: typing.SupportsInt, ellipse_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Add line-ellipse tangent constraint.
+        """
+    def vertical_line(self, line_id: typing.SupportsInt, driving: bool = True) -> int:
+        """
+        Constrain line to be vertical.
+        """
+    def vertical_points(
+        self, p1_id: typing.SupportsInt, p2_id: typing.SupportsInt, driving: bool = True
+    ) -> int:
+        """
+        Constrain two points to have same X.
+        """
+
+class SolveStatus:
+    """
+    Members:
+
+      Success
+
+      Converged
+
+      Failed
+
+      SuccessfulSolutionInvalid
+    """
+
+    Converged: typing.ClassVar[SolveStatus]  # value = <SolveStatus.Converged: 1>
+    Failed: typing.ClassVar[SolveStatus]  # value = <SolveStatus.Failed: 2>
+    Success: typing.ClassVar[SolveStatus]  # value = <SolveStatus.Success: 0>
+    SuccessfulSolutionInvalid: typing.ClassVar[
+        SolveStatus
+    ]  # value = <SolveStatus.SuccessfulSolutionInvalid: 3>
+    __members__: typing.ClassVar[
+        dict[str, SolveStatus]
+    ]  # value = {'Success': <SolveStatus.Success: 0>, 'Converged': <SolveStatus.Converged: 1>, 'Failed': <SolveStatus.Failed: 2>, 'SuccessfulSolutionInvalid': <SolveStatus.SuccessfulSolutionInvalid: 3>}
+    def __eq__(self, other: typing.Any) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
+    def __init__(self, value: typing.SupportsInt) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self, other: typing.Any) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self, state: typing.SupportsInt) -> None: ...
+    def __str__(self) -> str: ...
+    @property
+    def name(self) -> str: ...
+    @property
+    def value(self) -> int: ...
+
+BFGS: Algorithm  # value = <Algorithm.BFGS: 0>
+Converged: SolveStatus  # value = <SolveStatus.Converged: 1>
+DogLeg: Algorithm  # value = <Algorithm.DogLeg: 2>
+EllipseFocus2X: InternalAlignmentType  # value = <InternalAlignmentType.EllipseFocus2X: 8>
+EllipseFocus2Y: InternalAlignmentType  # value = <InternalAlignmentType.EllipseFocus2Y: 9>
+EllipseNegativeMajorX: (
+    InternalAlignmentType  # value = <InternalAlignmentType.EllipseNegativeMajorX: 2>
+)
+EllipseNegativeMajorY: (
+    InternalAlignmentType  # value = <InternalAlignmentType.EllipseNegativeMajorY: 3>
+)
+EllipseNegativeMinorX: (
+    InternalAlignmentType  # value = <InternalAlignmentType.EllipseNegativeMinorX: 6>
+)
+EllipseNegativeMinorY: (
+    InternalAlignmentType  # value = <InternalAlignmentType.EllipseNegativeMinorY: 7>
+)
+EllipsePositiveMajorX: (
+    InternalAlignmentType  # value = <InternalAlignmentType.EllipsePositiveMajorX: 0>
+)
+EllipsePositiveMajorY: (
+    InternalAlignmentType  # value = <InternalAlignmentType.EllipsePositiveMajorY: 1>
+)
+EllipsePositiveMinorX: (
+    InternalAlignmentType  # value = <InternalAlignmentType.EllipsePositiveMinorX: 4>
+)
+EllipsePositiveMinorY: (
+    InternalAlignmentType  # value = <InternalAlignmentType.EllipsePositiveMinorY: 5>
+)
+Failed: SolveStatus  # value = <SolveStatus.Failed: 2>
+HyperbolaNegativeMajorX: (
+    InternalAlignmentType  # value = <InternalAlignmentType.HyperbolaNegativeMajorX: 12>
+)
+HyperbolaNegativeMajorY: (
+    InternalAlignmentType  # value = <InternalAlignmentType.HyperbolaNegativeMajorY: 13>
+)
+HyperbolaNegativeMinorX: (
+    InternalAlignmentType  # value = <InternalAlignmentType.HyperbolaNegativeMinorX: 16>
+)
+HyperbolaNegativeMinorY: (
+    InternalAlignmentType  # value = <InternalAlignmentType.HyperbolaNegativeMinorY: 17>
+)
+HyperbolaPositiveMajorX: (
+    InternalAlignmentType  # value = <InternalAlignmentType.HyperbolaPositiveMajorX: 10>
+)
+HyperbolaPositiveMajorY: (
+    InternalAlignmentType  # value = <InternalAlignmentType.HyperbolaPositiveMajorY: 11>
+)
+HyperbolaPositiveMinorX: (
+    InternalAlignmentType  # value = <InternalAlignmentType.HyperbolaPositiveMinorX: 14>
+)
+HyperbolaPositiveMinorY: (
+    InternalAlignmentType  # value = <InternalAlignmentType.HyperbolaPositiveMinorY: 15>
+)
+IterationLevel: DebugMode  # value = <DebugMode.IterationLevel: 2>
+LevenbergMarquardt: Algorithm  # value = <Algorithm.LevenbergMarquardt: 1>
+Minimal: DebugMode  # value = <DebugMode.Minimal: 1>
+NoDebug: DebugMode  # value = <DebugMode.NoDebug: 0>
+Success: SolveStatus  # value = <SolveStatus.Success: 0>
+SuccessfulSolutionInvalid: SolveStatus  # value = <SolveStatus.SuccessfulSolutionInvalid: 3>
