@@ -11,6 +11,7 @@ __all__: list[str] = [
     "BFGS",
     "Converged",
     "DebugMode",
+    "DiagnosisResult",
     "DogLeg",
     "EllipseFocus2X",
     "EllipseFocus2Y",
@@ -105,6 +106,28 @@ class DebugMode:
     def name(self) -> str: ...
     @property
     def value(self) -> int: ...
+
+class DiagnosisResult:
+    @property
+    def conflicting(self) -> list[int]:
+        """
+        Tags of conflicting (over-constraining) constraints.
+        """
+    @property
+    def dof(self) -> int:
+        """
+        Degrees of freedom. 0 = fully constrained, >0 = under-constrained.
+        """
+    @property
+    def partially_redundant(self) -> list[int]:
+        """
+        Tags of partially redundant constraints.
+        """
+    @property
+    def redundant(self) -> list[int]:
+        """
+        Tags of redundant constraints.
+        """
 
 class InternalAlignmentType:
     """
@@ -412,6 +435,10 @@ class SketchSolver:
         """
         Fix the Y coordinate of a point.
         """
+    def diagnose(self, algorithm: Algorithm = Algorithm.DogLeg) -> DiagnosisResult:
+        """
+        Run full diagnosis. Returns DiagnosisResult with dof, conflicting, redundant, and partially_redundant constraint tags.
+        """
     def difference(
         self,
         param1_id: typing.SupportsInt,
@@ -421,6 +448,10 @@ class SketchSolver:
     ) -> int:
         """
         Add difference constraint.
+        """
+    def dof(self) -> int:
+        """
+        Return degrees of freedom after running diagnosis. 0 = fully constrained, >0 = under-constrained.
         """
     def equal(
         self, param1_id: typing.SupportsInt, param2_id: typing.SupportsInt, driving: bool = True

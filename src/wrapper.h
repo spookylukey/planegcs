@@ -333,11 +333,39 @@ public:
         system_.applySolution();
     }
 
+    struct DiagnosisResult {
+        int dof;                          // degrees of freedom (0 = fully constrained)
+        std::vector<int> conflicting;     // tags of conflicting (over-constraining) constraints
+        std::vector<int> redundant;       // tags of redundant constraints
+        std::vector<int> partially_redundant; // tags of partially redundant constraints
+    };
+
     int dof() {
-        system_.declareUnknowns(unknowns_cache_);
-        system_.initSolution();
+        declare_unknowns();
+        init_solution();
         system_.diagnose();
         return system_.dofsNumber();
+    }
+
+    DiagnosisResult diagnose(GCS::Algorithm alg = GCS::DogLeg) {
+        declare_unknowns();
+        init_solution(alg);
+        system_.diagnose(alg);
+
+        DiagnosisResult result;
+        result.dof = system_.dofsNumber();
+
+        GCS::VEC_I tags;
+        system_.getConflicting(tags);
+        result.conflicting.assign(tags.begin(), tags.end());
+
+        system_.getRedundant(tags);
+        result.redundant.assign(tags.begin(), tags.end());
+
+        system_.getPartiallyRedundant(tags);
+        result.partially_redundant.assign(tags.begin(), tags.end());
+
+        return result;
     }
 
     void clear() {
@@ -780,7 +808,6 @@ private:
     std::map<int, GCS::ArcOfHyperbola> arcs_of_hyperbola_;
     std::map<int, GCS::Parabola> parabolas_;
     std::map<int, GCS::ArcOfParabola> arcs_of_parabola_;
-    GCS::VEC_pD unknowns_cache_;
     int next_param_id_ = 0;
     int next_geo_id_ = 0;
     int next_constraint_tag_ = 1;

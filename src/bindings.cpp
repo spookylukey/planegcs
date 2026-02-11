@@ -48,6 +48,17 @@ PYBIND11_MODULE(_planegcs, m) {
         .value("HyperbolaNegativeMinorY", GCS::HyperbolaNegativeMinorY)
         .export_values();
 
+    py::class_<SketchSolver::DiagnosisResult>(m, "DiagnosisResult")
+        .def_readonly("dof", &SketchSolver::DiagnosisResult::dof,
+                      "Degrees of freedom. 0 = fully constrained, >0 = under-constrained.")
+        .def_readonly("conflicting", &SketchSolver::DiagnosisResult::conflicting,
+                      "Tags of conflicting (over-constraining) constraints.")
+        .def_readonly("redundant", &SketchSolver::DiagnosisResult::redundant,
+                      "Tags of redundant constraints.")
+        .def_readonly("partially_redundant", &SketchSolver::DiagnosisResult::partially_redundant,
+                      "Tags of partially redundant constraints.")
+    ;
+
     // SketchSolver class
     py::class_<SketchSolver>(m, "SketchSolver")
         .def(py::init<>())
@@ -152,6 +163,11 @@ PYBIND11_MODULE(_planegcs, m) {
         .def("solve", &SketchSolver::solve,
              py::arg("algorithm") = GCS::DogLeg,
              "Solve the system. Returns SolveStatus.")
+        .def("dof", &SketchSolver::dof,
+             "Return degrees of freedom after running diagnosis. 0 = fully constrained, >0 = under-constrained.")
+        .def("diagnose", &SketchSolver::diagnose,
+             py::arg("algorithm") = GCS::DogLeg,
+             "Run full diagnosis. Returns DiagnosisResult with dof, conflicting, redundant, and partially_redundant constraint tags.")
         .def("clear", &SketchSolver::clear,
              "Clear all geometry, constraints, and parameters.")
 

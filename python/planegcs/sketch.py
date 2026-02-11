@@ -55,6 +55,53 @@ class ArcInfo:
     """(x, y) of the arc end point."""
 
 
+@dataclass(frozen=True, slots=True)
+class Diagnosis:
+    """Result of constraint system diagnosis.
+
+    Returned by :meth:`Sketch.diagnose`.
+    """
+
+    dof: int
+    """Degrees of freedom.
+
+    - ``0``: Fully constrained.
+    - ``> 0``: Under-constrained (this many degrees of freedom remain).
+    """
+
+    conflicting: list[ConstraintTag]
+    """Tags of conflicting constraints.
+
+    Non-empty means the system is over-constrained. These are the
+    constraint tags that conflict with each other.
+    """
+
+    redundant: list[ConstraintTag]
+    """Tags of redundant constraints.
+
+    Redundant constraints are satisfied but provide no additional
+    information (they duplicate information already present).
+    """
+
+    partially_redundant: list[ConstraintTag]
+    """Tags of partially redundant constraints."""
+
+    @property
+    def is_fully_constrained(self) -> bool:
+        """True if the system has zero degrees of freedom and no conflicts."""
+        return self.dof == 0 and not self.conflicting
+
+    @property
+    def is_under_constrained(self) -> bool:
+        """True if the system has degrees of freedom remaining."""
+        return self.dof > 0
+
+    @property
+    def is_over_constrained(self) -> bool:
+        """True if there are conflicting constraints."""
+        return bool(self.conflicting)
+
+
 class Sketch:
     """A 2D constraint sketch.
 
@@ -423,6 +470,48 @@ class Sketch:
         Returns :class:`SolveStatus` indicating result.
         """
         return self._solver.solve(algorithm)
+
+    def diagnose(self, algorithm: Algorithm = Algorithm.DogLeg) -> Diagnosis:
+        """Diagnose the constraint system.
+
+        Runs the solver's diagnosis to determine the degrees of freedom
+        and identify any conflicting or redundant constraints.
+
+        Returns a :class:`Diagnosis` with:
+
+        - ``dof``: Degrees of freedom (0 = fully constrained).
+        - ``conflicting``: Over-constraining constraint tags.
+        - ``redundant``: Redundant constraint tags.
+        - ``partially_redundant``: Partially redundant constraint tags.
+        - Convenience properties: ``is_fully_constrained``,
+          ``is_under_constrained``, ``is_over_constrained``.
+
+        Example::
+
+            s = Sketch()
+            p1 = s.add_point(0, 0)
+            p2 = s.add_point(5, 0)
+            l = s.add_line(p1, p2)
+            s.horizontal(l)
+            diag = s.diagnose()
+            print(diag.dof)  # 3 (under-constrained)
+            print(diag.is_under_constrained)  # True
+        """
+        r = self._solver.diagnose(algorithm)
+        return Diagnosis(
+            dof=r.dof,
+            conflicting=[ConstraintTag(t) for t in r.conflicting],
+            redundant=[ConstraintTag(t) for t in r.redundant],
+            partially_redundant=[ConstraintTag(t) for t in r.partially_redundant],
+        )
+
+    def dof(self) -> int:
+        """Return degrees of freedom of the constraint system.
+
+        Shorthand for ``diagnose().dof``. Returns 0 when fully
+        constrained, positive when under-constrained.
+        """
+        return self._solver.dof()
 
     def clear(self) -> None:
         """Clear all geometry, constraints and parameters."""
