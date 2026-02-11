@@ -1,6 +1,6 @@
 """High-level Pythonic interface for the PlaneGCS constraint solver."""
 
-from typing import NewType
+from typing import NamedTuple, NewType
 
 from planegcs._planegcs import Algorithm, SketchSolver, SolveStatus
 
@@ -29,6 +29,28 @@ EllipseId = NewType("EllipseId", int)
 
 ConstraintTag = NewType("ConstraintTag", int)
 """Tag for a constraint (returned by constraint methods)."""
+
+
+class ArcInfo(NamedTuple):
+    """Properties of an arc, returned by :meth:`Sketch.get_arc`."""
+
+    center: tuple[float, float]
+    """(x, y) of the arc center."""
+
+    radius: float
+    """Arc radius."""
+
+    start_angle: float
+    """Start angle in radians."""
+
+    end_angle: float
+    """End angle in radians."""
+
+    start_point: tuple[float, float]
+    """(x, y) of the arc start point."""
+
+    end_point: tuple[float, float]
+    """(x, y) of the arc end point."""
 
 
 class Sketch:
@@ -159,6 +181,38 @@ class Sketch:
             Arc ID.
         """
         return ArcId(self._solver.add_arc_from_start_end(start_id, end_id, radius))
+
+    def get_arc(self, arc_id: ArcId) -> ArcInfo:
+        """Get all properties of an arc.
+
+        Returns an :class:`ArcInfo` named tuple with ``center``,
+        ``radius``, ``start_angle``, ``end_angle``, ``start_point``,
+        and ``end_point`` fields.
+        """
+        return ArcInfo(
+            center=self._solver.get_arc_center(arc_id),
+            radius=self._solver.get_arc_radius(arc_id),
+            start_angle=self._solver.get_arc_start_angle(arc_id),
+            end_angle=self._solver.get_arc_end_angle(arc_id),
+            start_point=self._solver.get_arc_start_point(arc_id),
+            end_point=self._solver.get_arc_end_point(arc_id),
+        )
+
+    def get_arc_center(self, arc_id: ArcId) -> tuple[float, float]:
+        """Get the (x, y) of an arc's center."""
+        return self._solver.get_arc_center(arc_id)
+
+    def get_arc_radius(self, arc_id: ArcId) -> float:
+        """Get the radius of an arc."""
+        return self._solver.get_arc_radius(arc_id)
+
+    def get_arc_start_angle(self, arc_id: ArcId) -> float:
+        """Get the start angle of an arc (radians)."""
+        return self._solver.get_arc_start_angle(arc_id)
+
+    def get_arc_end_angle(self, arc_id: ArcId) -> float:
+        """Get the end angle of an arc (radians)."""
+        return self._solver.get_arc_end_angle(arc_id)
 
     def add_ellipse(self, center_id: PointId, focus1_id: PointId, radmin: float) -> EllipseId:
         """Add an ellipse. Returns ellipse ID."""

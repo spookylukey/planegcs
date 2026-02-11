@@ -183,6 +183,34 @@ public:
         return id;
     }
 
+    // ── Geometry: Arc accessors ───────────────────────────────────────
+    std::pair<double, double> get_arc_center(int arc_id) const {
+        auto& a = arcs_.at(arc_id);
+        return {*a.center.x, *a.center.y};
+    }
+
+    double get_arc_radius(int arc_id) const {
+        return *arcs_.at(arc_id).rad;
+    }
+
+    double get_arc_start_angle(int arc_id) const {
+        return *arcs_.at(arc_id).startAngle;
+    }
+
+    double get_arc_end_angle(int arc_id) const {
+        return *arcs_.at(arc_id).endAngle;
+    }
+
+    std::pair<double, double> get_arc_start_point(int arc_id) const {
+        auto& a = arcs_.at(arc_id);
+        return {*a.start.x, *a.start.y};
+    }
+
+    std::pair<double, double> get_arc_end_point(int arc_id) const {
+        auto& a = arcs_.at(arc_id);
+        return {*a.end.x, *a.end.y};
+    }
+
     // ── Geometry: Ellipses ───────────────────────────────────────────
     int add_ellipse(int center_id, int focus1_id, double radmin) {
         int rm_id = add_param(radmin);

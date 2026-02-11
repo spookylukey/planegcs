@@ -9,6 +9,7 @@ from planegcs._planegcs import (
 )
 from planegcs.sketch import (
     ArcId,
+    ArcInfo,
     CircleId,
     ConstraintTag,
     EllipseId,
@@ -20,6 +21,7 @@ from planegcs.sketch import (
 
 __all__ = [
     "ArcId",
+    "ArcInfo",
     "Algorithm",
     "CircleId",
     "ConstraintTag",
