@@ -19,10 +19,15 @@ What gets built:
 Step-by-step release process
 ----------------------------
 
-1. Bump the version number
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+The ``release.sh`` script automates the local steps (version bump, commit, tag,
+push).  Run it from the repository root:
 
-Use ``uv version --bump`` e.g. ``uv version --bump patch``
+.. code-block:: bash
+
+   ./release.sh <bump>
+
+where ``<bump>`` is the argument passed to ``uv version --bump`` — typically one
+of ``major``, ``minor``, or ``patch``.
 
 We roughly follow `Semantic Versioning <https://semver.org/>`_:
 
@@ -30,27 +35,22 @@ We roughly follow `Semantic Versioning <https://semver.org/>`_:
 * **MINOR** — new functionality, backwards-compatible
 * **PATCH** — backwards-compatible bug fixes
 
-2. Commit and push
-~~~~~~~~~~~~~~~~~~
+The script will:
 
-.. code-block:: bash
+1. Check that the working tree is clean and you are on ``main``.
+2. Bump the version in ``pyproject.toml``.
+3. Commit the change and push to ``origin main``.
+4. Create a ``vX.Y.Z`` tag and push it.
+5. Open the GitHub Actions workflow page (or print the URL) so you can trigger
+   the build.
 
-   git add pyproject.toml
-   git commit -m "Bump version to X.Y.Z"
-   git push origin main
+Triggering the release workflow
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-3. Create a Git tag
-~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: bash
-
-   git tag vX.Y.Z
-   git push origin vX.Y.Z
-
-4. Run the release workflow
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+After the script finishes, trigger the build on GitHub Actions:
 
 1. Go to https://github.com/spookylukey/planegcs/actions/workflows/release.yml
+   (the script will try to open this for you).
 2. Click **Run workflow**.
 3. Choose the ``main`` branch.
 4. Click **Run workflow**.
@@ -110,13 +110,13 @@ Troubleshooting
     ``pytest {project}/tests -x``.  Check the test output in the workflow logs.
 
 **Version mismatch**
-    If the version in ``pyproject.toml`` and ``python/planegcs/__init__.py``
-    don't match, the package metadata will be inconsistent.  Always update
-    both files together.
+    The version lives in ``pyproject.toml``.  The ``release.sh`` script uses
+    ``uv version --bump`` to update it automatically.
 
 File reference
 --------------
 
+* ``release.sh`` — automates version bump, commit, tag, and push
 * ``.github/workflows/release.yml`` — the release workflow
 * ``.github/workflows/ci.yml`` — CI workflow (runs tests on push/PR)
 * ``pyproject.toml`` — build config including ``[tool.cibuildwheel]`` settings
