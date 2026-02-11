@@ -3,7 +3,11 @@
  History/change log
 ====================
 
-* 0.1.2 (2026-01-11)
+* 0.2 (2026-02-11)
+
+  - Added `add_fixed_point` convenience method
+
+* 0.1.2 (2026-02-11)
 
   - more automated tests, reformatting etc.
   - Python 3.14 wheels added
