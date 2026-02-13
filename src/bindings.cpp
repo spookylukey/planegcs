@@ -124,6 +124,11 @@ PYBIND11_MODULE(_planegcs, m) {
              py::arg("center_id"), py::arg("focus1_id"), py::arg("radmin"),
              "Add an ellipse. Returns ellipse ID.")
 
+        // Geometry: Ellipse accessors
+        .def("get_ellipse_center", &SketchSolver::get_ellipse_center, py::arg("ellipse_id"))
+        .def("get_ellipse_focus1", &SketchSolver::get_ellipse_focus1, py::arg("ellipse_id"))
+        .def("get_ellipse_radmin", &SketchSolver::get_ellipse_radmin, py::arg("ellipse_id"))
+
         // Geometry: ArcOfEllipse
         .def("add_arc_of_ellipse", &SketchSolver::add_arc_of_ellipse,
              py::arg("center_id"), py::arg("focus1_id"), py::arg("radmin"),
