@@ -74,8 +74,7 @@ Circles and Arcs
 
    s = Sketch()
 
-   center = s.add_point(0, 0)
-   s.fix_point(center, 0, 0)
+   center = s.add_fixed_point(0, 0)
 
    c = s.add_circle(center, 5.0)
 

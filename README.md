@@ -34,7 +34,7 @@ from planegcs import Sketch, SolveStatus
 s = Sketch()
 
 # Create three points for a triangle
-p1 = s.add_point(0, 0)
+p1 = s.add_fixed_point(0, 0)
 p2 = s.add_point(5, 0)
 p3 = s.add_point(2.5, 4)
 
@@ -47,8 +47,7 @@ l3 = s.add_line(p3, p1)
 s.equal_length(l1, l2)
 s.equal_length(l2, l3)
 
-# Fix first point and make base horizontal
-s.fix_point(p1, 0, 0)
+# Make base horizontal
 s.horizontal(l1)
 
 # Fix the side length to 5

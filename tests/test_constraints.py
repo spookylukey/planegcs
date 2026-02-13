@@ -12,17 +12,14 @@ def _dist(p1, p2):
 def test_parallel_lines():
     """Two lines constrained parallel."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
-    p2 = s.add_point(5, 0)
-    p3 = s.add_point(0, 3)
+    p1 = s.add_fixed_point(0, 0)
+    p2 = s.add_fixed_point(5, 0)
+    p3 = s.add_fixed_point(0, 3)
     p4 = s.add_point(5, 4)
 
     l1 = s.add_line(p1, p2)
     l2 = s.add_line(p3, p4)
 
-    s.fix_point(p1, 0, 0)
-    s.fix_point(p2, 5, 0)
-    s.fix_point(p3, 0, 3)
     s.horizontal(l1)
     s.parallel(l1, l2)
 
@@ -38,16 +35,14 @@ def test_parallel_lines():
 def test_perpendicular_lines():
     """Two lines constrained perpendicular."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(5, 0)
-    p3 = s.add_point(0, 0)
+    p3 = s.add_fixed_point(0, 0)
     p4 = s.add_point(0, 5)
 
     l1 = s.add_line(p1, p2)
     l2 = s.add_line(p3, p4)
 
-    s.fix_point(p1, 0, 0)
-    s.fix_point(p3, 0, 0)
     s.horizontal(l1)
     s.perpendicular(l1, l2)
 
@@ -68,11 +63,9 @@ def test_midpoint_on_line():
     """Midpoint of one line constrained to lie on another."""
     s = Sketch()
     # Line 1: from (0,0) to (6,0)
-    p1 = s.add_point(0, 0)
-    p2 = s.add_point(6, 0)
+    p1 = s.add_fixed_point(0, 0)
+    p2 = s.add_fixed_point(6, 0)
     l1 = s.add_line(p1, p2)
-    s.fix_point(p1, 0, 0)
-    s.fix_point(p2, 6, 0)
 
     # Line 2: vertical line at x=3
     p3 = s.add_point(3, -5)
@@ -97,16 +90,13 @@ def test_symmetric_about_line():
     """Points symmetric about a line."""
     s = Sketch()
     # Symmetry line: y-axis (vertical)
-    lp1 = s.add_point(0, -10)
-    lp2 = s.add_point(0, 10)
+    lp1 = s.add_fixed_point(0, -10)
+    lp2 = s.add_fixed_point(0, 10)
     sym_line = s.add_line(lp1, lp2)
-    s.fix_point(lp1, 0, -10)
-    s.fix_point(lp2, 0, 10)
 
     # Two symmetric points
-    pa = s.add_point(3, 2)
+    pa = s.add_fixed_point(3, 2)
     pb = s.add_point(-4, 2)  # initial guess, should move to (-3, 2)
-    s.fix_point(pa, 3, 2)
     s.symmetric_line(pa, pb, sym_line)
 
     status = s.solve()
@@ -122,12 +112,10 @@ def test_symmetric_about_line():
 def test_symmetric_about_point():
     """Points symmetric about a center point."""
     s = Sketch()
-    center = s.add_point(0, 0)
-    s.fix_point(center, 0, 0)
+    center = s.add_fixed_point(0, 0)
 
-    pa = s.add_point(3, 4)
+    pa = s.add_fixed_point(3, 4)
     pb = s.add_point(-2, -3)  # initial guess
-    s.fix_point(pa, 3, 4)
     s.symmetric_point(pa, pb, center)
 
     status = s.solve()
@@ -144,17 +132,14 @@ def test_symmetric_about_point():
 def test_equal_length():
     """Two lines with equal length constraint."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
-    p2 = s.add_point(5, 0)
-    p3 = s.add_point(10, 0)
+    p1 = s.add_fixed_point(0, 0)
+    p2 = s.add_fixed_point(5, 0)
+    p3 = s.add_fixed_point(10, 0)
     p4 = s.add_point(10, 3)
 
     l1 = s.add_line(p1, p2)
     l2 = s.add_line(p3, p4)
 
-    s.fix_point(p1, 0, 0)
-    s.fix_point(p2, 5, 0)
-    s.fix_point(p3, 10, 0)
     s.vertical(l2)  # l2 is vertical from p3
     s.equal_length(l1, l2)
 
@@ -171,16 +156,14 @@ def test_equal_length():
 def test_l2l_angle():
     """Angle between two lines."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(5, 0)
-    p3 = s.add_point(0, 0)
+    p3 = s.add_fixed_point(0, 0)
     p4 = s.add_point(3, 4)
 
     l1 = s.add_line(p1, p2)
     l2 = s.add_line(p3, p4)
 
-    s.fix_point(p1, 0, 0)
-    s.fix_point(p3, 0, 0)
     s.horizontal(l1)
 
     d1 = s.add_param(5.0)
@@ -202,11 +185,9 @@ def test_l2l_angle():
 def test_p2l_distance():
     """Point to line distance."""
     s = Sketch()
-    lp1 = s.add_point(0, 0)
-    lp2 = s.add_point(10, 0)
+    lp1 = s.add_fixed_point(0, 0)
+    lp2 = s.add_fixed_point(10, 0)
     line = s.add_line(lp1, lp2)
-    s.fix_point(lp1, 0, 0)
-    s.fix_point(lp2, 10, 0)
 
     pt = s.add_point(5, 3)
     d = s.add_param(7.0)
@@ -249,11 +230,10 @@ def test_clear_by_tag():
 def test_horizontal_vertical_points():
     """Horizontal/vertical constraints between points."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(5, 3)
     p3 = s.add_point(2, 7)
 
-    s.fix_point(p1, 0, 0)
     s.horizontal_points(p1, p2)
     s.vertical_points(p1, p3)
 

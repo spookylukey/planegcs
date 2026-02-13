@@ -12,9 +12,8 @@ def _dist(p1: tuple[float, float], p2: tuple[float, float]) -> float:
 def test_set_p2p_distance():
     """set_p2p_distance constrains distance with a float value."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(1, 0)
-    s.fix_point(p1, 0, 0)
     s.horizontal_points(p1, p2)
     s.set_p2p_distance(p1, p2, 7.0)
     status = s.solve()
@@ -26,9 +25,8 @@ def test_set_p2p_distance():
 def test_set_p2p_distance_non_integer():
     """set_p2p_distance works with non-integer distances (e.g. 3.7)."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(1, 0)
-    s.fix_point(p1, 0, 0)
     s.horizontal_points(p1, p2)
     s.set_p2p_distance(p1, p2, 3.7)
     status = s.solve()
@@ -40,7 +38,7 @@ def test_set_p2p_distance_non_integer():
 def test_set_p2p_distance_equilateral_triangle():
     """Equilateral triangle using set_p2p_distance."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(5, 0)
     p3 = s.add_point(2.5, 4)
 
@@ -50,7 +48,6 @@ def test_set_p2p_distance_equilateral_triangle():
 
     s.equal_length(l1, l2)
     s.equal_length(l2, l3)
-    s.fix_point(p1, 0, 0)
     s.horizontal(l1)
     s.set_p2p_distance(p1, p2, 5.0)
 
@@ -68,11 +65,9 @@ def test_set_p2p_distance_equilateral_triangle():
 def test_set_p2l_distance():
     """set_p2l_distance constrains point-to-line distance with a float value."""
     s = Sketch()
-    lp1 = s.add_point(0, 0)
-    lp2 = s.add_point(10, 0)
+    lp1 = s.add_fixed_point(0, 0)
+    lp2 = s.add_fixed_point(10, 0)
     line = s.add_line(lp1, lp2)
-    s.fix_point(lp1, 0, 0)
-    s.fix_point(lp2, 10, 0)
 
     pt = s.add_point(5, 3)
     s.set_p2l_distance(pt, line, 7.0)
@@ -91,16 +86,13 @@ def test_set_p2l_distance():
 def test_set_l2l_angle():
     """set_l2l_angle constrains angle with a float value."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(5, 0)
-    p3 = s.add_point(0, 0)
+    p3 = s.add_fixed_point(0, 0)
     p4 = s.add_point(3, 4)
 
     l1 = s.add_line(p1, p2)
     l2 = s.add_line(p3, p4)
-
-    s.fix_point(p1, 0, 0)
-    s.fix_point(p3, 0, 0)
     s.horizontal(l1)
 
     s.set_p2p_distance(p1, p2, 5.0)
@@ -117,8 +109,7 @@ def test_set_l2l_angle():
 def test_set_circle_radius():
     """set_circle_radius constrains radius with a float value."""
     s = Sketch()
-    center = s.add_point(0, 0)
-    s.fix_point(center, 0, 0)
+    center = s.add_fixed_point(0, 0)
 
     c = s.add_circle(center, 3.0)  # initial guess radius 3
     s.set_circle_radius(c, 5.0)  # constrain to 5
