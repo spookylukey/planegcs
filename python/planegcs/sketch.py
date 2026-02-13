@@ -31,15 +31,18 @@ EllipseId = NewType("EllipseId", int)
 ConstraintTag = NewType("ConstraintTag", int)
 """Tag for a constraint (returned by constraint methods)."""
 
+type PointInfo = tuple[float, float]
+"""(x, y) coordinates of a point, returned by :meth:`Sketch.get_point`."""
+
 
 @dataclass(frozen=True, slots=True)
 class LineInfo:
     """Properties of a line, returned by :meth:`Sketch.get_line`."""
 
-    p1: tuple[float, float]
+    p1: PointInfo
     """(x, y) of the first endpoint."""
 
-    p2: tuple[float, float]
+    p2: PointInfo
     """(x, y) of the second endpoint."""
 
 
@@ -47,7 +50,7 @@ class LineInfo:
 class CircleInfo:
     """Properties of a circle, returned by :meth:`Sketch.get_circle`."""
 
-    center: tuple[float, float]
+    center: PointInfo
     """(x, y) of the circle center."""
 
     radius: float
@@ -58,7 +61,7 @@ class CircleInfo:
 class ArcInfo:
     """Properties of an arc, returned by :meth:`Sketch.get_arc`."""
 
-    center: tuple[float, float]
+    center: PointInfo
     """(x, y) of the arc center."""
 
     radius: float
@@ -70,10 +73,10 @@ class ArcInfo:
     end_angle: float
     """End angle in radians."""
 
-    start_point: tuple[float, float]
+    start_point: PointInfo
     """(x, y) of the arc start point."""
 
-    end_point: tuple[float, float]
+    end_point: PointInfo
     """(x, y) of the arc end point."""
 
 
@@ -81,10 +84,10 @@ class ArcInfo:
 class EllipseInfo:
     """Properties of an ellipse, returned by :meth:`Sketch.get_ellipse`."""
 
-    center: tuple[float, float]
+    center: PointInfo
     """(x, y) of the ellipse center."""
 
-    focus1: tuple[float, float]
+    focus1: PointInfo
     """(x, y) of the first focus."""
 
     radmin: float
@@ -214,7 +217,7 @@ class Sketch:
         """Add a point at (x, y). Returns point ID."""
         return PointId(self._solver.add_point(x, y))
 
-    def get_point(self, point_id: PointId) -> tuple[float, float]:
+    def get_point(self, point_id: PointId) -> PointInfo:
         """Get current (x, y) of a point."""
         return self._solver.get_point(point_id)
 

@@ -20,6 +20,7 @@ from planegcs.sketch import (
     LineInfo,
     ParamId,
     PointId,
+    PointInfo,
     Sketch,
 )
 
@@ -39,6 +40,7 @@ __all__ = [
     "LineInfo",
     "ParamId",
     "PointId",
+    "PointInfo",
     "Sketch",
     "SketchSolver",
     "SolveStatus",
