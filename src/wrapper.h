@@ -98,6 +98,16 @@ public:
         return id;
     }
 
+    // ── Geometry: Circle accessors ──────────────────────────────────
+    std::pair<double, double> get_circle_center(int circle_id) const {
+        auto& c = circles_.at(circle_id);
+        return {*c.center.x, *c.center.y};
+    }
+
+    double get_circle_radius(int circle_id) const {
+        return *circles_.at(circle_id).rad;
+    }
+
     // ── Geometry: Arcs ──────────────────────────────────────────────
     int add_arc_from_center(int center_id, double radius, double start_angle, double end_angle) {
         int rad_id = add_param(radius);

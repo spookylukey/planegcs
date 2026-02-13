@@ -33,6 +33,17 @@ ConstraintTag = NewType("ConstraintTag", int)
 
 
 @dataclass(frozen=True, slots=True)
+class CircleInfo:
+    """Properties of a circle, returned by :meth:`Sketch.get_circle`."""
+
+    center: tuple[float, float]
+    """(x, y) of the circle center."""
+
+    radius: float
+    """Circle radius."""
+
+
+@dataclass(frozen=True, slots=True)
 class ArcInfo:
     """Properties of an arc, returned by :meth:`Sketch.get_arc`."""
 
@@ -211,6 +222,17 @@ class Sketch:
     def add_circle(self, center_id: PointId, radius: float) -> CircleId:
         """Add a circle. Returns circle ID."""
         return CircleId(self._solver.add_circle(center_id, radius))
+
+    def get_circle(self, circle_id: CircleId) -> CircleInfo:
+        """Get all properties of a circle.
+
+        Returns a :class:`CircleInfo` dataclass with ``center`` and
+        ``radius`` fields.
+        """
+        return CircleInfo(
+            center=self._solver.get_circle_center(circle_id),
+            radius=self._solver.get_circle_radius(circle_id),
+        )
 
     def add_arc_from_center(
         self,
