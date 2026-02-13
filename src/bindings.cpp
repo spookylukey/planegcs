@@ -89,6 +89,10 @@ PYBIND11_MODULE(_planegcs, m) {
              py::arg("x1"), py::arg("y1"), py::arg("x2"), py::arg("y2"),
              "Add a line with endpoint coordinates. Returns line ID.")
 
+        // Geometry: Line accessors
+        .def("get_line_p1", &SketchSolver::get_line_p1, py::arg("line_id"))
+        .def("get_line_p2", &SketchSolver::get_line_p2, py::arg("line_id"))
+
         // Geometry: Circles
         .def("add_circle", &SketchSolver::add_circle,
              py::arg("center_id"), py::arg("radius"),

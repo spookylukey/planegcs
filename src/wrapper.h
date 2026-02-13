@@ -86,6 +86,17 @@ public:
         return add_line(p1, p2);
     }
 
+    // ── Geometry: Line accessors ────────────────────────────────────
+    std::pair<double, double> get_line_p1(int line_id) const {
+        auto& l = lines_.at(line_id);
+        return {*l.p1.x, *l.p1.y};
+    }
+
+    std::pair<double, double> get_line_p2(int line_id) const {
+        auto& l = lines_.at(line_id);
+        return {*l.p2.x, *l.p2.y};
+    }
+
     // ── Geometry: Circles ────────────────────────────────────────────
     int add_circle(int center_id, double radius) {
         int rad_id = add_param(radius);

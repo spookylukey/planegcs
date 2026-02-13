@@ -33,6 +33,17 @@ ConstraintTag = NewType("ConstraintTag", int)
 
 
 @dataclass(frozen=True, slots=True)
+class LineInfo:
+    """Properties of a line, returned by :meth:`Sketch.get_line`."""
+
+    p1: tuple[float, float]
+    """(x, y) of the first endpoint."""
+
+    p2: tuple[float, float]
+    """(x, y) of the second endpoint."""
+
+
+@dataclass(frozen=True, slots=True)
 class CircleInfo:
     """Properties of a circle, returned by :meth:`Sketch.get_circle`."""
 
@@ -218,6 +229,16 @@ class Sketch:
     def add_line_xy(self, x1: float, y1: float, x2: float, y2: float) -> LineId:
         """Add a line with endpoint coordinates. Returns line ID."""
         return LineId(self._solver.add_line(x1, y1, x2, y2))
+
+    def get_line(self, line_id: LineId) -> LineInfo:
+        """Get all properties of a line.
+
+        Returns a :class:`LineInfo` dataclass with ``p1`` and ``p2`` fields.
+        """
+        return LineInfo(
+            p1=self._solver.get_line_p1(line_id),
+            p2=self._solver.get_line_p2(line_id),
+        )
 
     def add_circle(self, center_id: PointId, radius: float) -> CircleId:
         """Add a circle. Returns circle ID."""
