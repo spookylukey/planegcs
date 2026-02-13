@@ -78,6 +78,20 @@ class ArcInfo:
 
 
 @dataclass(frozen=True, slots=True)
+class EllipseInfo:
+    """Properties of an ellipse, returned by :meth:`Sketch.get_ellipse`."""
+
+    center: tuple[float, float]
+    """(x, y) of the ellipse center."""
+
+    focus1: tuple[float, float]
+    """(x, y) of the first focus."""
+
+    radmin: float
+    """Semi-minor axis radius."""
+
+
+@dataclass(frozen=True, slots=True)
 class Diagnosis:
     """Result of constraint system diagnosis.
 
@@ -309,6 +323,18 @@ class Sketch:
     def add_ellipse(self, center_id: PointId, focus1_id: PointId, radmin: float) -> EllipseId:
         """Add an ellipse. Returns ellipse ID."""
         return EllipseId(self._solver.add_ellipse(center_id, focus1_id, radmin))
+
+    def get_ellipse(self, ellipse_id: EllipseId) -> EllipseInfo:
+        """Get all properties of an ellipse.
+
+        Returns an :class:`EllipseInfo` dataclass with ``center``,
+        ``focus1``, and ``radmin`` fields.
+        """
+        return EllipseInfo(
+            center=self._solver.get_ellipse_center(ellipse_id),
+            focus1=self._solver.get_ellipse_focus1(ellipse_id),
+            radmin=self._solver.get_ellipse_radmin(ellipse_id),
+        )
 
     # ── Constraints ────────────────────────────────────────────────
 

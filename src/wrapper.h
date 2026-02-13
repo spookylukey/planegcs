@@ -232,6 +232,21 @@ public:
         return {*a.end.x, *a.end.y};
     }
 
+    // ── Geometry: Ellipse accessors ─────────────────────────────────
+    std::pair<double, double> get_ellipse_center(int ellipse_id) const {
+        auto& e = ellipses_.at(ellipse_id);
+        return {*e.center.x, *e.center.y};
+    }
+
+    std::pair<double, double> get_ellipse_focus1(int ellipse_id) const {
+        auto& e = ellipses_.at(ellipse_id);
+        return {*e.focus1.x, *e.focus1.y};
+    }
+
+    double get_ellipse_radmin(int ellipse_id) const {
+        return *ellipses_.at(ellipse_id).radmin;
+    }
+
     // ── Geometry: Ellipses ───────────────────────────────────────────
     int add_ellipse(int center_id, int focus1_id, double radmin) {
         int rm_id = add_param(radmin);
