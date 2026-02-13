@@ -483,30 +483,14 @@ class SketchSolver:
         """
         Constrain two circles to have equal radius.
         """
-    def get_arc_center(self, arc_id: typing.SupportsInt) -> tuple[float, float]:
-        """
-        Get the (x, y) of an arc's center.
-        """
-    def get_arc_end_angle(self, arc_id: typing.SupportsInt) -> float:
-        """
-        Get the end angle of an arc (radians).
-        """
-    def get_arc_end_point(self, arc_id: typing.SupportsInt) -> tuple[float, float]:
-        """
-        Get the (x, y) of an arc's end point.
-        """
-    def get_arc_radius(self, arc_id: typing.SupportsInt) -> float:
-        """
-        Get the radius of an arc.
-        """
-    def get_arc_start_angle(self, arc_id: typing.SupportsInt) -> float:
-        """
-        Get the start angle of an arc (radians).
-        """
-    def get_arc_start_point(self, arc_id: typing.SupportsInt) -> tuple[float, float]:
-        """
-        Get the (x, y) of an arc's start point.
-        """
+    def get_arc_center(self, arc_id: typing.SupportsInt) -> tuple[float, float]: ...
+    def get_arc_end_angle(self, arc_id: typing.SupportsInt) -> float: ...
+    def get_arc_end_point(self, arc_id: typing.SupportsInt) -> tuple[float, float]: ...
+    def get_arc_radius(self, arc_id: typing.SupportsInt) -> float: ...
+    def get_arc_start_angle(self, arc_id: typing.SupportsInt) -> float: ...
+    def get_arc_start_point(self, arc_id: typing.SupportsInt) -> tuple[float, float]: ...
+    def get_circle_center(self, circle_id: typing.SupportsInt) -> tuple[float, float]: ...
+    def get_circle_radius(self, circle_id: typing.SupportsInt) -> float: ...
     def get_param(self, param_id: typing.SupportsInt) -> float:
         """
         Get the current value of a parameter.
