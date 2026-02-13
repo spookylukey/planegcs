@@ -50,7 +50,7 @@ def test_arc_radius_changes_when_variable():
     status = s.solve()
     assert status == SolveStatus.Success
 
-    solved_radius = s.get_arc_radius(arc)
+    solved_radius = s.get_arc(arc).radius
 
     # The tangent arc at a right-angle corner with inset 2 must have r = 2
     assert abs(solved_radius - 2.0) < 1e-3, f"Expected radius ~2.0 but got {solved_radius}"
@@ -74,7 +74,7 @@ def test_arc_radius_fixed_stays_constant():
     status = s.solve()
     assert status == SolveStatus.Success
 
-    solved_radius = s.get_arc_radius(arc)
+    solved_radius = s.get_arc(arc).radius
     assert abs(solved_radius - initial_radius) < 1e-6, (
         f"Fixed radius should stay at {initial_radius} but got {solved_radius}"
     )
@@ -112,7 +112,7 @@ def test_arc_radius_adjusted_by_tangent_constraint():
     status = s.solve()
     assert status == SolveStatus.Success
 
-    solved_radius = s.get_arc_radius(arc)
+    solved_radius = s.get_arc(arc).radius
 
     # For a tangent arc from (5,0) to (0,5) tangent to y=0 at (5,0),
     # the center is at (5, r) and distance to (0,5) = r:

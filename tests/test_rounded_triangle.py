@@ -56,7 +56,7 @@ def test_arc_tangent_to_line():
     assert abs(s.get_point(p3)[1] - 5.0) < 1e-6
 
     # Radius should remain close to 5.0
-    assert abs(s.get_arc_radius(arc) - 5.0) < 1e-4
+    assert abs(s.get_arc(arc).radius - 5.0) < 1e-4
 
 
 def test_equilateral_triangle_rounded_corners():

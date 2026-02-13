@@ -103,25 +103,13 @@ PYBIND11_MODULE(_planegcs, m) {
              py::arg("start_id"), py::arg("end_id"), py::arg("radius_id"),
              "Add an arc from start/end points and a radius parameter. Automatically adds arc rules and coincident constraints. Returns arc ID.")
 
-        // Geometry: Arc accessors
-        .def("get_arc_center", &SketchSolver::get_arc_center,
-             py::arg("arc_id"),
-             "Get the (x, y) of an arc's center.")
-        .def("get_arc_radius", &SketchSolver::get_arc_radius,
-             py::arg("arc_id"),
-             "Get the radius of an arc.")
-        .def("get_arc_start_angle", &SketchSolver::get_arc_start_angle,
-             py::arg("arc_id"),
-             "Get the start angle of an arc (radians).")
-        .def("get_arc_end_angle", &SketchSolver::get_arc_end_angle,
-             py::arg("arc_id"),
-             "Get the end angle of an arc (radians).")
-        .def("get_arc_start_point", &SketchSolver::get_arc_start_point,
-             py::arg("arc_id"),
-             "Get the (x, y) of an arc's start point.")
-        .def("get_arc_end_point", &SketchSolver::get_arc_end_point,
-             py::arg("arc_id"),
-             "Get the (x, y) of an arc's end point.")
+        // Geometry: Arc accessors (used internally by Sketch.get_arc())
+        .def("get_arc_center", &SketchSolver::get_arc_center, py::arg("arc_id"))
+        .def("get_arc_radius", &SketchSolver::get_arc_radius, py::arg("arc_id"))
+        .def("get_arc_start_angle", &SketchSolver::get_arc_start_angle, py::arg("arc_id"))
+        .def("get_arc_end_angle", &SketchSolver::get_arc_end_angle, py::arg("arc_id"))
+        .def("get_arc_start_point", &SketchSolver::get_arc_start_point, py::arg("arc_id"))
+        .def("get_arc_end_point", &SketchSolver::get_arc_end_point, py::arg("arc_id"))
 
         // Geometry: Ellipses
         .def("add_ellipse", &SketchSolver::add_ellipse,

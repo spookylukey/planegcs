@@ -12,8 +12,7 @@
   - Added typed IDs (``PointId``, ``LineId``, etc. via ``NewType``) and
     convenience methods to the ``Sketch`` API.
   - Added ``add_arc_from_start_end`` and ``tangent_line_arc`` constraint.
-  - Added arc property getters: ``get_arc``, ``get_arc_center``,
-    ``get_arc_radius``, angle and endpoint accessors.
+  - Added ``get_arc`` property getter returning full ``ArcInfo``.
   - Added constraint-system diagnosis: degrees of freedom, conflicting
     and redundant constraint detection.
   - Added ``add_fixed_param`` convenience method.
