@@ -263,22 +263,6 @@ class Sketch:
             end_point=self._solver.get_arc_end_point(arc_id),
         )
 
-    def get_arc_center(self, arc_id: ArcId) -> tuple[float, float]:
-        """Get the (x, y) of an arc's center."""
-        return self._solver.get_arc_center(arc_id)
-
-    def get_arc_radius(self, arc_id: ArcId) -> float:
-        """Get the radius of an arc."""
-        return self._solver.get_arc_radius(arc_id)
-
-    def get_arc_start_angle(self, arc_id: ArcId) -> float:
-        """Get the start angle of an arc (radians)."""
-        return self._solver.get_arc_start_angle(arc_id)
-
-    def get_arc_end_angle(self, arc_id: ArcId) -> float:
-        """Get the end angle of an arc (radians)."""
-        return self._solver.get_arc_end_angle(arc_id)
-
     def add_ellipse(self, center_id: PointId, focus1_id: PointId, radmin: float) -> EllipseId:
         """Add an ellipse. Returns ellipse ID."""
         return EllipseId(self._solver.add_ellipse(center_id, focus1_id, radmin))
