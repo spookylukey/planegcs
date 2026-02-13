@@ -47,8 +47,8 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 # --- run tests and type checking --------------------------------------------
 
-info "Running tests …"
-uv run pytest -x -q \
+info "Running tests with coverage …"
+uv run pytest -x -q --cov --cov-fail-under=100 \
     || die "Tests failed — fix before releasing"
 
 info "Running ty type checker …"

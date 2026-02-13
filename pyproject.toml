@@ -41,6 +41,7 @@ dev = [
     "pybind11-stubgen>=2.5",
     "pre-commit>=4.3.0",
     "pytest>=8.0",
+    "pytest-cov>=7.0",
     "pyupgrade>=3.21.0",
     "ruff>=0.15.0",
     "sphinx>=7.0",
@@ -71,6 +72,14 @@ before-all = "vcpkg install eigen3:x64-windows boost-graph:x64-windows boost-mat
 
 [tool.cibuildwheel.windows.environment]
 CMAKE_PREFIX_PATH = "C:/vcpkg/installed/x64-windows"
+
+[tool.coverage.run]
+source = ["planegcs"]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+skip_covered = true
 
 [tool.ruff]
 target-version = "py312"
