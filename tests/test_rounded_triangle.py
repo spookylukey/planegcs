@@ -15,10 +15,8 @@ def _dist(a: tuple[float, float], b: tuple[float, float]) -> float:
 def test_arc_from_start_end_basic():
     """Basic test: arc from start/end points and radius."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
-    p2 = s.add_point(3, 0)
-    s.fix_point(p1, 0, 0)
-    s.fix_point(p2, 3, 0)
+    p1 = s.add_fixed_point(0, 0)
+    p2 = s.add_fixed_point(3, 0)
 
     rad = s.add_param(3.0)
     s.add_arc_from_start_end(p1, p2, rad)
@@ -35,16 +33,13 @@ def test_arc_from_start_end_basic():
 def test_arc_tangent_to_line():
     """Arc tangent to a line at the shared endpoint."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
-    p2 = s.add_point(5, 0)
+    p1 = s.add_fixed_point(0, 0)
+    p2 = s.add_fixed_point(5, 0)
     # p3 at (10, 5) lies on a circle of radius 5 centered at (5, 5),
     # which is the center when the arc is tangent to the horizontal line at p2.
-    p3 = s.add_point(10, 5)
+    p3 = s.add_fixed_point(10, 5)
 
     line = s.add_line(p1, p2)
-    s.fix_point(p1, 0, 0)
-    s.fix_point(p2, 5, 0)
-    s.fix_point(p3, 10, 5)
     s.horizontal(line)
 
     rad = s.add_param(5.0)
@@ -91,12 +86,12 @@ def test_equilateral_triangle_rounded_corners():
     s = Sketch()
 
     # Six tangent-point vertices
-    p_bs = s.add_point(*bs)
+    p_bs = s.add_fixed_point(*bs)
     p_be = s.add_point(*be)
-    p_rs = s.add_point(*rs)
+    p_rs = s.add_fixed_point(*rs)
     p_re = s.add_point(*re)
     p_ls = s.add_point(*ls)
-    p_le = s.add_point(*le)
+    p_le = s.add_fixed_point(*le)
 
     # Three straight edges
     line_b = s.add_line(p_bs, p_be)
@@ -122,11 +117,8 @@ def test_equilateral_triangle_rounded_corners():
     s.equal_length(line_r, line_l)
 
     # Position & orient
-    # fix_point for p_bs, p_le, and p_rs pins the shape and resolves
+    # add_fixed_point for p_bs, p_le, and p_rs pins the shape and resolves
     # the arc center ambiguities (each arc from start/end adds 1 DOF)
-    s.fix_point(p_bs, *bs)
-    s.fix_point(p_le, *le)
-    s.fix_point(p_rs, *rs)
     s.horizontal(line_b)
     s.set_p2p_distance(p_bs, p_be, side - 2 * t)
 

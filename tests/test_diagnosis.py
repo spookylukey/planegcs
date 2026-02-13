@@ -6,12 +6,9 @@ from planegcs import Sketch, SolveStatus
 def test_fully_constrained():
     """A fully constrained system has dof=0 and no conflicts."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
-    p2 = s.add_point(5, 0)
+    p1 = s.add_fixed_point(0, 0)
+    p2 = s.add_fixed_point(5, 0)
     s.add_line(p1, p2)
-
-    s.fix_point(p1, 0, 0)
-    s.fix_point(p2, 5, 0)
 
     diag = s.diagnose()
     assert diag.dof == 0
@@ -25,11 +22,10 @@ def test_fully_constrained():
 def test_under_constrained():
     """A system with free degrees of freedom."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(5, 0)
     s.add_line(p1, p2)
 
-    s.fix_point(p1, 0, 0)
     # p2 is free -> 2 dof remaining
 
     diag = s.diagnose()
@@ -41,12 +37,10 @@ def test_under_constrained():
 def test_over_constrained():
     """A system with conflicting constraints."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
-    p2 = s.add_point(5, 0)
+    p1 = s.add_fixed_point(0, 0)
+    p2 = s.add_fixed_point(5, 0)
     s.add_line(p1, p2)
 
-    s.fix_point(p1, 0, 0)
-    s.fix_point(p2, 5, 0)
     # Now also constrain distance to something different
     s.set_p2p_distance(p1, p2, 10.0)
 
@@ -58,12 +52,10 @@ def test_over_constrained():
 def test_redundant_constraint():
     """A system with redundant constraints."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
-    p2 = s.add_point(5, 0)
+    p1 = s.add_fixed_point(0, 0)
+    p2 = s.add_fixed_point(5, 0)
     s.add_line(p1, p2)
 
-    s.fix_point(p1, 0, 0)
-    s.fix_point(p2, 5, 0)
     # Adding a consistent distance constraint (redundant with fixed points)
     s.set_p2p_distance(p1, p2, 5.0)
 
@@ -75,9 +67,8 @@ def test_redundant_constraint():
 def test_dof_shorthand():
     """Sketch.dof() returns same as diagnose().dof."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    s.add_fixed_point(0, 0)
     _p2 = s.add_point(5, 0)
-    s.fix_point(p1, 0, 0)
 
     assert s.dof() == s.diagnose().dof
 
@@ -85,7 +76,7 @@ def test_dof_shorthand():
 def test_dof_triangle_example():
     """Equilateral triangle from README is fully constrained."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(5, 0)
     p3 = s.add_point(2.5, 4)
 
@@ -95,7 +86,6 @@ def test_dof_triangle_example():
 
     s.equal_length(l1, l2)
     s.equal_length(l2, l3)
-    s.fix_point(p1, 0, 0)
     s.horizontal(l1)
     s.set_p2p_distance(p1, p2, 5.0)
 

@@ -113,7 +113,7 @@ class Sketch:
     Example::
 
         s = Sketch()
-        p1 = s.add_point(0, 0)
+        p1 = s.add_fixed_point(0, 0)
         p2 = s.add_point(5, 0)
         p3 = s.add_point(2.5, 4)
         l1 = s.add_line(p1, p2)
@@ -121,7 +121,6 @@ class Sketch:
         l3 = s.add_line(p3, p1)
         s.equal_length(l1, l2)
         s.equal_length(l2, l3)
-        s.fix_point(p1, 0, 0)
         s.horizontal(l1)
         s.set_p2p_distance(p1, p2, 5.0)
         status = s.solve()

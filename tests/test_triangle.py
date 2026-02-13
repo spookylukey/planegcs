@@ -14,7 +14,7 @@ def test_equilateral_triangle():
     s = Sketch()
 
     # Three points (initial guess)
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(5, 0)
     p3 = s.add_point(2.5, 4)
 
@@ -28,7 +28,6 @@ def test_equilateral_triangle():
     s.equal_length(l2, l3)
 
     # Fix p1 at origin, make base horizontal
-    s.fix_point(p1, 0, 0)
     s.horizontal(l1)
 
     # Side length = 5
@@ -66,16 +65,13 @@ def test_right_triangle():
     """Solve for a right triangle with legs 3 and 4."""
     s = Sketch()
 
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(3, 0)
     p3 = s.add_point(0, 4)
 
     l_base = s.add_line(p1, p2)
     l_height = s.add_line(p1, p3)
     s.add_line(p2, p3)  # hypotenuse
-
-    # Fix p1 at origin
-    s.fix_point(p1, 0, 0)
 
     # Base horizontal, height vertical
     s.horizontal(l_base)
@@ -109,7 +105,7 @@ def test_isoceles_triangle():
     """Solve for an isosceles triangle."""
     s = Sketch()
 
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(6, 0)
     p3 = s.add_point(3, 5)
 
@@ -117,7 +113,6 @@ def test_isoceles_triangle():
     l2 = s.add_line(p1, p3)  # left side
     l3 = s.add_line(p2, p3)  # right side
 
-    s.fix_point(p1, 0, 0)
     s.horizontal(l1)
 
     # Two sides equal

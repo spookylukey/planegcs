@@ -12,8 +12,7 @@ def _dist(p1, p2):
 def test_point_on_circle():
     """A point constrained on a circle lies at the right distance from center."""
     s = Sketch()
-    center = s.add_point(0, 0)
-    s.fix_point(center, 0, 0)
+    center = s.add_fixed_point(0, 0)
 
     c = s.add_circle(center, 5.0)
     r_param = s.add_param(5.0)
@@ -34,8 +33,7 @@ def test_point_on_circle():
 def test_tangent_line_circle():
     """A line tangent to a circle touches at exactly one point."""
     s = Sketch()
-    center = s.add_point(0, 0)
-    s.fix_point(center, 0, 0)
+    center = s.add_fixed_point(0, 0)
     c = s.add_circle(center, 3.0)
 
     # Horizontal line at y=3 (tangent to circle of radius 3)
@@ -65,8 +63,7 @@ def test_tangent_line_circle():
 def test_concentric_circles_equal_radius():
     """Two concentric circles with equal radius constraint."""
     s = Sketch()
-    center = s.add_point(0, 0)
-    s.fix_point(center, 0, 0)
+    center = s.add_fixed_point(0, 0)
 
     c1 = s.add_circle(center, 3.0)
     c2 = s.add_circle(center, 7.0)  # different initial radius
@@ -87,9 +84,8 @@ def test_concentric_circles_equal_radius():
 def test_two_tangent_circles():
     """Two circles tangent to each other."""
     s = Sketch()
-    c1_center = s.add_point(0, 0)
+    c1_center = s.add_fixed_point(0, 0)
     c2_center = s.add_point(8, 0)
-    s.fix_point(c1_center, 0, 0)
     s.horizontal_points(c1_center, c2_center)
 
     c1 = s.add_circle(c1_center, 3.0)

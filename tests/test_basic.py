@@ -46,10 +46,9 @@ def test_sketch_fix_point():
 def test_horizontal_line():
     """Horizontal constraint makes y-coords equal."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(5, 3)
     line = s.add_line(p1, p2)
-    s.fix_point(p1, 0, 0)
     s.horizontal(line)
     status = s.solve()
     assert status == SolveStatus.Success
@@ -61,10 +60,9 @@ def test_horizontal_line():
 def test_vertical_line():
     """Vertical constraint makes x-coords equal."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(3, 5)
     line = s.add_line(p1, p2)
-    s.fix_point(p1, 0, 0)
     s.vertical(line)
     status = s.solve()
     assert status == SolveStatus.Success
@@ -91,10 +89,9 @@ def test_coincident():
 def test_point_on_line():
     """Point constrained to lie on a line."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(10, 0)
     line = s.add_line(p1, p2)
-    s.fix_point(p1, 0, 0)
     s.horizontal(line)
 
     p3 = s.add_point(5, 5)  # starts off-line
@@ -108,9 +105,8 @@ def test_point_on_line():
 def test_distance_constraint():
     """Point-to-point distance."""
     s = Sketch()
-    p1 = s.add_point(0, 0)
+    p1 = s.add_fixed_point(0, 0)
     p2 = s.add_point(1, 0)
-    s.fix_point(p1, 0, 0)
     s.horizontal_points(p1, p2)
 
     d = s.add_param(7.0)
@@ -201,9 +197,8 @@ def test_algorithms():
     """Solving works with different algorithms."""
     for alg in [Algorithm.DogLeg, Algorithm.BFGS, Algorithm.LevenbergMarquardt]:
         s = Sketch()
-        p1 = s.add_point(0, 0)
+        s.add_fixed_point(0, 0)
         p2 = s.add_point(5, 3)
-        s.fix_point(p1, 0, 0)
         s.fix_point(p2, 3, 4)
         status = s.solve(alg)
         assert status == SolveStatus.Success

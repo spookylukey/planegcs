@@ -52,7 +52,7 @@ tangent to its two adjacent line segments.
     s = Sketch()
 
     # Six tangent-point vertices
-    p_bs = s.add_point(*bs)
+    p_bs = s.add_fixed_point(*bs)                    # anchor one point
     p_be = s.add_point(*be)
     p_rs = s.add_point(*rs)
     p_re = s.add_point(*re)
@@ -86,7 +86,6 @@ tangent to its two adjacent line segments.
     s.equal_length(line_r, line_l)
 
     # ── Positioning and sizing ──────────────────────────────────
-    s.fix_point(p_bs, *bs)                          # anchor one point
     s.horizontal(line_b)                             # bottom is horizontal
     s.set_p2p_distance(p_bs, p_be, side - 2 * t)    # set edge length
 

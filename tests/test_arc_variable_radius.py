@@ -27,18 +27,14 @@ def test_arc_radius_changes_when_variable():
     s = Sketch()
 
     # Horizontal segment from origin to (2, 0)
-    ph1 = s.add_point(0, 0)
-    ph2 = s.add_point(2, 0)
-    s.fix_point(ph1, 0, 0)
-    s.fix_point(ph2, 2, 0)
+    ph1 = s.add_fixed_point(0, 0)
+    ph2 = s.add_fixed_point(2, 0)
     h_line = s.add_line(ph1, ph2)
     s.horizontal(h_line)
 
     # Vertical segment from (4, 2) to (4, 5)
-    pv1 = s.add_point(4, 2)
-    pv2 = s.add_point(4, 5)
-    s.fix_point(pv1, 4, 2)
-    s.fix_point(pv2, 4, 5)
+    pv1 = s.add_fixed_point(4, 2)
+    pv2 = s.add_fixed_point(4, 5)
     v_line = s.add_line(pv1, pv2)
     s.vertical(v_line)
 
@@ -67,10 +63,8 @@ def test_arc_radius_fixed_stays_constant():
     """Contrast: when fixed=True (default), the radius does NOT change."""
     s = Sketch()
 
-    p1 = s.add_point(0, 0)
-    p2 = s.add_point(6, 0)
-    s.fix_point(p1, 0, 0)
-    s.fix_point(p2, 6, 0)
+    p1 = s.add_fixed_point(0, 0)
+    p2 = s.add_fixed_point(6, 0)
 
     initial_radius = 10.0
     rad = s.add_param(initial_radius, fixed=True)  # fixed!
@@ -96,18 +90,14 @@ def test_arc_radius_adjusted_by_tangent_constraint():
     s = Sketch()
 
     # Horizontal line
-    pl1 = s.add_point(-5, 0)
-    pl2 = s.add_point(5, 0)
-    s.fix_point(pl1, -5, 0)
-    s.fix_point(pl2, 5, 0)
+    pl1 = s.add_fixed_point(-5, 0)
+    pl2 = s.add_fixed_point(5, 0)
     line = s.add_line(pl1, pl2)
     s.horizontal(line)
 
     # Arc from (5,0) to (0,5)
-    pa1 = s.add_point(5, 0)
-    pa2 = s.add_point(0, 5)
-    s.fix_point(pa1, 5, 0)
-    s.fix_point(pa2, 0, 5)
+    pa1 = s.add_fixed_point(5, 0)
+    pa2 = s.add_fixed_point(0, 5)
 
     initial_radius = 20.0
     rad = s.add_param(initial_radius, fixed=False)
