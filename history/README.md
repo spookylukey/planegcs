@@ -8,7 +8,7 @@ For the record, the process looked roughly as follows:
 
 Using [exe.dev](https://exe.dev/), I started a fresh VM.
 
-I then promped the Shelley coding agent like this:
+I then prompted the Shelley coding agent like this:
 
 > Make a checkout of the FreeCAD source code from https://github.com/FreeCAD/Fr
 
@@ -40,5 +40,10 @@ After the response we settled on pybind11 and I prompted it to continue in a new
 >
 > Include some test files that will demonstrate that the wrapper actually works. The end goal is a Python package that I will be able to upload to PyPI and install. If relevant, choose modern tools like `uv` for package management. Create docs using Sphinx. Create a plan in WRAPPER_PLAN.md, use it to iterate until done.
 
-The resulting plans are in `PLAN_02a.md` and `PLAN_02b.md` (got a bit confused).
+The resulting plans are in `PLAN_02a.md` and `PLAN_02b.md` (it got a bit confused).
 This also completed successfully, with the work being done in a fresh repo (this one).
+
+Most subsequent work was completed with similar use of the same coding agent, often with more specific guidance as I honed and tweaked the APIs provided.
+
+I have put my own name and email as the author of all commits, with "Shelley" as co-author, not to claim I personally wrote the code, but because I believe in taking responsibility for code I have produced and released, no matter the degree to which I used coding assistants of any kind.
+
