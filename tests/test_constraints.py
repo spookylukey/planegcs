@@ -195,7 +195,7 @@ def test_p2l_distance():
 
     # Also fix x of pt
     px = s.add_param(5.0)
-    s.solver.coordinate_x(pt, px)
+    s.coordinate_x(pt, px)
 
     status = s.solve()
     assert status == SolveStatus.Success
@@ -244,3 +244,39 @@ def test_horizontal_vertical_points():
     pt3 = s.get_point(p3)
     assert abs(pt2[1]) < 1e-6  # same y as p1
     assert abs(pt3[0]) < 1e-6  # same x as p1
+
+
+def test_coordinate_x():
+    """Fix just the x-coordinate of a point."""
+    s = Sketch()
+    p = s.add_point(3, 7)
+    x_val = s.add_param(5.0)
+    tag = s.coordinate_x(p, x_val)
+    assert tag > 0
+
+    # Fix y too so the system is fully constrained.
+    y_val = s.add_param(7.0)
+    s.coordinate_y(p, y_val)
+
+    status = s.solve()
+    assert status == SolveStatus.Success
+    assert abs(s.get_point(p)[0] - 5.0) < 1e-9
+    assert abs(s.get_point(p)[1] - 7.0) < 1e-9
+
+
+def test_coordinate_y():
+    """Fix just the y-coordinate of a point."""
+    s = Sketch()
+    p = s.add_point(3, 7)
+    y_val = s.add_param(2.0)
+    tag = s.coordinate_y(p, y_val)
+    assert tag > 0
+
+    # Fix x too so the system is fully constrained.
+    x_val = s.add_param(3.0)
+    s.coordinate_x(p, x_val)
+
+    status = s.solve()
+    assert status == SolveStatus.Success
+    assert abs(s.get_point(p)[0] - 3.0) < 1e-9
+    assert abs(s.get_point(p)[1] - 2.0) < 1e-9

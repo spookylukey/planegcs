@@ -27,7 +27,7 @@ def test_difference_horizontal_distance():
 
     # Also pin the y-coordinate of p2 so the system is fully constrained.
     y_val = s.add_param(5.0, fixed=True)
-    s.solver.coordinate_y(p2, y_val)
+    s.coordinate_y(p2, y_val)
 
     status = s.solve()
     assert status == SolveStatus.Success

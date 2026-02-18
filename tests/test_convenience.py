@@ -74,7 +74,7 @@ def test_set_p2l_distance():
 
     # Also fix x of pt via a param
     px = s.add_param(5.0)
-    s.solver.coordinate_x(pt, px)
+    s.coordinate_x(pt, px)
 
     status = s.solve()
     assert status == SolveStatus.Success

@@ -357,15 +357,31 @@ class Sketch:
         """Make two points coincident. Returns constraint tag."""
         return ConstraintTag(self._solver.coincident(pt1_id, pt2_id, driving))
 
+    def coordinate_x(
+        self, pt_id: PointId, x_id: ParamId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Fix the X coordinate of a point to a parameter value."""
+        return ConstraintTag(self._solver.coordinate_x(pt_id, x_id, driving))
+
+    def coordinate_y(
+        self, pt_id: PointId, y_id: ParamId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Fix the Y coordinate of a point to a parameter value."""
+        return ConstraintTag(self._solver.coordinate_y(pt_id, y_id, driving))
+
     def fix_point(
         self, pt_id: PointId, x: float, y: float, *, driving: bool = True
     ) -> tuple[ConstraintTag, ConstraintTag]:
-        """Fix a point to (x, y). Returns (tag_x, tag_y)."""
+        """Fix a point to (x, y). Returns (tag_x, tag_y).
+
+        Convenience method that creates parameters internally and calls
+        :meth:`coordinate_x` and :meth:`coordinate_y`.
+        """
         px = self.add_param(x, fixed=True)
         py = self.add_param(y, fixed=True)
-        tx = ConstraintTag(self._solver.coordinate_x(pt_id, px, driving))
-        ty = ConstraintTag(self._solver.coordinate_y(pt_id, py, driving))
-        return tx, ty
+        return self.coordinate_x(pt_id, px, driving=driving), self.coordinate_y(
+            pt_id, py, driving=driving
+        )
 
     def horizontal(self, line_id: LineId, *, driving: bool = True) -> ConstraintTag:
         """Constrain a line to be horizontal."""
