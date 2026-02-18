@@ -456,6 +456,12 @@ class Sketch:
         """Constrain point on line."""
         return ConstraintTag(self._solver.point_on_line(pt_id, line_id, driving))
 
+    def point_on_perp_bisector(
+        self, pt_id: PointId, line_id: LineId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain point to lie on the perpendicular bisector of a line."""
+        return ConstraintTag(self._solver.point_on_perp_bisector(pt_id, line_id, driving))
+
     def parallel(self, l1_id: LineId, l2_id: LineId, *, driving: bool = True) -> ConstraintTag:
         """Constrain lines to be parallel."""
         return ConstraintTag(self._solver.parallel(l1_id, l2_id, driving))
