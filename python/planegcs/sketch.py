@@ -894,3 +894,11 @@ class Sketch:
     def clear(self) -> None:
         """Clear all geometry, constraints and parameters."""
         self._solver.clear()
+
+    def clear_by_tag(self, tag: ConstraintTag) -> None:
+        """Remove all constraints with the given tag."""
+        self._solver.clear_by_tag(tag)
+
+    def constraint_error(self, tag: ConstraintTag) -> float:
+        """Calculate the RMS error of all constraints with the given tag."""
+        return self._solver.constraint_error(tag)
