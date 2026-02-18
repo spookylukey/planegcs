@@ -64,6 +64,16 @@ public:
         return id;
     }
 
+    int add_point_from_params(int px_id, int py_id) {
+        int id = next_geo_id_++;
+        GCS::Point p;
+        p.x = param_ptr(px_id);
+        p.y = param_ptr(py_id);
+        points_[id] = p;
+        point_param_ids_[id] = {px_id, py_id};
+        return id;
+    }
+
     std::pair<double, double> get_point(int id) const {
         auto& p = points_.at(id);
         return {*p.x, *p.y};

@@ -78,6 +78,9 @@ PYBIND11_MODULE(_planegcs, m) {
         // Geometry: Points
         .def("add_point", &SketchSolver::add_point, py::arg("x"), py::arg("y"),
              "Add a point. Returns point ID.")
+        .def("add_point_from_params", &SketchSolver::add_point_from_params,
+             py::arg("px_id"), py::arg("py_id"),
+             "Add a point from existing parameter IDs for x and y. Returns point ID.")
         .def("get_point", &SketchSolver::get_point, py::arg("point_id"),
              "Get the (x, y) of a point.")
         .def("get_point_param_ids", &SketchSolver::get_point_param_ids, py::arg("point_id"),

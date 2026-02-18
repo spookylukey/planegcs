@@ -369,6 +369,14 @@ class SketchSolver:
         """
         Add a point. Returns point ID.
         """
+    def add_point_from_params(
+        self,
+        px_id: typing.SupportsInt | typing.SupportsIndex,
+        py_id: typing.SupportsInt | typing.SupportsIndex,
+    ) -> int:
+        """
+        Add a point from existing parameter IDs for x and y. Returns point ID.
+        """
     def arc_diameter(
         self,
         arc_id: typing.SupportsInt | typing.SupportsIndex,

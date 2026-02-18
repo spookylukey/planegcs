@@ -217,6 +217,17 @@ class Sketch:
         """Add a point at (x, y). Returns point ID."""
         return PointId(self._solver.add_point(x, y))
 
+    def add_point_from_params(self, px_id: ParamId, py_id: ParamId) -> PointId:
+        """Add a point from existing parameter IDs for x and y.
+
+        Unlike :meth:`add_point`, which creates fresh parameters internally,
+        this lets you supply parameters you already control — useful when
+        you need to apply parameter-level constraints (e.g.
+        :meth:`difference`, :meth:`equal`) to the coordinates, or when
+        you want to share a parameter between multiple points.
+        """
+        return PointId(self._solver.add_point_from_params(px_id, py_id))
+
     def get_point(self, point_id: PointId) -> PointInfo:
         """Get current (x, y) of a point."""
         return self._solver.get_point(point_id)
