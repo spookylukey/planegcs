@@ -528,6 +528,17 @@ class Sketch:
         """Add arc rules (start/end points computed from center, radius, angles)."""
         return ConstraintTag(self._solver.arc_rules(arc_id, driving))
 
+    def proportional(
+        self,
+        param1_id: ParamId,
+        param2_id: ParamId,
+        ratio: float,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain param1 = ratio * param2."""
+        return ConstraintTag(self._solver.proportional(param1_id, param2_id, ratio, driving))
+
     def difference(
         self,
         param1_id: ParamId,
