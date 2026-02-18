@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from typing import NewType
 
-from planegcs._planegcs import Algorithm, SketchSolver, SolveStatus
+from planegcs._planegcs import Algorithm, InternalAlignmentType, SketchSolver, SolveStatus
 
 # ── Typed IDs ──────────────────────────────────────────────────────
 # These are all ints at runtime, but static type checkers will treat
@@ -814,6 +814,25 @@ class Sketch:
         All three arguments are parameter IDs (from :meth:`add_param`).
         """
         return ConstraintTag(self._solver.difference(param1_id, param2_id, diff_id, driving))
+
+    def internal_alignment_point2ellipse(
+        self,
+        ellipse_id: EllipseId,
+        pt_id: PointId,
+        alignment_type: InternalAlignmentType,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Internal alignment: constrain a point relative to an ellipse.
+
+        The *alignment_type* specifies which feature of the ellipse the
+        point is aligned to (e.g. major axis endpoint, focus, etc.).
+        """
+        return ConstraintTag(
+            self._solver.internal_alignment_point2ellipse(
+                ellipse_id, pt_id, alignment_type, driving
+            )
+        )
 
     def midpoint_on_line(
         self, l1_id: LineId, l2_id: LineId, *, driving: bool = True
