@@ -528,6 +528,20 @@ class Sketch:
         """Add arc rules (start/end points computed from center, radius, angles)."""
         return ConstraintTag(self._solver.arc_rules(arc_id, driving))
 
+    def difference(
+        self,
+        param1_id: ParamId,
+        param2_id: ParamId,
+        diff_id: ParamId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain param1 - param2 = diff.
+
+        All three arguments are parameter IDs (from :meth:`add_param`).
+        """
+        return ConstraintTag(self._solver.difference(param1_id, param2_id, diff_id, driving))
+
     def midpoint_on_line(
         self, l1_id: LineId, l2_id: LineId, *, driving: bool = True
     ) -> ConstraintTag:
