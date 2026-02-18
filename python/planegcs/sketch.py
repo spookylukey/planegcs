@@ -399,6 +399,36 @@ class Sketch:
         d = self.add_param(distance, fixed=True)
         return self.p2p_distance(pt1_id, pt2_id, d, driving=driving)
 
+    def p2p_angle(
+        self,
+        pt1_id: PointId,
+        pt2_id: PointId,
+        angle_id: ParamId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain the angle of the line from pt1 to pt2.
+
+        For a simpler API that takes a float directly, see :meth:`set_p2p_angle`.
+        """
+        return ConstraintTag(self._solver.p2p_angle(pt1_id, pt2_id, angle_id, driving))
+
+    def set_p2p_angle(
+        self,
+        pt1_id: PointId,
+        pt2_id: PointId,
+        angle: float,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain the angle of the line from pt1 to pt2 to a value (radians).
+
+        Convenience method that creates the parameter internally.
+        To use an explicit parameter, use :meth:`p2p_angle` with :meth:`add_param`.
+        """
+        a = self.add_param(angle, fixed=True)
+        return self.p2p_angle(pt1_id, pt2_id, a, driving=driving)
+
     def p2l_distance(
         self, pt_id: PointId, line_id: LineId, distance_id: ParamId, *, driving: bool = True
     ) -> ConstraintTag:
