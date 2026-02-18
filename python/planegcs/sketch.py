@@ -767,6 +767,25 @@ class Sketch:
         d = self.add_param(distance, fixed=True)
         return self.c2l_distance(circle_id, line_id, d, driving=driving)
 
+    def arc_length(
+        self, arc_id: ArcId, length_id: ParamId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain arc length using a parameter.
+
+        For a simpler API that takes a float directly, see :meth:`set_arc_length`.
+        """
+        return ConstraintTag(self._solver.arc_length(arc_id, length_id, driving))
+
+    def set_arc_length(
+        self, arc_id: ArcId, length: float, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain arc length to a value.
+
+        Convenience method that creates the parameter internally.
+        """
+        p = self.add_param(length, fixed=True)
+        return self.arc_length(arc_id, p, driving=driving)
+
     def arc_rules(self, arc_id: ArcId, *, driving: bool = True) -> ConstraintTag:
         """Add arc rules (start/end points computed from center, radius, angles)."""
         return ConstraintTag(self._solver.arc_rules(arc_id, driving))
