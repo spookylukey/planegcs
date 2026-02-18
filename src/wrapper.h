@@ -69,6 +69,10 @@ public:
         return {*p.x, *p.y};
     }
 
+    std::pair<int, int> get_point_param_ids(int point_id) const {
+        return point_param_ids_.at(point_id);
+    }
+
     // ── Geometry: Lines ──────────────────────────────────────────────
     int add_line(int p1_id, int p2_id) {
         int id = next_geo_id_++;

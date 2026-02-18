@@ -80,6 +80,8 @@ PYBIND11_MODULE(_planegcs, m) {
              "Add a point. Returns point ID.")
         .def("get_point", &SketchSolver::get_point, py::arg("point_id"),
              "Get the (x, y) of a point.")
+        .def("get_point_param_ids", &SketchSolver::get_point_param_ids, py::arg("point_id"),
+             "Get the (x_param_id, y_param_id) for a point.")
 
         // Geometry: Lines
         .def("add_line", py::overload_cast<int, int>(&SketchSolver::add_line),

@@ -221,6 +221,16 @@ class Sketch:
         """Get current (x, y) of a point."""
         return self._solver.get_point(point_id)
 
+    def get_point_param_ids(self, point_id: PointId) -> tuple[ParamId, ParamId]:
+        """Get the (x_param_id, y_param_id) for a point.
+
+        Useful when you need to apply parameter-level constraints
+        (e.g. :meth:`difference`, :meth:`equal`, :meth:`proportional`)
+        to individual coordinates of a point.
+        """
+        px, py = self._solver.get_point_param_ids(point_id)
+        return ParamId(px), ParamId(py)
+
     def add_fixed_point(self, x: float, y: float, *, driving: bool = True) -> PointId:
         """Add a point and fix it at (x, y) in one step.
 
@@ -809,9 +819,11 @@ class Sketch:
         *,
         driving: bool = True,
     ) -> ConstraintTag:
-        """Constrain param1 - param2 = diff.
+        """Constrain param2 - param1 = diff.
 
         All three arguments are parameter IDs (from :meth:`add_param`).
+        Use :meth:`get_point_param_ids` to obtain the x/y parameter
+        IDs for a point.
         """
         return ConstraintTag(self._solver.difference(param1_id, param2_id, diff_id, driving))
 

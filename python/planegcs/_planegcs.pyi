@@ -64,11 +64,11 @@ class Algorithm:
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
     def __index__(self) -> int: ...
-    def __init__(self, value: typing.SupportsInt) -> None: ...
+    def __init__(self, value: typing.SupportsInt | typing.SupportsIndex) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self, other: typing.Any) -> bool: ...
     def __repr__(self) -> str: ...
-    def __setstate__(self, state: typing.SupportsInt) -> None: ...
+    def __setstate__(self, state: typing.SupportsInt | typing.SupportsIndex) -> None: ...
     def __str__(self) -> str: ...
     @property
     def name(self) -> str: ...
@@ -96,11 +96,11 @@ class DebugMode:
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
     def __index__(self) -> int: ...
-    def __init__(self, value: typing.SupportsInt) -> None: ...
+    def __init__(self, value: typing.SupportsInt | typing.SupportsIndex) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self, other: typing.Any) -> bool: ...
     def __repr__(self) -> str: ...
-    def __setstate__(self, state: typing.SupportsInt) -> None: ...
+    def __setstate__(self, state: typing.SupportsInt | typing.SupportsIndex) -> None: ...
     def __str__(self) -> str: ...
     @property
     def name(self) -> str: ...
@@ -231,11 +231,11 @@ class InternalAlignmentType:
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
     def __index__(self) -> int: ...
-    def __init__(self, value: typing.SupportsInt) -> None: ...
+    def __init__(self, value: typing.SupportsInt | typing.SupportsIndex) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self, other: typing.Any) -> bool: ...
     def __repr__(self) -> str: ...
-    def __setstate__(self, state: typing.SupportsInt) -> None: ...
+    def __setstate__(self, state: typing.SupportsInt | typing.SupportsIndex) -> None: ...
     def __str__(self) -> str: ...
     @property
     def name(self) -> str: ...
@@ -246,138 +246,167 @@ class SketchSolver:
     def __init__(self) -> None: ...
     def add_arc_from_center(
         self,
-        center_id: typing.SupportsInt,
-        radius: typing.SupportsFloat,
-        start_angle: typing.SupportsFloat,
-        end_angle: typing.SupportsFloat,
+        center_id: typing.SupportsInt | typing.SupportsIndex,
+        radius: typing.SupportsFloat | typing.SupportsIndex,
+        start_angle: typing.SupportsFloat | typing.SupportsIndex,
+        end_angle: typing.SupportsFloat | typing.SupportsIndex,
     ) -> int:
         """
         Add an arc from center point, radius and angles. Returns arc ID.
         """
     def add_arc_from_start_end(
         self,
-        start_id: typing.SupportsInt,
-        end_id: typing.SupportsInt,
-        radius_id: typing.SupportsInt,
+        start_id: typing.SupportsInt | typing.SupportsIndex,
+        end_id: typing.SupportsInt | typing.SupportsIndex,
+        radius_id: typing.SupportsInt | typing.SupportsIndex,
     ) -> int:
         """
         Add an arc from start/end points and a radius parameter. Automatically adds arc rules and coincident constraints. Returns arc ID.
         """
     def add_arc_of_ellipse(
         self,
-        center_id: typing.SupportsInt,
-        focus1_id: typing.SupportsInt,
-        radmin: typing.SupportsFloat,
-        start_angle: typing.SupportsFloat,
-        end_angle: typing.SupportsFloat,
-        start_id: typing.SupportsInt,
-        end_id: typing.SupportsInt,
+        center_id: typing.SupportsInt | typing.SupportsIndex,
+        focus1_id: typing.SupportsInt | typing.SupportsIndex,
+        radmin: typing.SupportsFloat | typing.SupportsIndex,
+        start_angle: typing.SupportsFloat | typing.SupportsIndex,
+        end_angle: typing.SupportsFloat | typing.SupportsIndex,
+        start_id: typing.SupportsInt | typing.SupportsIndex,
+        end_id: typing.SupportsInt | typing.SupportsIndex,
     ) -> int:
         """
         Add an arc of ellipse. Returns ID.
         """
     def add_arc_of_hyperbola(
         self,
-        center_id: typing.SupportsInt,
-        focus1_id: typing.SupportsInt,
-        radmin: typing.SupportsFloat,
-        start_angle: typing.SupportsFloat,
-        end_angle: typing.SupportsFloat,
-        start_id: typing.SupportsInt,
-        end_id: typing.SupportsInt,
+        center_id: typing.SupportsInt | typing.SupportsIndex,
+        focus1_id: typing.SupportsInt | typing.SupportsIndex,
+        radmin: typing.SupportsFloat | typing.SupportsIndex,
+        start_angle: typing.SupportsFloat | typing.SupportsIndex,
+        end_angle: typing.SupportsFloat | typing.SupportsIndex,
+        start_id: typing.SupportsInt | typing.SupportsIndex,
+        end_id: typing.SupportsInt | typing.SupportsIndex,
     ) -> int:
         """
         Add an arc of hyperbola. Returns ID.
         """
     def add_arc_of_parabola(
         self,
-        vertex_id: typing.SupportsInt,
-        focus1_id: typing.SupportsInt,
-        start_angle: typing.SupportsFloat,
-        end_angle: typing.SupportsFloat,
-        start_id: typing.SupportsInt,
-        end_id: typing.SupportsInt,
+        vertex_id: typing.SupportsInt | typing.SupportsIndex,
+        focus1_id: typing.SupportsInt | typing.SupportsIndex,
+        start_angle: typing.SupportsFloat | typing.SupportsIndex,
+        end_angle: typing.SupportsFloat | typing.SupportsIndex,
+        start_id: typing.SupportsInt | typing.SupportsIndex,
+        end_id: typing.SupportsInt | typing.SupportsIndex,
     ) -> int:
         """
         Add an arc of parabola. Returns ID.
         """
-    def add_circle(self, center_id: typing.SupportsInt, radius: typing.SupportsFloat) -> int:
+    def add_circle(
+        self,
+        center_id: typing.SupportsInt | typing.SupportsIndex,
+        radius: typing.SupportsFloat | typing.SupportsIndex,
+    ) -> int:
         """
         Add a circle. Returns circle ID.
         """
     def add_ellipse(
         self,
-        center_id: typing.SupportsInt,
-        focus1_id: typing.SupportsInt,
-        radmin: typing.SupportsFloat,
+        center_id: typing.SupportsInt | typing.SupportsIndex,
+        focus1_id: typing.SupportsInt | typing.SupportsIndex,
+        radmin: typing.SupportsFloat | typing.SupportsIndex,
     ) -> int:
         """
         Add an ellipse. Returns ellipse ID.
         """
     def add_hyperbola(
         self,
-        center_id: typing.SupportsInt,
-        focus1_id: typing.SupportsInt,
-        radmin: typing.SupportsFloat,
+        center_id: typing.SupportsInt | typing.SupportsIndex,
+        focus1_id: typing.SupportsInt | typing.SupportsIndex,
+        radmin: typing.SupportsFloat | typing.SupportsIndex,
     ) -> int:
         """
         Add a hyperbola. Returns ID.
         """
     @typing.overload
-    def add_line(self, p1_id: typing.SupportsInt, p2_id: typing.SupportsInt) -> int:
+    def add_line(
+        self,
+        p1_id: typing.SupportsInt | typing.SupportsIndex,
+        p2_id: typing.SupportsInt | typing.SupportsIndex,
+    ) -> int:
         """
         Add a line between two existing points. Returns line ID.
         """
     @typing.overload
     def add_line(
         self,
-        x1: typing.SupportsFloat,
-        y1: typing.SupportsFloat,
-        x2: typing.SupportsFloat,
-        y2: typing.SupportsFloat,
+        x1: typing.SupportsFloat | typing.SupportsIndex,
+        y1: typing.SupportsFloat | typing.SupportsIndex,
+        x2: typing.SupportsFloat | typing.SupportsIndex,
+        y2: typing.SupportsFloat | typing.SupportsIndex,
     ) -> int:
         """
         Add a line with endpoint coordinates. Returns line ID.
         """
-    def add_parabola(self, vertex_id: typing.SupportsInt, focus1_id: typing.SupportsInt) -> int:
+    def add_parabola(
+        self,
+        vertex_id: typing.SupportsInt | typing.SupportsIndex,
+        focus1_id: typing.SupportsInt | typing.SupportsIndex,
+    ) -> int:
         """
         Add a parabola. Returns ID.
         """
-    def add_param(self, value: typing.SupportsFloat = 0.0, fixed: bool = False) -> int:
+    def add_param(
+        self, value: typing.SupportsFloat | typing.SupportsIndex = 0.0, fixed: bool = False
+    ) -> int:
         """
         Allocate a parameter. fixed=True for driving constraint values. Returns param ID.
         """
-    def add_point(self, x: typing.SupportsFloat, y: typing.SupportsFloat) -> int:
+    def add_point(
+        self,
+        x: typing.SupportsFloat | typing.SupportsIndex,
+        y: typing.SupportsFloat | typing.SupportsIndex,
+    ) -> int:
         """
         Add a point. Returns point ID.
         """
     def arc_diameter(
-        self, arc_id: typing.SupportsInt, diameter_id: typing.SupportsInt, driving: bool = True
+        self,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        diameter_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Set arc diameter.
         """
     def arc_length(
-        self, arc_id: typing.SupportsInt, dist_id: typing.SupportsInt, driving: bool = True
+        self,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        dist_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain arc length.
         """
     def arc_radius(
-        self, arc_id: typing.SupportsInt, radius_id: typing.SupportsInt, driving: bool = True
+        self,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        radius_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Set arc radius.
         """
-    def arc_rules(self, arc_id: typing.SupportsInt, driving: bool = True) -> int:
+    def arc_rules(
+        self, arc_id: typing.SupportsInt | typing.SupportsIndex, driving: bool = True
+    ) -> int:
         """
         Add arc rules constraint (start/end computed from center+radius+angles).
         """
     def c2c_distance(
         self,
-        c1_id: typing.SupportsInt,
-        c2_id: typing.SupportsInt,
-        dist_id: typing.SupportsInt,
+        c1_id: typing.SupportsInt | typing.SupportsIndex,
+        c2_id: typing.SupportsInt | typing.SupportsIndex,
+        dist_id: typing.SupportsInt | typing.SupportsIndex,
         driving: bool = True,
     ) -> int:
         """
@@ -385,22 +414,28 @@ class SketchSolver:
         """
     def c2l_distance(
         self,
-        circle_id: typing.SupportsInt,
-        line_id: typing.SupportsInt,
-        dist_id: typing.SupportsInt,
+        circle_id: typing.SupportsInt | typing.SupportsIndex,
+        line_id: typing.SupportsInt | typing.SupportsIndex,
+        dist_id: typing.SupportsInt | typing.SupportsIndex,
         driving: bool = True,
     ) -> int:
         """
         Add circle-to-line distance constraint.
         """
     def circle_diameter(
-        self, circle_id: typing.SupportsInt, diameter_id: typing.SupportsInt, driving: bool = True
+        self,
+        circle_id: typing.SupportsInt | typing.SupportsIndex,
+        diameter_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Set circle diameter.
         """
     def circle_radius(
-        self, circle_id: typing.SupportsInt, radius_id: typing.SupportsInt, driving: bool = True
+        self,
+        circle_id: typing.SupportsInt | typing.SupportsIndex,
+        radius_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Set circle radius.
@@ -409,28 +444,37 @@ class SketchSolver:
         """
         Clear all geometry, constraints, and parameters.
         """
-    def clear_by_tag(self, tag: typing.SupportsInt) -> None:
+    def clear_by_tag(self, tag: typing.SupportsInt | typing.SupportsIndex) -> None:
         """
         Clear all constraints with the given tag.
         """
     def coincident(
-        self, pt1_id: typing.SupportsInt, pt2_id: typing.SupportsInt, driving: bool = True
+        self,
+        pt1_id: typing.SupportsInt | typing.SupportsIndex,
+        pt2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Add coincident constraint between two points.
         """
-    def constraint_error(self, tag: typing.SupportsInt) -> float:
+    def constraint_error(self, tag: typing.SupportsInt | typing.SupportsIndex) -> float:
         """
         Calculate RMS error of all constraints with given tag.
         """
     def coordinate_x(
-        self, pt_id: typing.SupportsInt, x_id: typing.SupportsInt, driving: bool = True
+        self,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        x_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Fix the X coordinate of a point.
         """
     def coordinate_y(
-        self, pt_id: typing.SupportsInt, y_id: typing.SupportsInt, driving: bool = True
+        self,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        y_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Fix the Y coordinate of a point.
@@ -441,9 +485,9 @@ class SketchSolver:
         """
     def difference(
         self,
-        param1_id: typing.SupportsInt,
-        param2_id: typing.SupportsInt,
-        diff_id: typing.SupportsInt,
+        param1_id: typing.SupportsInt | typing.SupportsIndex,
+        param2_id: typing.SupportsInt | typing.SupportsIndex,
+        diff_id: typing.SupportsInt | typing.SupportsIndex,
         driving: bool = True,
     ) -> int:
         """
@@ -454,101 +498,150 @@ class SketchSolver:
         Return degrees of freedom after running diagnosis. 0 = fully constrained, >0 = under-constrained.
         """
     def equal(
-        self, param1_id: typing.SupportsInt, param2_id: typing.SupportsInt, driving: bool = True
+        self,
+        param1_id: typing.SupportsInt | typing.SupportsIndex,
+        param2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Add equality constraint between two parameters.
         """
     def equal_length(
-        self, l1_id: typing.SupportsInt, l2_id: typing.SupportsInt, driving: bool = True
+        self,
+        l1_id: typing.SupportsInt | typing.SupportsIndex,
+        l2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain two lines to have equal length.
         """
     def equal_radius_aa(
-        self, a1_id: typing.SupportsInt, a2_id: typing.SupportsInt, driving: bool = True
+        self,
+        a1_id: typing.SupportsInt | typing.SupportsIndex,
+        a2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain two arcs to have equal radius.
         """
     def equal_radius_ca(
-        self, circle_id: typing.SupportsInt, arc_id: typing.SupportsInt, driving: bool = True
+        self,
+        circle_id: typing.SupportsInt | typing.SupportsIndex,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain circle and arc to have equal radius.
         """
     def equal_radius_cc(
-        self, c1_id: typing.SupportsInt, c2_id: typing.SupportsInt, driving: bool = True
+        self,
+        c1_id: typing.SupportsInt | typing.SupportsIndex,
+        c2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain two circles to have equal radius.
         """
-    def get_arc_center(self, arc_id: typing.SupportsInt) -> tuple[float, float]: ...
-    def get_arc_end_angle(self, arc_id: typing.SupportsInt) -> float: ...
-    def get_arc_end_point(self, arc_id: typing.SupportsInt) -> tuple[float, float]: ...
-    def get_arc_radius(self, arc_id: typing.SupportsInt) -> float: ...
-    def get_arc_start_angle(self, arc_id: typing.SupportsInt) -> float: ...
-    def get_arc_start_point(self, arc_id: typing.SupportsInt) -> tuple[float, float]: ...
-    def get_circle_center(self, circle_id: typing.SupportsInt) -> tuple[float, float]: ...
-    def get_circle_radius(self, circle_id: typing.SupportsInt) -> float: ...
-    def get_ellipse_center(self, ellipse_id: typing.SupportsInt) -> tuple[float, float]: ...
-    def get_ellipse_focus1(self, ellipse_id: typing.SupportsInt) -> tuple[float, float]: ...
-    def get_ellipse_radmin(self, ellipse_id: typing.SupportsInt) -> float: ...
-    def get_line_p1(self, line_id: typing.SupportsInt) -> tuple[float, float]: ...
-    def get_line_p2(self, line_id: typing.SupportsInt) -> tuple[float, float]: ...
-    def get_param(self, param_id: typing.SupportsInt) -> float:
+    def get_arc_center(
+        self, arc_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_end_angle(self, arc_id: typing.SupportsInt | typing.SupportsIndex) -> float: ...
+    def get_arc_end_point(
+        self, arc_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_radius(self, arc_id: typing.SupportsInt | typing.SupportsIndex) -> float: ...
+    def get_arc_start_angle(self, arc_id: typing.SupportsInt | typing.SupportsIndex) -> float: ...
+    def get_arc_start_point(
+        self, arc_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_circle_center(
+        self, circle_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_circle_radius(self, circle_id: typing.SupportsInt | typing.SupportsIndex) -> float: ...
+    def get_ellipse_center(
+        self, ellipse_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_ellipse_focus1(
+        self, ellipse_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_ellipse_radmin(
+        self, ellipse_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> float: ...
+    def get_line_p1(
+        self, line_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_line_p2(
+        self, line_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_param(self, param_id: typing.SupportsInt | typing.SupportsIndex) -> float:
         """
         Get the current value of a parameter.
         """
-    def get_point(self, point_id: typing.SupportsInt) -> tuple[float, float]:
+    def get_point(
+        self, point_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]:
         """
         Get the (x, y) of a point.
         """
-    def horizontal_line(self, line_id: typing.SupportsInt, driving: bool = True) -> int:
+    def get_point_param_ids(
+        self, point_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[int, int]:
+        """
+        Get the (x_param_id, y_param_id) for a point.
+        """
+    def horizontal_line(
+        self, line_id: typing.SupportsInt | typing.SupportsIndex, driving: bool = True
+    ) -> int:
         """
         Constrain line to be horizontal.
         """
     def horizontal_points(
-        self, p1_id: typing.SupportsInt, p2_id: typing.SupportsInt, driving: bool = True
+        self,
+        p1_id: typing.SupportsInt | typing.SupportsIndex,
+        p2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain two points to have same Y.
         """
     def internal_alignment_point2ellipse(
         self,
-        ellipse_id: typing.SupportsInt,
-        pt_id: typing.SupportsInt,
+        ellipse_id: typing.SupportsInt | typing.SupportsIndex,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
         alignment_type: InternalAlignmentType,
         driving: bool = True,
     ) -> int:
         """
         Internal alignment: point to ellipse.
         """
-    def is_param_fixed(self, param_id: typing.SupportsInt) -> bool:
+    def is_param_fixed(self, param_id: typing.SupportsInt | typing.SupportsIndex) -> bool:
         """
         Check if a parameter is fixed (not an unknown).
         """
     def l2l_angle(
         self,
-        l1_id: typing.SupportsInt,
-        l2_id: typing.SupportsInt,
-        angle_id: typing.SupportsInt,
+        l1_id: typing.SupportsInt | typing.SupportsIndex,
+        l2_id: typing.SupportsInt | typing.SupportsIndex,
+        angle_id: typing.SupportsInt | typing.SupportsIndex,
         driving: bool = True,
     ) -> int:
         """
         Add line-to-line angle constraint.
         """
     def midpoint_on_line(
-        self, l1_id: typing.SupportsInt, l2_id: typing.SupportsInt, driving: bool = True
+        self,
+        l1_id: typing.SupportsInt | typing.SupportsIndex,
+        l2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain midpoint of l1 to lie on l2.
         """
     def p2c_distance(
         self,
-        pt_id: typing.SupportsInt,
-        circle_id: typing.SupportsInt,
-        distance_id: typing.SupportsInt,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        circle_id: typing.SupportsInt | typing.SupportsIndex,
+        distance_id: typing.SupportsInt | typing.SupportsIndex,
         driving: bool = True,
     ) -> int:
         """
@@ -556,9 +649,9 @@ class SketchSolver:
         """
     def p2l_distance(
         self,
-        pt_id: typing.SupportsInt,
-        line_id: typing.SupportsInt,
-        distance_id: typing.SupportsInt,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        line_id: typing.SupportsInt | typing.SupportsIndex,
+        distance_id: typing.SupportsInt | typing.SupportsIndex,
         driving: bool = True,
     ) -> int:
         """
@@ -566,9 +659,9 @@ class SketchSolver:
         """
     def p2p_angle(
         self,
-        pt1_id: typing.SupportsInt,
-        pt2_id: typing.SupportsInt,
-        angle_id: typing.SupportsInt,
+        pt1_id: typing.SupportsInt | typing.SupportsIndex,
+        pt2_id: typing.SupportsInt | typing.SupportsIndex,
+        angle_id: typing.SupportsInt | typing.SupportsIndex,
         driving: bool = True,
     ) -> int:
         """
@@ -576,71 +669,98 @@ class SketchSolver:
         """
     def p2p_distance(
         self,
-        pt1_id: typing.SupportsInt,
-        pt2_id: typing.SupportsInt,
-        distance_id: typing.SupportsInt,
+        pt1_id: typing.SupportsInt | typing.SupportsIndex,
+        pt2_id: typing.SupportsInt | typing.SupportsIndex,
+        distance_id: typing.SupportsInt | typing.SupportsIndex,
         driving: bool = True,
     ) -> int:
         """
         Add point-to-point distance constraint.
         """
     def parallel(
-        self, l1_id: typing.SupportsInt, l2_id: typing.SupportsInt, driving: bool = True
+        self,
+        l1_id: typing.SupportsInt | typing.SupportsIndex,
+        l2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Add parallel constraint.
         """
     def perpendicular(
-        self, l1_id: typing.SupportsInt, l2_id: typing.SupportsInt, driving: bool = True
+        self,
+        l1_id: typing.SupportsInt | typing.SupportsIndex,
+        l2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Add perpendicular constraint.
         """
     def point_on_arc(
-        self, pt_id: typing.SupportsInt, arc_id: typing.SupportsInt, driving: bool = True
+        self,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain point to lie on arc.
         """
     def point_on_circle(
-        self, pt_id: typing.SupportsInt, circle_id: typing.SupportsInt, driving: bool = True
+        self,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        circle_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain point to lie on circle.
         """
     def point_on_ellipse(
-        self, pt_id: typing.SupportsInt, ellipse_id: typing.SupportsInt, driving: bool = True
+        self,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        ellipse_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain point to lie on ellipse.
         """
     def point_on_line(
-        self, pt_id: typing.SupportsInt, line_id: typing.SupportsInt, driving: bool = True
+        self,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        line_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain point to lie on line.
         """
     def point_on_perp_bisector(
-        self, pt_id: typing.SupportsInt, line_id: typing.SupportsInt, driving: bool = True
+        self,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        line_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain point to lie on perpendicular bisector of line.
         """
     def proportional(
         self,
-        param1_id: typing.SupportsInt,
-        param2_id: typing.SupportsInt,
-        ratio: typing.SupportsFloat,
+        param1_id: typing.SupportsInt | typing.SupportsIndex,
+        param2_id: typing.SupportsInt | typing.SupportsIndex,
+        ratio: typing.SupportsFloat | typing.SupportsIndex,
         driving: bool = True,
     ) -> int:
         """
         Add proportional constraint.
         """
-    def set_param(self, param_id: typing.SupportsInt, value: typing.SupportsFloat) -> None:
+    def set_param(
+        self,
+        param_id: typing.SupportsInt | typing.SupportsIndex,
+        value: typing.SupportsFloat | typing.SupportsIndex,
+    ) -> None:
         """
         Set the value of a parameter.
         """
-    def set_param_fixed(self, param_id: typing.SupportsInt, fixed: bool) -> None:
+    def set_param_fixed(
+        self, param_id: typing.SupportsInt | typing.SupportsIndex, fixed: bool
+    ) -> None:
         """
         Set whether a parameter is fixed.
         """
@@ -650,9 +770,9 @@ class SketchSolver:
         """
     def symmetric_points_line(
         self,
-        p1_id: typing.SupportsInt,
-        p2_id: typing.SupportsInt,
-        line_id: typing.SupportsInt,
+        p1_id: typing.SupportsInt | typing.SupportsIndex,
+        p2_id: typing.SupportsInt | typing.SupportsIndex,
+        line_id: typing.SupportsInt | typing.SupportsIndex,
         driving: bool = True,
     ) -> int:
         """
@@ -660,38 +780,47 @@ class SketchSolver:
         """
     def symmetric_points_point(
         self,
-        p1_id: typing.SupportsInt,
-        p2_id: typing.SupportsInt,
-        center_id: typing.SupportsInt,
+        p1_id: typing.SupportsInt | typing.SupportsIndex,
+        p2_id: typing.SupportsInt | typing.SupportsIndex,
+        center_id: typing.SupportsInt | typing.SupportsIndex,
         driving: bool = True,
     ) -> int:
         """
         Constrain points symmetric about a center point.
         """
     def tangent_arc_arc(
-        self, a1_id: typing.SupportsInt, a2_id: typing.SupportsInt, driving: bool = True
+        self,
+        a1_id: typing.SupportsInt | typing.SupportsIndex,
+        a2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Add arc-arc tangent constraint.
         """
     def tangent_circle_arc(
-        self, circle_id: typing.SupportsInt, arc_id: typing.SupportsInt, driving: bool = True
+        self,
+        circle_id: typing.SupportsInt | typing.SupportsIndex,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Add circle-arc tangent constraint.
         """
     def tangent_circle_circle(
-        self, c1_id: typing.SupportsInt, c2_id: typing.SupportsInt, driving: bool = True
+        self,
+        c1_id: typing.SupportsInt | typing.SupportsIndex,
+        c2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Add circle-circle tangent constraint.
         """
     def tangent_circumf(
         self,
-        p1_id: typing.SupportsInt,
-        p2_id: typing.SupportsInt,
-        rd1_id: typing.SupportsInt,
-        rd2_id: typing.SupportsInt,
+        p1_id: typing.SupportsInt | typing.SupportsIndex,
+        p2_id: typing.SupportsInt | typing.SupportsIndex,
+        rd1_id: typing.SupportsInt | typing.SupportsIndex,
+        rd2_id: typing.SupportsInt | typing.SupportsIndex,
         internal: bool = False,
         driving: bool = True,
     ) -> int:
@@ -699,29 +828,43 @@ class SketchSolver:
         Tangent circumference constraint.
         """
     def tangent_line_arc(
-        self, line_id: typing.SupportsInt, arc_id: typing.SupportsInt, driving: bool = True
+        self,
+        line_id: typing.SupportsInt | typing.SupportsIndex,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Add line-arc tangent constraint.
         """
     def tangent_line_circle(
-        self, line_id: typing.SupportsInt, circle_id: typing.SupportsInt, driving: bool = True
+        self,
+        line_id: typing.SupportsInt | typing.SupportsIndex,
+        circle_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Add line-circle tangent constraint.
         """
     def tangent_line_ellipse(
-        self, line_id: typing.SupportsInt, ellipse_id: typing.SupportsInt, driving: bool = True
+        self,
+        line_id: typing.SupportsInt | typing.SupportsIndex,
+        ellipse_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Add line-ellipse tangent constraint.
         """
-    def vertical_line(self, line_id: typing.SupportsInt, driving: bool = True) -> int:
+    def vertical_line(
+        self, line_id: typing.SupportsInt | typing.SupportsIndex, driving: bool = True
+    ) -> int:
         """
         Constrain line to be vertical.
         """
     def vertical_points(
-        self, p1_id: typing.SupportsInt, p2_id: typing.SupportsInt, driving: bool = True
+        self,
+        p1_id: typing.SupportsInt | typing.SupportsIndex,
+        p2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
     ) -> int:
         """
         Constrain two points to have same X.
@@ -753,11 +896,11 @@ class SolveStatus:
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
     def __index__(self) -> int: ...
-    def __init__(self, value: typing.SupportsInt) -> None: ...
+    def __init__(self, value: typing.SupportsInt | typing.SupportsIndex) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self, other: typing.Any) -> bool: ...
     def __repr__(self) -> str: ...
-    def __setstate__(self, state: typing.SupportsInt) -> None: ...
+    def __setstate__(self, state: typing.SupportsInt | typing.SupportsIndex) -> None: ...
     def __str__(self) -> str: ...
     @property
     def name(self) -> str: ...
