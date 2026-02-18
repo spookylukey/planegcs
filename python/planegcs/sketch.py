@@ -482,6 +482,24 @@ class Sketch:
         """Constrain two parameters to be equal."""
         return ConstraintTag(self._solver.equal(param1_id, param2_id, driving))
 
+    def equal_radius_cc(
+        self, c1_id: CircleId, c2_id: CircleId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain two circles to have equal radius."""
+        return ConstraintTag(self._solver.equal_radius_cc(c1_id, c2_id, driving))
+
+    def equal_radius_ca(
+        self, circle_id: CircleId, arc_id: ArcId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain a circle and an arc to have equal radius."""
+        return ConstraintTag(self._solver.equal_radius_ca(circle_id, arc_id, driving))
+
+    def equal_radius_aa(
+        self, a1_id: ArcId, a2_id: ArcId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain two arcs to have equal radius."""
+        return ConstraintTag(self._solver.equal_radius_aa(a1_id, a2_id, driving))
+
     def l2l_angle(
         self, l1_id: LineId, l2_id: LineId, angle_id: ParamId, *, driving: bool = True
     ) -> ConstraintTag:
