@@ -635,6 +635,39 @@ class Sketch:
         """Line tangent to arc."""
         return ConstraintTag(self._solver.tangent_line_arc(line_id, arc_id, driving))
 
+    def tangent_line_ellipse(
+        self, line_id: LineId, ellipse_id: EllipseId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Line tangent to ellipse."""
+        return ConstraintTag(self._solver.tangent_line_ellipse(line_id, ellipse_id, driving))
+
+    def tangent_arc_arc(
+        self, a1_id: ArcId, a2_id: ArcId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Arc tangent to arc."""
+        return ConstraintTag(self._solver.tangent_arc_arc(a1_id, a2_id, driving))
+
+    def tangent_circle_arc(
+        self, circle_id: CircleId, arc_id: ArcId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Circle tangent to arc."""
+        return ConstraintTag(self._solver.tangent_circle_arc(circle_id, arc_id, driving))
+
+    def tangent_circumf(
+        self,
+        p1_id: PointId,
+        p2_id: PointId,
+        rd1_id: ParamId,
+        rd2_id: ParamId,
+        *,
+        internal: bool = False,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Tangent circumference constraint."""
+        return ConstraintTag(
+            self._solver.tangent_circumf(p1_id, p2_id, rd1_id, rd2_id, internal, driving)
+        )
+
     def symmetric_line(
         self, p1_id: PointId, p2_id: PointId, line_id: LineId, *, driving: bool = True
     ) -> ConstraintTag:
