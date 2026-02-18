@@ -542,6 +542,63 @@ class Sketch:
         r = self.add_param(radius, fixed=True)
         return self.circle_radius(circle_id, r, driving=driving)
 
+    def circle_diameter(
+        self, circle_id: CircleId, diameter_id: ParamId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain circle diameter using a parameter.
+
+        For a simpler API that takes a float directly, see :meth:`set_circle_diameter`.
+        """
+        return ConstraintTag(self._solver.circle_diameter(circle_id, diameter_id, driving))
+
+    def set_circle_diameter(
+        self, circle_id: CircleId, diameter: float, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain circle diameter to a value.
+
+        Convenience method that creates the parameter internally.
+        """
+        d = self.add_param(diameter, fixed=True)
+        return self.circle_diameter(circle_id, d, driving=driving)
+
+    def arc_radius(
+        self, arc_id: ArcId, radius_id: ParamId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain arc radius using a parameter.
+
+        For a simpler API that takes a float directly, see :meth:`set_arc_radius`.
+        """
+        return ConstraintTag(self._solver.arc_radius(arc_id, radius_id, driving))
+
+    def set_arc_radius(
+        self, arc_id: ArcId, radius: float, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain arc radius to a value.
+
+        Convenience method that creates the parameter internally.
+        """
+        r = self.add_param(radius, fixed=True)
+        return self.arc_radius(arc_id, r, driving=driving)
+
+    def arc_diameter(
+        self, arc_id: ArcId, diameter_id: ParamId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain arc diameter using a parameter.
+
+        For a simpler API that takes a float directly, see :meth:`set_arc_diameter`.
+        """
+        return ConstraintTag(self._solver.arc_diameter(arc_id, diameter_id, driving))
+
+    def set_arc_diameter(
+        self, arc_id: ArcId, diameter: float, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain arc diameter to a value.
+
+        Convenience method that creates the parameter internally.
+        """
+        d = self.add_param(diameter, fixed=True)
+        return self.arc_diameter(arc_id, d, driving=driving)
+
     def tangent_line_circle(
         self, line_id: LineId, circle_id: CircleId, *, driving: bool = True
     ) -> ConstraintTag:
