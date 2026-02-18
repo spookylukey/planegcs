@@ -680,6 +680,93 @@ class Sketch:
         """Constrain points symmetric about a center point."""
         return ConstraintTag(self._solver.symmetric_points_point(p1_id, p2_id, center_id, driving))
 
+    def p2c_distance(
+        self,
+        pt_id: PointId,
+        circle_id: CircleId,
+        distance_id: ParamId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain point-to-circle distance using a parameter.
+
+        For a simpler API that takes a float directly, see :meth:`set_p2c_distance`.
+        """
+        return ConstraintTag(self._solver.p2c_distance(pt_id, circle_id, distance_id, driving))
+
+    def set_p2c_distance(
+        self,
+        pt_id: PointId,
+        circle_id: CircleId,
+        distance: float,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain point-to-circle distance to a value.
+
+        Convenience method that creates the parameter internally.
+        """
+        d = self.add_param(distance, fixed=True)
+        return self.p2c_distance(pt_id, circle_id, d, driving=driving)
+
+    def c2c_distance(
+        self,
+        c1_id: CircleId,
+        c2_id: CircleId,
+        dist_id: ParamId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain circle-to-circle distance using a parameter.
+
+        For a simpler API that takes a float directly, see :meth:`set_c2c_distance`.
+        """
+        return ConstraintTag(self._solver.c2c_distance(c1_id, c2_id, dist_id, driving))
+
+    def set_c2c_distance(
+        self,
+        c1_id: CircleId,
+        c2_id: CircleId,
+        distance: float,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain circle-to-circle distance to a value.
+
+        Convenience method that creates the parameter internally.
+        """
+        d = self.add_param(distance, fixed=True)
+        return self.c2c_distance(c1_id, c2_id, d, driving=driving)
+
+    def c2l_distance(
+        self,
+        circle_id: CircleId,
+        line_id: LineId,
+        dist_id: ParamId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain circle-to-line distance using a parameter.
+
+        For a simpler API that takes a float directly, see :meth:`set_c2l_distance`.
+        """
+        return ConstraintTag(self._solver.c2l_distance(circle_id, line_id, dist_id, driving))
+
+    def set_c2l_distance(
+        self,
+        circle_id: CircleId,
+        line_id: LineId,
+        distance: float,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain circle-to-line distance to a value.
+
+        Convenience method that creates the parameter internally.
+        """
+        d = self.add_param(distance, fixed=True)
+        return self.c2l_distance(circle_id, line_id, d, driving=driving)
+
     def arc_rules(self, arc_id: ArcId, *, driving: bool = True) -> ConstraintTag:
         """Add arc rules (start/end points computed from center, radius, angles)."""
         return ConstraintTag(self._solver.arc_rules(arc_id, driving))
