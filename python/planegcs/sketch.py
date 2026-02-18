@@ -509,6 +509,18 @@ class Sketch:
         """Constrain point on circle."""
         return ConstraintTag(self._solver.point_on_circle(pt_id, circle_id, driving))
 
+    def point_on_arc(
+        self, pt_id: PointId, arc_id: ArcId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain point to lie on arc."""
+        return ConstraintTag(self._solver.point_on_arc(pt_id, arc_id, driving))
+
+    def point_on_ellipse(
+        self, pt_id: PointId, ellipse_id: EllipseId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain point to lie on ellipse."""
+        return ConstraintTag(self._solver.point_on_ellipse(pt_id, ellipse_id, driving))
+
     def circle_radius(
         self, circle_id: CircleId, radius_id: ParamId, *, driving: bool = True
     ) -> ConstraintTag:
