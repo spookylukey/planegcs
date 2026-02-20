@@ -35,6 +35,8 @@ CMAKE_BUILD_TYPE = "Release"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "--cov=python --cov-report=term-missing --cov-fail-under=100"
+
 
 [dependency-groups]
 dev = [
