@@ -377,6 +377,54 @@ class SketchSolver:
         """
         Add a point from existing parameter IDs for x and y. Returns point ID.
         """
+    def angle_via_point(
+        self,
+        crv1_id: typing.SupportsInt | typing.SupportsIndex,
+        crv2_id: typing.SupportsInt | typing.SupportsIndex,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        angle_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain angle between two curves at a point.
+        """
+    def angle_via_point_and_param(
+        self,
+        crv1_id: typing.SupportsInt | typing.SupportsIndex,
+        crv2_id: typing.SupportsInt | typing.SupportsIndex,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        cparam_id: typing.SupportsInt | typing.SupportsIndex,
+        angle_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain angle between two curves at a point with a curve parameter.
+        """
+    def angle_via_point_and_two_params(
+        self,
+        crv1_id: typing.SupportsInt | typing.SupportsIndex,
+        crv2_id: typing.SupportsInt | typing.SupportsIndex,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        cparam1_id: typing.SupportsInt | typing.SupportsIndex,
+        cparam2_id: typing.SupportsInt | typing.SupportsIndex,
+        angle_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain angle between two curves at a point with two curve parameters.
+        """
+    def angle_via_two_points(
+        self,
+        crv1_id: typing.SupportsInt | typing.SupportsIndex,
+        crv2_id: typing.SupportsInt | typing.SupportsIndex,
+        pt1_id: typing.SupportsInt | typing.SupportsIndex,
+        pt2_id: typing.SupportsInt | typing.SupportsIndex,
+        angle_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain angle between two curves via two points.
+        """
     def arc_diameter(
         self,
         arc_id: typing.SupportsInt | typing.SupportsIndex,
@@ -429,6 +477,25 @@ class SketchSolver:
     ) -> int:
         """
         Add circle-to-line distance constraint.
+        """
+    def calculate_angle_via_point(
+        self,
+        crv1_id: typing.SupportsInt | typing.SupportsIndex,
+        crv2_id: typing.SupportsInt | typing.SupportsIndex,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+    ) -> float:
+        """
+        Calculate the angle between two curves at a point (no constraint added).
+        """
+    def calculate_angle_via_two_points(
+        self,
+        crv1_id: typing.SupportsInt | typing.SupportsIndex,
+        crv2_id: typing.SupportsInt | typing.SupportsIndex,
+        pt1_id: typing.SupportsInt | typing.SupportsIndex,
+        pt2_id: typing.SupportsInt | typing.SupportsIndex,
+    ) -> float:
+        """
+        Calculate the angle between two curves via two points (no constraint added).
         """
     def circle_diameter(
         self,
@@ -486,6 +553,16 @@ class SketchSolver:
     ) -> int:
         """
         Fix the Y coordinate of a point.
+        """
+    def curve_value(
+        self,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        curve_id: typing.SupportsInt | typing.SupportsIndex,
+        u_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain a point to lie on a curve at parameter u.
         """
     def diagnose(self, algorithm: Algorithm = Algorithm.DogLeg) -> DiagnosisResult:
         """
@@ -771,6 +848,21 @@ class SketchSolver:
     ) -> None:
         """
         Set whether a parameter is fixed.
+        """
+    def snells_law(
+        self,
+        ray1_id: typing.SupportsInt | typing.SupportsIndex,
+        ray2_id: typing.SupportsInt | typing.SupportsIndex,
+        boundary_id: typing.SupportsInt | typing.SupportsIndex,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        n1_id: typing.SupportsInt | typing.SupportsIndex,
+        n2_id: typing.SupportsInt | typing.SupportsIndex,
+        flipn1: bool = False,
+        flipn2: bool = False,
+        driving: bool = True,
+    ) -> int:
+        """
+        Add Snell's law refraction constraint at a boundary point.
         """
     def solve(self, algorithm: Algorithm = Algorithm.DogLeg) -> SolveStatus:
         """
