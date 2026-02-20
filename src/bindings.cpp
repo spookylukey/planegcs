@@ -331,5 +331,40 @@ PYBIND11_MODULE(_planegcs, m) {
              "Clear all constraints with the given tag.")
         .def("constraint_error", &SketchSolver::constraint_error, py::arg("tag"),
              "Calculate RMS error of all constraints with given tag.")
+        // AngleViaPoint constraints
+        .def("angle_via_point", &SketchSolver::angle_via_point,
+             py::arg("crv1_id"), py::arg("crv2_id"), py::arg("pt_id"),
+             py::arg("angle_id"), py::arg("driving") = true,
+             "Constrain angle between two curves at a point.")
+        .def("angle_via_two_points", &SketchSolver::angle_via_two_points,
+             py::arg("crv1_id"), py::arg("crv2_id"),
+             py::arg("pt1_id"), py::arg("pt2_id"),
+             py::arg("angle_id"), py::arg("driving") = true,
+             "Constrain angle between two curves via two points.")
+        .def("angle_via_point_and_param", &SketchSolver::angle_via_point_and_param,
+             py::arg("crv1_id"), py::arg("crv2_id"), py::arg("pt_id"),
+             py::arg("cparam_id"), py::arg("angle_id"), py::arg("driving") = true,
+             "Constrain angle between two curves at a point with a curve parameter.")
+        .def("angle_via_point_and_two_params", &SketchSolver::angle_via_point_and_two_params,
+             py::arg("crv1_id"), py::arg("crv2_id"), py::arg("pt_id"),
+             py::arg("cparam1_id"), py::arg("cparam2_id"),
+             py::arg("angle_id"), py::arg("driving") = true,
+             "Constrain angle between two curves at a point with two curve parameters.")
+        .def("curve_value", &SketchSolver::curve_value,
+             py::arg("pt_id"), py::arg("curve_id"), py::arg("u_id"),
+             py::arg("driving") = true,
+             "Constrain a point to lie on a curve at parameter u.")
+        .def("snells_law", &SketchSolver::snells_law,
+             py::arg("ray1_id"), py::arg("ray2_id"), py::arg("boundary_id"),
+             py::arg("pt_id"), py::arg("n1_id"), py::arg("n2_id"),
+             py::arg("flipn1") = false, py::arg("flipn2") = false,
+             py::arg("driving") = true,
+             "Add Snell's law refraction constraint at a boundary point.")
+        .def("calculate_angle_via_point", &SketchSolver::calculate_angle_via_point,
+             py::arg("crv1_id"), py::arg("crv2_id"), py::arg("pt_id"),
+             "Calculate the angle between two curves at a point (no constraint added).")
+        .def("calculate_angle_via_two_points", &SketchSolver::calculate_angle_via_two_points,
+             py::arg("crv1_id"), py::arg("crv2_id"), py::arg("pt1_id"), py::arg("pt2_id"),
+             "Calculate the angle between two curves via two points (no constraint added).")
     ;
 }

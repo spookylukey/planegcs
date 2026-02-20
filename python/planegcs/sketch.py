@@ -28,6 +28,9 @@ or :meth:`Sketch.add_arc_from_start_end`)."""
 EllipseId = NewType("EllipseId", int)
 """ID for an ellipse (returned by :meth:`Sketch.add_ellipse`)."""
 
+CurveId = NewType("CurveId", int)
+"""ID for any geometry usable as a curve (line, circle, arc, ellipse, etc.)."""
+
 ConstraintTag = NewType("ConstraintTag", int)
 """Tag for a constraint (returned by constraint methods)."""
 
@@ -883,6 +886,268 @@ class Sketch:
     ) -> ConstraintTag:
         """Constrain midpoint of l1 to lie on l2."""
         return ConstraintTag(self._solver.midpoint_on_line(l1_id, l2_id, driving))
+
+    # ── Angle-via-point constraints ────────────────────────────────
+
+    def angle_via_point(
+        self,
+        crv1_id: CurveId,
+        crv2_id: CurveId,
+        pt_id: PointId,
+        angle_id: ParamId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain angle between two curves at a shared point.
+
+        The angle is measured between the tangent directions of the two
+        curves at the given point. This is the general-purpose angle
+        constraint used by FreeCAD's Sketcher for curve–curve angles.
+
+        Args:
+            crv1_id: First curve (any geometry ID: line, circle, arc, ellipse, …).
+            crv2_id: Second curve.
+            pt_id: Point where the curves meet.
+            angle_id: Parameter ID for the angle value (radians).
+            driving: Whether this is a driving constraint.
+
+        Returns:
+            Constraint tag.
+        """
+        return ConstraintTag(
+            self._solver.angle_via_point(crv1_id, crv2_id, pt_id, angle_id, driving)
+        )
+
+    def set_angle_via_point(
+        self,
+        crv1_id: CurveId,
+        crv2_id: CurveId,
+        pt_id: PointId,
+        angle: float,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain angle between two curves at a point to a value (radians).
+
+        Convenience method that creates the angle parameter internally.
+        """
+        a = self.add_param(angle, fixed=True)
+        return self.angle_via_point(crv1_id, crv2_id, pt_id, a, driving=driving)
+
+    def angle_via_two_points(
+        self,
+        crv1_id: CurveId,
+        crv2_id: CurveId,
+        pt1_id: PointId,
+        pt2_id: PointId,
+        angle_id: ParamId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain angle between two curves via two points.
+
+        Used when each curve passes through a different point.
+
+        Args:
+            crv1_id: First curve.
+            crv2_id: Second curve.
+            pt1_id: Point on the first curve.
+            pt2_id: Point on the second curve.
+            angle_id: Parameter ID for the angle value (radians).
+            driving: Whether this is a driving constraint.
+
+        Returns:
+            Constraint tag.
+        """
+        return ConstraintTag(
+            self._solver.angle_via_two_points(crv1_id, crv2_id, pt1_id, pt2_id, angle_id, driving)
+        )
+
+    def set_angle_via_two_points(
+        self,
+        crv1_id: CurveId,
+        crv2_id: CurveId,
+        pt1_id: PointId,
+        pt2_id: PointId,
+        angle: float,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain angle between two curves via two points to a value (radians).
+
+        Convenience method that creates the angle parameter internally.
+        """
+        a = self.add_param(angle, fixed=True)
+        return self.angle_via_two_points(crv1_id, crv2_id, pt1_id, pt2_id, a, driving=driving)
+
+    def angle_via_point_and_param(
+        self,
+        crv1_id: CurveId,
+        crv2_id: CurveId,
+        pt_id: PointId,
+        cparam_id: ParamId,
+        angle_id: ParamId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain angle between two curves at a point with a curve parameter.
+
+        Args:
+            crv1_id: First curve.
+            crv2_id: Second curve.
+            pt_id: Point where the curves meet.
+            cparam_id: Curve parameter for the second curve.
+            angle_id: Parameter ID for the angle value (radians).
+            driving: Whether this is a driving constraint.
+
+        Returns:
+            Constraint tag.
+        """
+        return ConstraintTag(
+            self._solver.angle_via_point_and_param(
+                crv1_id, crv2_id, pt_id, cparam_id, angle_id, driving
+            )
+        )
+
+    def angle_via_point_and_two_params(
+        self,
+        crv1_id: CurveId,
+        crv2_id: CurveId,
+        pt_id: PointId,
+        cparam1_id: ParamId,
+        cparam2_id: ParamId,
+        angle_id: ParamId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain angle between two curves at a point with two curve parameters.
+
+        Args:
+            crv1_id: First curve.
+            crv2_id: Second curve.
+            pt_id: Point where the curves meet.
+            cparam1_id: Curve parameter for the first curve.
+            cparam2_id: Curve parameter for the second curve.
+            angle_id: Parameter ID for the angle value (radians).
+            driving: Whether this is a driving constraint.
+
+        Returns:
+            Constraint tag.
+        """
+        return ConstraintTag(
+            self._solver.angle_via_point_and_two_params(
+                crv1_id, crv2_id, pt_id, cparam1_id, cparam2_id, angle_id, driving
+            )
+        )
+
+    def curve_value(
+        self,
+        pt_id: PointId,
+        curve_id: CurveId,
+        u_id: ParamId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain a point to lie on a curve at parameter *u*.
+
+        Args:
+            pt_id: Point to constrain.
+            curve_id: Curve the point must lie on.
+            u_id: Parameter ID for the curve parameter *u*.
+            driving: Whether this is a driving constraint.
+
+        Returns:
+            Constraint tag.
+        """
+        return ConstraintTag(self._solver.curve_value(pt_id, curve_id, u_id, driving))
+
+    def snells_law(
+        self,
+        ray1_id: CurveId,
+        ray2_id: CurveId,
+        boundary_id: CurveId,
+        pt_id: PointId,
+        n1_id: ParamId,
+        n2_id: ParamId,
+        *,
+        flipn1: bool = False,
+        flipn2: bool = False,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Add Snell's law refraction constraint.
+
+        Constrains the angles of *ray1* and *ray2* relative to the
+        *boundary* curve at point *pt* to satisfy Snell's law with
+        refractive indices *n1* and *n2*.
+
+        Args:
+            ray1_id: Incoming ray curve.
+            ray2_id: Outgoing ray curve.
+            boundary_id: Boundary curve.
+            pt_id: Refraction point.
+            n1_id: Parameter for refractive index of first medium.
+            n2_id: Parameter for refractive index of second medium.
+            flipn1: Flip normal direction for ray1.
+            flipn2: Flip normal direction for ray2.
+            driving: Whether this is a driving constraint.
+
+        Returns:
+            Constraint tag.
+        """
+        return ConstraintTag(
+            self._solver.snells_law(
+                ray1_id,
+                ray2_id,
+                boundary_id,
+                pt_id,
+                n1_id,
+                n2_id,
+                flipn1,
+                flipn2,
+                driving,
+            )
+        )
+
+    def calculate_angle_via_point(
+        self,
+        crv1_id: CurveId,
+        crv2_id: CurveId,
+        pt_id: PointId,
+    ) -> float:
+        """Calculate the current angle between two curves at a point.
+
+        This is a query, not a constraint — it returns the angle
+        between the tangent directions without adding any constraint.
+
+        Args:
+            crv1_id: First curve.
+            crv2_id: Second curve.
+            pt_id: Point where the angle is measured.
+
+        Returns:
+            Angle in radians.
+        """
+        return self._solver.calculate_angle_via_point(crv1_id, crv2_id, pt_id)
+
+    def calculate_angle_via_two_points(
+        self,
+        crv1_id: CurveId,
+        crv2_id: CurveId,
+        pt1_id: PointId,
+        pt2_id: PointId,
+    ) -> float:
+        """Calculate the current angle between two curves via two points.
+
+        Args:
+            crv1_id: First curve.
+            crv2_id: Second curve.
+            pt1_id: Point on the first curve.
+            pt2_id: Point on the second curve.
+
+        Returns:
+            Angle in radians.
+        """
+        return self._solver.calculate_angle_via_two_points(crv1_id, crv2_id, pt1_id, pt2_id)
 
     # ── Solving ────────────────────────────────────────────────────
 

@@ -841,6 +841,106 @@ public:
     // Access the GCS system for advanced use
     GCS::System& system() { return system_; }
 
+    // ── Curve lookup (for *ViaPoint constraints) ────────────────────
+    // Any geometry ID (line, circle, arc, ellipse, arc-of-ellipse,
+    // hyperbola, arc-of-hyperbola, parabola, arc-of-parabola) can be
+    // looked up as a Curve&.
+    GCS::Curve& get_curve(int id) {
+        auto it_l = lines_.find(id);
+        if (it_l != lines_.end()) return it_l->second;
+        auto it_c = circles_.find(id);
+        if (it_c != circles_.end()) return it_c->second;
+        auto it_a = arcs_.find(id);
+        if (it_a != arcs_.end()) return it_a->second;
+        auto it_e = ellipses_.find(id);
+        if (it_e != ellipses_.end()) return it_e->second;
+        auto it_ae = arcs_of_ellipse_.find(id);
+        if (it_ae != arcs_of_ellipse_.end()) return it_ae->second;
+        auto it_h = hyperbolas_.find(id);
+        if (it_h != hyperbolas_.end()) return it_h->second;
+        auto it_ah = arcs_of_hyperbola_.find(id);
+        if (it_ah != arcs_of_hyperbola_.end()) return it_ah->second;
+        auto it_p = parabolas_.find(id);
+        if (it_p != parabolas_.end()) return it_p->second;
+        auto it_ap = arcs_of_parabola_.find(id);
+        if (it_ap != arcs_of_parabola_.end()) return it_ap->second;
+        throw std::out_of_range("get_curve: unknown geometry id " + std::to_string(id));
+    }
+
+    // ── AngleViaPoint constraints ───────────────────────────────────
+    int angle_via_point(int crv1_id, int crv2_id, int pt_id,
+                        int angle_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintAngleViaPoint(
+            get_curve(crv1_id), get_curve(crv2_id),
+            points_.at(pt_id), param_ptr(angle_id), tag, driving);
+        return tag;
+    }
+
+    int angle_via_two_points(int crv1_id, int crv2_id, int pt1_id, int pt2_id,
+                             int angle_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintAngleViaTwoPoints(
+            get_curve(crv1_id), get_curve(crv2_id),
+            points_.at(pt1_id), points_.at(pt2_id),
+            param_ptr(angle_id), tag, driving);
+        return tag;
+    }
+
+    int angle_via_point_and_param(int crv1_id, int crv2_id, int pt_id,
+                                  int cparam_id, int angle_id,
+                                  bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintAngleViaPointAndParam(
+            get_curve(crv1_id), get_curve(crv2_id),
+            points_.at(pt_id), param_ptr(cparam_id),
+            param_ptr(angle_id), tag, driving);
+        return tag;
+    }
+
+    int angle_via_point_and_two_params(int crv1_id, int crv2_id, int pt_id,
+                                       int cparam1_id, int cparam2_id,
+                                       int angle_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintAngleViaPointAndTwoParams(
+            get_curve(crv1_id), get_curve(crv2_id),
+            points_.at(pt_id), param_ptr(cparam1_id), param_ptr(cparam2_id),
+            param_ptr(angle_id), tag, driving);
+        return tag;
+    }
+
+    // ── CurveValue constraint ───────────────────────────────────────
+    int curve_value(int pt_id, int curve_id, int u_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintCurveValue(
+            points_.at(pt_id), get_curve(curve_id),
+            param_ptr(u_id), tag, driving);
+        return tag;
+    }
+
+    // ── Snell's law constraint ──────────────────────────────────────
+    int snells_law(int ray1_id, int ray2_id, int boundary_id, int pt_id,
+                   int n1_id, int n2_id, bool flipn1 = false, bool flipn2 = false,
+                   bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintSnellsLaw(
+            get_curve(ray1_id), get_curve(ray2_id), get_curve(boundary_id),
+            points_.at(pt_id), param_ptr(n1_id), param_ptr(n2_id),
+            flipn1, flipn2, tag, driving);
+        return tag;
+    }
+
+    // ── calculateAngleViaPoint ──────────────────────────────────────
+    double calculate_angle_via_point(int crv1_id, int crv2_id, int pt_id) {
+        return system_.calculateAngleViaPoint(
+            get_curve(crv1_id), get_curve(crv2_id), points_.at(pt_id));
+    }
+
+    double calculate_angle_via_two_points(int crv1_id, int crv2_id, int pt1_id, int pt2_id) {
+        return system_.calculateAngleViaPoint(
+            get_curve(crv1_id), get_curve(crv2_id), points_.at(pt1_id), points_.at(pt2_id));
+    }
+
 private:
     GCS::System system_;
     std::deque<double> params_;  // pointer-stable storage
