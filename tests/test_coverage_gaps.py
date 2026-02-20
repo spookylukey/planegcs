@@ -84,6 +84,7 @@ def test_add_arc_from_center_and_arc_rules():
     assert abs(info.end_point[0] - 0.0) < 1e-4
     assert abs(info.end_point[1] - radius) < 1e-4
     assert abs(info.radius - radius) < 1e-4
+    assert abs(info.arc_size - (end_angle - start_angle)) < 1e-4
 
 
 def test_add_ellipse_and_get_ellipse():
