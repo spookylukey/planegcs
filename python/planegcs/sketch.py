@@ -28,7 +28,7 @@ or :meth:`Sketch.add_arc_from_start_end`)."""
 EllipseId = NewType("EllipseId", int)
 """ID for an ellipse (returned by :meth:`Sketch.add_ellipse`)."""
 
-CurveId = NewType("CurveId", int)
+type CurveId = CircleId | EllipseId | ArcId | LineId
 """ID for any geometry usable as a curve (line, circle, arc, ellipse, etc.)."""
 
 ConstraintTag = NewType("ConstraintTag", int)

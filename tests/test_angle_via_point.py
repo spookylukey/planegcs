@@ -1,10 +1,11 @@
 """Tests for *ViaPoint constraint support."""
+from typing import cast
 
 import math
 
 import pytest
 
-from planegcs import CurveId, Sketch, SolveStatus
+from planegcs import Sketch, SolveStatus
 
 
 def _approx(val: float, *, abs: float = 1e-6):
@@ -26,12 +27,12 @@ class TestAngleViaPointTwoLines:
         l2 = s.add_line(origin, p2)
 
         # Constrain the angle at the origin to pi/2
-        s.set_angle_via_point(CurveId(l1), CurveId(l2), origin, math.pi / 2)
+        s.set_angle_via_point(l1, l2, origin, math.pi / 2)
 
         status = s.solve()
         assert status == SolveStatus.Success
 
-        measured = s.calculate_angle_via_point(CurveId(l1), CurveId(l2), origin)
+        measured = s.calculate_angle_via_point(l1, l2, origin)
         assert measured == _approx(math.pi / 2)
 
     def test_acute_angle(self):
@@ -43,11 +44,11 @@ class TestAngleViaPointTwoLines:
         l2 = s.add_line(origin, p2)
 
         target = math.pi / 6  # 30 degrees
-        s.set_angle_via_point(CurveId(l1), CurveId(l2), origin, target)
+        s.set_angle_via_point(l1, l2, origin, target)
         status = s.solve()
         assert status == SolveStatus.Success
 
-        measured = s.calculate_angle_via_point(CurveId(l1), CurveId(l2), origin)
+        measured = s.calculate_angle_via_point(l1, l2, origin)
         assert measured == _approx(target)
 
 
@@ -74,12 +75,12 @@ class TestAngleViaPointLineCircle:
 
         # Constrain angle at pt between line and circle to 45 deg
         target = math.pi / 4
-        s.set_angle_via_point(CurveId(line), CurveId(circ), pt, target)
+        s.set_angle_via_point(line, circ, pt, target)
 
         status = s.solve()
         assert status == SolveStatus.Success
 
-        measured = s.calculate_angle_via_point(CurveId(line), CurveId(circ), pt)
+        measured = s.calculate_angle_via_point(line, circ, pt)
         assert measured == _approx(target)
 
 
@@ -97,7 +98,7 @@ class TestCalculateAngleViaPoint:
         l1 = s.add_line(o, px)
         l2 = s.add_line(o, py)
 
-        angle = s.calculate_angle_via_point(CurveId(l1), CurveId(l2), o)
+        angle = s.calculate_angle_via_point(l1, l2, o)
         assert angle == _approx(math.pi / 2)
 
     def test_parallel_lines(self):
@@ -109,7 +110,7 @@ class TestCalculateAngleViaPoint:
         l1 = s.add_line(o, p1)
         l2 = s.add_line(o, p2)
 
-        angle = s.calculate_angle_via_point(CurveId(l1), CurveId(l2), o)
+        angle = s.calculate_angle_via_point(l1, l2, o)
         # Parallel/collinear → angle is 0 or pi
         assert abs(math.sin(angle)) == _approx(0.0)
 
@@ -126,7 +127,7 @@ class TestCurveValue:
 
         pt = s.add_point(5, 0)
         u = s.add_param(0.0, fixed=True)  # u=0 → rightmost point
-        s.curve_value(pt, CurveId(circ), u)
+        s.curve_value(pt, circ, u)
 
         status = s.solve()
         assert status == SolveStatus.Success
@@ -143,7 +144,7 @@ class TestCurveValue:
 
         pt = s.add_point(0, 5)
         u = s.add_param(math.pi / 2, fixed=True)  # u=pi/2 → top
-        s.curve_value(pt, CurveId(circ), u)
+        s.curve_value(pt, circ, u)
 
         status = s.solve()
         assert status == SolveStatus.Success
@@ -163,7 +164,7 @@ class TestGetCurveError:
         u = s.add_param(0.0)
         with pytest.raises(IndexError, match="get_curve"):
             # 9999 is not a valid geometry id
-            s.curve_value(pt, CurveId(9999), u)
+            s.curve_value(pt, 9999, u)
 
 
 # ── angle_via_two_points ──────────────────────────────────────────
@@ -183,12 +184,12 @@ class TestAngleViaTwoPoints:
         l2 = s.add_line(p3, p4)  # vertical-ish
 
         target = math.pi / 2
-        s.set_angle_via_two_points(CurveId(l1), CurveId(l2), p1, p3, target)
+        s.set_angle_via_two_points(l1, l2, p1, p3, target)
 
         status = s.solve()
         assert status == SolveStatus.Success
 
-        measured = s.calculate_angle_via_two_points(CurveId(l1), CurveId(l2), p1, p3)
+        measured = s.calculate_angle_via_two_points(l1, l2, p1, p3)
         assert measured == _approx(target)
 
     def test_angle_via_two_points_param_api(self):
@@ -202,7 +203,7 @@ class TestAngleViaTwoPoints:
         l2 = s.add_line(p3, p4)
 
         angle_param = s.add_param(math.pi / 2)
-        tag = s.angle_via_two_points(CurveId(l1), CurveId(l2), p1, p3, angle_param)
+        tag = s.angle_via_two_points(l1, l2, p1, p3, angle_param)
         assert tag > 0
 
         status = s.solve()
@@ -230,7 +231,7 @@ class TestAngleViaPointAndParam:
 
         cparam = s.add_param(0.0, fixed=False)
         angle_p = s.add_param(math.pi / 4)
-        tag = s.angle_via_point_and_param(CurveId(line), CurveId(circ), pt, cparam, angle_p)
+        tag = s.angle_via_point_and_param(line, circ, pt, cparam, angle_p)
         assert tag > 0
 
         status = s.solve()
@@ -254,9 +255,7 @@ class TestAngleViaPointAndParam:
         cp1 = s.add_param(0.0, fixed=False)
         cp2 = s.add_param(math.pi, fixed=False)
         angle_p = s.add_param(math.pi)
-        tag = s.angle_via_point_and_two_params(
-            CurveId(circ1), CurveId(circ2), pt, cp1, cp2, angle_p
-        )
+        tag = s.angle_via_point_and_two_params(circ1, circ2, pt, cp1, cp2, angle_p)
         assert tag > 0
 
         status = s.solve()
@@ -292,9 +291,9 @@ class TestSnellsLaw:
         n2 = s.add_param(1.5)  # refractive index medium 2
 
         tag = s.snells_law(
-            CurveId(ray1),
-            CurveId(ray2),
-            CurveId(boundary),
+            ray1,
+            ray2,
+            boundary,
             pt,
             n1,
             n2,
@@ -311,4 +310,4 @@ class TestSnellsLaw:
 def test_curveid_importable():
     from planegcs import CurveId  # noqa: F811
 
-    assert CurveId(42) == 42
+    assert cast(CurveId, 42) == 42
