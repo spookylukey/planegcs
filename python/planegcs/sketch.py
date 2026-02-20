@@ -79,6 +79,11 @@ class ArcInfo:
     end_point: PointInfo
     """(x, y) of the arc end point."""
 
+    @property
+    def arc_size(self) -> float:
+        """Angular size of the arc in radians (end_angle - start_angle)."""
+        return self.end_angle - self.start_angle
+
 
 @dataclass(frozen=True, slots=True)
 class EllipseInfo:
