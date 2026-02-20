@@ -703,6 +703,16 @@ public:
         return tag;
     }
 
+    int arc_angle(int arc_id, int angle_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        auto& a = arcs_.at(arc_id);
+        // Use center→start and center→end as the two "lines" for L2LAngle
+        system_.addConstraintL2LAngle(
+            a.center, a.start, a.center, a.end,
+            param_ptr(angle_id), tag, driving);
+        return tag;
+    }
+
     int equal_length(int l1_id, int l2_id, bool driving = true) {
         int tag = next_constraint_tag_++;
         system_.addConstraintEqualLength(

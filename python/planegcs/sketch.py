@@ -662,6 +662,31 @@ class Sketch:
         d = self.add_param(diameter, fixed=True)
         return self.arc_diameter(arc_id, d, driving=driving)
 
+    def arc_angle(
+        self, arc_id: ArcId, angle_id: ParamId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain the angular span (sweep) of an arc using a parameter.
+
+        The angle is measured from the center→start ray to the center→end
+        ray.  Internally this uses an L2LAngle (line-to-line angle)
+        constraint on the two radii of the arc, which is the same
+        approach FreeCAD's Sketcher uses.
+
+        For a simpler API that takes a float directly, see :meth:`set_arc_angle`.
+        """
+        return ConstraintTag(self._solver.arc_angle(arc_id, angle_id, driving))
+
+    def set_arc_angle(self, arc_id: ArcId, angle: float, *, driving: bool = True) -> ConstraintTag:
+        """Constrain the angular span (sweep) of an arc to a value (in radians).
+
+        Convenience method that creates the parameter internally.
+        To use an explicit parameter (e.g. to read back the solved value
+        or share it between constraints), use :meth:`arc_angle` with
+        :meth:`add_param`.
+        """
+        a = self.add_param(angle, fixed=True)
+        return self.arc_angle(arc_id, a, driving=driving)
+
     def tangent_line_circle(
         self, line_id: LineId, circle_id: CircleId, *, driving: bool = True
     ) -> ConstraintTag:

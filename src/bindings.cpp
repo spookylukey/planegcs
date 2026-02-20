@@ -283,6 +283,9 @@ PYBIND11_MODULE(_planegcs, m) {
         .def("arc_diameter", &SketchSolver::arc_diameter,
              py::arg("arc_id"), py::arg("diameter_id"), py::arg("driving") = true,
              "Set arc diameter.")
+        .def("arc_angle", &SketchSolver::arc_angle,
+             py::arg("arc_id"), py::arg("angle_id"), py::arg("driving") = true,
+             "Constrain the angular span (sweep) of an arc using a parameter.")
         .def("equal_length", &SketchSolver::equal_length,
              py::arg("l1_id"), py::arg("l2_id"), py::arg("driving") = true,
              "Constrain two lines to have equal length.")

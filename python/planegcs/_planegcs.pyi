@@ -425,6 +425,15 @@ class SketchSolver:
         """
         Constrain angle between two curves via two points.
         """
+    def arc_angle(
+        self,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        angle_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain the angular span (sweep) of an arc using a parameter.
+        """
     def arc_diameter(
         self,
         arc_id: typing.SupportsInt | typing.SupportsIndex,
