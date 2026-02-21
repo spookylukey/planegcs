@@ -1,4 +1,24 @@
-"""High-level Pythonic interface for the PlaneGCS constraint solver."""
+"""High-level Pythonic interface for the PlaneGCS constraint solver.
+
+Angle convention
+~~~~~~~~~~~~~~~~
+
+All angles (for arcs, ellipses, etc.) are in **radians**, measured
+**counterclockwise (CCW) from the positive x-axis** — the standard
+mathematical convention.
+
+Arc direction
+~~~~~~~~~~~~~
+
+An arc's direction is determined by its **sweep** (``end_angle -
+start_angle``).  A positive sweep traces the arc counterclockwise;
+a negative sweep traces it clockwise.  FreeCAD always uses CCW arcs
+(``end_angle >= start_angle``).
+
+Arc-rules constraints (added automatically by :meth:`Sketch.add_arc`)
+tie the start and end *points* to the angles via the parametric
+equation ``point = center + radius * (cos θ, sin θ)``.
+"""
 
 import math
 from dataclasses import dataclass
@@ -62,19 +82,34 @@ class CircleInfo:
 
 @dataclass(frozen=True, slots=True)
 class ArcInfo:
-    """Properties of an arc, returned by :meth:`Sketch.get_arc`."""
+    """Properties of an arc, returned by :meth:`Sketch.get_arc`.
+
+    Angles use the standard mathematical convention: measured in radians,
+    counterclockwise from the positive x-axis.  The **sweep** of the arc
+    is ``end_angle - start_angle``:
+
+    * **Positive sweep** (``end_angle > start_angle``): the arc goes
+      **counterclockwise** from start to end.
+    * **Negative sweep** (``end_angle < start_angle``): the arc goes
+      **clockwise** from start to end.
+
+    Start and end points are kept consistent with the angles via the
+    parametric equation::
+
+        point = center + radius * (cos(angle), sin(angle))
+    """
 
     center: PointInfo
     """(x, y) of the arc center."""
 
     radius: float
-    """Arc radius."""
+    """Arc radius (should be positive)."""
 
     start_angle: float
-    """Start angle in radians."""
+    """Start angle in radians (CCW from positive x-axis)."""
 
     end_angle: float
-    """End angle in radians."""
+    """End angle in radians (CCW from positive x-axis)."""
 
     start_point: PointInfo
     """(x, y) of the arc start point."""
@@ -84,7 +119,10 @@ class ArcInfo:
 
     @property
     def arc_size(self) -> float:
-        """Angular size of the arc in radians (end_angle - start_angle)."""
+        """Angular sweep of the arc in radians (``end_angle - start_angle``).
+
+        Positive for counterclockwise arcs, negative for clockwise.
+        """
         return self.end_angle - self.start_angle
 
 
@@ -314,19 +352,34 @@ class Sketch:
 
         The caller supplies all six components that define an arc:
         three points (center, start, end) and three scalar parameters
-        (radius, start angle, end angle).  Arc-rules constraints are
-        added automatically so that the start and end points are kept
-        consistent with ``center + radius * (cos θ, sin θ)``.
+        (radius, start angle, end angle).
+
+        **Angle convention:** angles are in radians, measured
+        counterclockwise (CCW) from the positive x-axis.  The arc
+        traces from *start_angle* to *end_angle*:
+
+        * ``end_angle > start_angle`` → **CCW** arc.
+        * ``end_angle < start_angle`` → **CW** arc.
+
+        **Arc rules** are added automatically so that start and end
+        points satisfy ``point = center + radius * (cos θ, sin θ)``.
+        The radius should be positive.
 
         No hidden geometry or parameters are created.
+
+        .. note::
+
+           FreeCAD always uses CCW arcs (``end_angle >= start_angle``).
+           If you are reproducing a FreeCAD sketch, keep
+           ``end_angle >= start_angle``.
 
         Args:
             center_id: Center point of the arc.
             start_id: Start point of the arc (at *start_angle*).
             end_id: End point of the arc (at *end_angle*).
-            radius_id: Parameter for the radius.
-            start_angle_id: Parameter for the start angle (radians).
-            end_angle_id: Parameter for the end angle (radians).
+            radius_id: Parameter for the radius (should be positive).
+            start_angle_id: Parameter for the start angle (radians, CCW from +x).
+            end_angle_id: Parameter for the end angle (radians, CCW from +x).
 
         Returns:
             Arc ID.
@@ -354,13 +407,19 @@ class Sketch:
 
         "CSE" stands for Center–Start–End.
 
+        **Angle convention:** angles are in radians, measured
+        counterclockwise (CCW) from the positive x-axis.  A positive
+        sweep (``end_angle > start_angle``) gives a CCW arc; a
+        negative sweep gives a CW arc.  See :class:`ArcInfo` for
+        details.
+
         Args:
             center_id: Center point of the arc.
             start_id: Start point of the arc.
             end_id: End point of the arc.
-            radius: Initial radius value.
-            start_angle: Initial start angle (radians).
-            end_angle: Initial end angle (radians).
+            radius: Initial radius value (should be positive).
+            start_angle: Initial start angle (radians, CCW from +x).
+            end_angle: Initial end angle (radians, CCW from +x).
 
         Returns:
             Arc ID.
@@ -380,15 +439,24 @@ class Sketch:
         """Add a fully self-contained arc from center coords and angles.
 
         Creates center, start, and end points plus radius/angle
-        parameters internally.  Useful for quick prototyping when
-        you don't need direct access to the individual points or
-        parameters.
+        parameters internally.  Start and end point coordinates are
+        computed from the parametric equation
+        ``center + radius * (cos θ, sin θ)``.
+
+        Useful for quick prototyping when you don't need direct
+        access to the individual points or parameters.
+
+        **Angle convention:** angles are in radians, measured
+        counterclockwise (CCW) from the positive x-axis.  A positive
+        sweep (``end_angle > start_angle``) gives a CCW arc; a
+        negative sweep gives a CW arc.  See :class:`ArcInfo` for
+        details.
 
         Args:
-            center: (x, y) of the arc center.
-            radius: Arc radius.
-            start_angle: Start angle in radians.
-            end_angle: End angle in radians.
+            center: ``(x, y)`` of the arc center.
+            radius: Arc radius (should be positive).
+            start_angle: Start angle in radians (CCW from +x).
+            end_angle: End angle in radians (CCW from +x).
 
         Returns:
             Arc ID.
@@ -730,19 +798,21 @@ class Sketch:
     def arc_angle(
         self, arc_id: ArcId, angle_id: ParamId, *, driving: bool = True
     ) -> ConstraintTag:
-        """Constrain the angular span (sweep) of an arc using a parameter.
+        """Constrain the angular sweep of an arc using a parameter.
 
-        The angle is measured from the center→start ray to the center→end
-        ray.  Internally this uses an L2LAngle (line-to-line angle)
-        constraint on the two radii of the arc, which is the same
-        approach FreeCAD's Sketcher uses.
+        The sweep is ``end_angle - start_angle``: positive for CCW arcs,
+        negative for CW arcs.  Internally this uses an L2LAngle
+        (line-to-line angle) constraint on the two radii of the arc,
+        the same approach FreeCAD's Sketcher uses.
 
         For a simpler API that takes a float directly, see :meth:`set_arc_angle`.
         """
         return ConstraintTag(self._solver.arc_angle(arc_id, angle_id, driving))
 
     def set_arc_angle(self, arc_id: ArcId, angle: float, *, driving: bool = True) -> ConstraintTag:
-        """Constrain the angular span (sweep) of an arc to a value (in radians).
+        """Constrain the angular sweep of an arc to a value (in radians).
+
+        Positive values constrain a CCW sweep, negative values a CW sweep.
 
         Convenience method that creates the parameter internally.
         To use an explicit parameter (e.g. to read back the solved value
@@ -922,7 +992,16 @@ class Sketch:
         return self.arc_length(arc_id, p, driving=driving)
 
     def arc_rules(self, arc_id: ArcId, *, driving: bool = True) -> ConstraintTag:
-        """Add arc rules (start/end points computed from center, radius, angles)."""
+        """Add arc rules (start/end points tied to center, radius, angles).
+
+        Arc rules constrain the start and end points to satisfy::
+
+            start = center + radius * (cos(start_angle), sin(start_angle))
+            end   = center + radius * (cos(end_angle),   sin(end_angle))
+
+        These are added automatically by :meth:`add_arc`, so you normally
+        do not need to call this directly.
+        """
         return ConstraintTag(self._solver.arc_rules(arc_id, driving))
 
     def proportional(
