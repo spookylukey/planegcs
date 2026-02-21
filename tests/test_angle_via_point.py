@@ -1,11 +1,11 @@
 """Tests for *ViaPoint constraint support."""
-from typing import cast
 
 import math
+from typing import cast
 
 import pytest
 
-from planegcs import Sketch, SolveStatus
+from planegcs import LineId, Sketch, SolveStatus
 
 
 def _approx(val: float, *, abs: float = 1e-6):
@@ -164,7 +164,7 @@ class TestGetCurveError:
         u = s.add_param(0.0)
         with pytest.raises(IndexError, match="get_curve"):
             # 9999 is not a valid geometry id
-            s.curve_value(pt, 9999, u)
+            s.curve_value(pt, LineId(9999), u)
 
 
 # ── angle_via_two_points ──────────────────────────────────────────
