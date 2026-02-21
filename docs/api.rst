@@ -15,6 +15,17 @@ Diagnosis
    :members:
    :undoc-members:
 
+Constraint & Entity Info
+------------------------
+
+.. autoclass:: planegcs.ConstraintInfo
+   :members:
+   :undoc-members:
+
+.. autoclass:: planegcs.EntityInfo
+   :members:
+   :undoc-members:
+
 SketchSolver (Low-Level)
 ------------------------
 

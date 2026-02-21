@@ -20,9 +20,11 @@ tie the start and end *points* to the angles via the parametric
 equation ``point = center + radius * (cos θ, sin θ)``.
 """
 
+from __future__ import annotations
+
 import math
 from dataclasses import dataclass, field
-from typing import NewType
+from typing import Literal, NewType
 
 from planegcs._planegcs import Algorithm, InternalAlignmentType, SketchSolver, SolveStatus
 
@@ -56,6 +58,41 @@ ConstraintTag = NewType("ConstraintTag", int)
 
 type PointInfo = tuple[float, float]
 """(x, y) coordinates of a point, returned by :meth:`Sketch.get_point`."""
+
+EntityType = Literal["point", "line", "circle", "arc", "ellipse", "param"]
+"""The kind of geometric entity or parameter an ID refers to."""
+
+
+@dataclass(frozen=True, slots=True)
+class EntityInfo:
+    """Description of a geometric entity or parameter in a :class:`Sketch`.
+
+    Returned by :meth:`Sketch.get_entity`.  Gives the entity's type and
+    current solver value so that opaque integer IDs become meaningful.
+    """
+
+    id: int
+    """The numeric ID of the entity (same value as the typed ID)."""
+
+    type: EntityType
+    """Kind of entity: ``"point"``, ``"line"``, ``"circle"``, ``"arc"``,
+    ``"ellipse"``, or ``"param"``."""
+
+    value: PointInfo | LineInfo | CircleInfo | ArcInfo | EllipseInfo | float
+    """Current solver value.
+
+    The concrete type depends on :attr:`type`:
+
+    - ``"point"`` → ``PointInfo`` (an ``(x, y)`` tuple)
+    - ``"line"`` → :class:`LineInfo`
+    - ``"circle"`` → :class:`CircleInfo`
+    - ``"arc"`` → :class:`ArcInfo`
+    - ``"ellipse"`` → :class:`EllipseInfo`
+    - ``"param"`` → ``float``
+    """
+
+    def __repr__(self) -> str:
+        return f"EntityInfo(id={self.id}, type={self.type!r}, value={self.value!r})"
 
 
 @dataclass(frozen=True, slots=True)
@@ -92,6 +129,29 @@ class ConstraintInfo:
             f"ConstraintInfo(tag={self.tag}, type_name={self.type_name!r}, "
             f"entities={self.entities}, driving={self.driving})"
         )
+
+    def get_entities(self, sketch: Sketch) -> list[EntityInfo]:
+        """Resolve each entity ID to an :class:`EntityInfo` via *sketch*.
+
+        Returns a list in the same order as :attr:`entities`.  IDs that
+        the sketch cannot resolve (e.g. internal solver IDs) are omitted.
+
+        Args:
+            sketch: The :class:`Sketch` that owns this constraint.
+
+        Example::
+
+            diag = sketch.diagnose()
+            for ci in diag.conflicting_info:
+                for entity in ci.get_entities(sketch):
+                    print(entity.type, entity.value)
+        """
+        result: list[EntityInfo] = []
+        for eid in self.entities:
+            info = sketch.get_entity(eid)
+            if info is not None:
+                result.append(info)
+        return result
 
 
 @dataclass(frozen=True, slots=True)
@@ -266,6 +326,7 @@ class Sketch:
     def __init__(self) -> None:
         self._solver = SketchSolver()
         self._constraints: dict[ConstraintTag, ConstraintInfo] = {}
+        self._entity_types: dict[int, EntityType] = {}
 
     @property
     def solver(self) -> SketchSolver:
@@ -288,6 +349,42 @@ class Sketch:
         created by the solver itself).
         """
         return self._constraints.get(tag)
+
+    def get_entity(self, entity_id: int) -> EntityInfo | None:
+        """Look up an entity by its numeric ID.
+
+        Returns an :class:`EntityInfo` with the entity's type and current
+        solver value, or ``None`` if the ID is not recognised (e.g. an
+        internal solver ID that was never registered via the Sketch API).
+
+        This is the primary way to understand the opaque integer IDs that
+        appear in :attr:`ConstraintInfo.entities`.
+
+        Example::
+
+            line = sketch.add_line(p1, p2)
+            info = sketch.get_entity(line)
+            assert info.type == "line"
+            assert isinstance(info.value, LineInfo)
+        """
+        etype = self._entity_types.get(entity_id)
+        if etype is None:
+            return None
+        if etype == "point":
+            value = self.get_point(PointId(entity_id))
+        elif etype == "line":
+            value = self.get_line(LineId(entity_id))
+        elif etype == "circle":
+            value = self.get_circle(CircleId(entity_id))
+        elif etype == "arc":
+            value = self.get_arc(ArcId(entity_id))
+        elif etype == "ellipse":
+            value = self.get_ellipse(EllipseId(entity_id))
+        elif etype == "param":
+            value = self.get_param(ParamId(entity_id))
+        else:  # pragma: no cover
+            return None
+        return EntityInfo(id=entity_id, type=etype, value=value)
 
     def _record(
         self, tag: int, type_name: str, entities: tuple[int, ...], driving: bool
@@ -313,7 +410,9 @@ class Sketch:
         Returns:
             Parameter ID.
         """
-        return ParamId(self._solver.add_param(value, fixed))
+        pid = ParamId(self._solver.add_param(value, fixed))
+        self._entity_types[pid] = "param"
+        return pid
 
     def add_fixed_param(self, value: float) -> ParamId:
         """Allocate a fixed parameter with the given value.
@@ -340,7 +439,9 @@ class Sketch:
 
     def add_point(self, x: float, y: float) -> PointId:
         """Add a point at (x, y). Returns point ID."""
-        return PointId(self._solver.add_point(x, y))
+        pid = PointId(self._solver.add_point(x, y))
+        self._entity_types[pid] = "point"
+        return pid
 
     def add_point_from_params(self, px_id: ParamId, py_id: ParamId) -> PointId:
         """Add a point from existing parameter IDs for x and y.
@@ -351,7 +452,9 @@ class Sketch:
         :meth:`difference`, :meth:`equal`) to the coordinates, or when
         you want to share a parameter between multiple points.
         """
-        return PointId(self._solver.add_point_from_params(px_id, py_id))
+        pid = PointId(self._solver.add_point_from_params(px_id, py_id))
+        self._entity_types[pid] = "point"
+        return pid
 
     def get_point(self, point_id: PointId) -> PointInfo:
         """Get current (x, y) of a point."""
@@ -387,11 +490,15 @@ class Sketch:
 
     def add_line(self, p1_id: PointId, p2_id: PointId) -> LineId:
         """Add a line between two existing points. Returns line ID."""
-        return LineId(self._solver.add_line(p1_id, p2_id))
+        lid = LineId(self._solver.add_line(p1_id, p2_id))
+        self._entity_types[lid] = "line"
+        return lid
 
     def add_line_xy(self, x1: float, y1: float, x2: float, y2: float) -> LineId:
         """Add a line with endpoint coordinates. Returns line ID."""
-        return LineId(self._solver.add_line(x1, y1, x2, y2))
+        lid = LineId(self._solver.add_line(x1, y1, x2, y2))
+        self._entity_types[lid] = "line"
+        return lid
 
     def get_line(self, line_id: LineId) -> LineInfo:
         """Get all properties of a line.
@@ -405,7 +512,9 @@ class Sketch:
 
     def add_circle(self, center_id: PointId, radius: float) -> CircleId:
         """Add a circle. Returns circle ID."""
-        return CircleId(self._solver.add_circle(center_id, radius))
+        cid = CircleId(self._solver.add_circle(center_id, radius))
+        self._entity_types[cid] = "circle"
+        return cid
 
     def get_circle(self, circle_id: CircleId) -> CircleInfo:
         """Get all properties of a circle.
@@ -463,11 +572,13 @@ class Sketch:
         Returns:
             Arc ID.
         """
-        return ArcId(
+        aid = ArcId(
             self._solver.add_arc(
                 center_id, start_id, end_id, radius_id, start_angle_id, end_angle_id
             )
         )
+        self._entity_types[aid] = "arc"
+        return aid
 
     def add_arc_cse(
         self,
@@ -566,7 +677,9 @@ class Sketch:
 
     def add_ellipse(self, center_id: PointId, focus1_id: PointId, radmin: float) -> EllipseId:
         """Add an ellipse. Returns ellipse ID."""
-        return EllipseId(self._solver.add_ellipse(center_id, focus1_id, radmin))
+        eid = EllipseId(self._solver.add_ellipse(center_id, focus1_id, radmin))
+        self._entity_types[eid] = "ellipse"
+        return eid
 
     def get_ellipse(self, ellipse_id: EllipseId) -> EllipseInfo:
         """Get all properties of an ellipse.
@@ -1710,6 +1823,7 @@ class Sketch:
         """Clear all geometry, constraints and parameters."""
         self._solver.clear()
         self._constraints.clear()
+        self._entity_types.clear()
 
     def clear_by_tag(self, tag: ConstraintTag) -> None:
         """Remove all constraints with the given tag."""
