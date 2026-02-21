@@ -5,7 +5,7 @@ Targeted at:
 - add_line_xy
 - get_line
 - get_circle
-- add_arc_from_center / arc_rules
+- add_arc / add_arc3p
 - add_ellipse / get_ellipse
 - equal (parameter equality)
 """
@@ -63,16 +63,14 @@ def test_get_circle():
     assert abs(info.radius - 5.0) < 1e-6
 
 
-def test_add_arc_from_center_and_arc_rules():
-    """add_arc_from_center + arc_rules: start/end points match angles."""
+def test_add_arc3p_and_arc_rules():
+    """add_arc3p: start/end points match angles (arc rules applied automatically)."""
     s = Sketch()
-    center = s.add_fixed_point(0.0, 0.0)
     radius = 5.0
     start_angle = 0.0
     end_angle = math.pi / 2
 
-    arc = s.add_arc_from_center(center, radius, start_angle, end_angle)
-    s.arc_rules(arc)
+    arc = s.add_arc3p((0.0, 0.0), radius, start_angle, end_angle)
     status = s.solve()
     assert status == SolveStatus.Success
 
@@ -85,6 +83,27 @@ def test_add_arc_from_center_and_arc_rules():
     assert abs(info.end_point[1] - radius) < 1e-4
     assert abs(info.radius - radius) < 1e-4
     assert abs(info.arc_size - (end_angle - start_angle)) < 1e-4
+
+
+def test_arc_rules_python_method():
+    """Exercise the Python-level arc_rules method directly.
+
+    Builds an arc via the low-level add_arc (which calls arc_rules in C++),
+    then adds a *second* arc_rules from Python to verify the method works.
+    """
+    s = Sketch()
+    center = s.add_point(0.0, 0.0)
+    sp = s.add_point(5.0, 0.0)
+    ep = s.add_point(0.0, 5.0)
+    r = s.add_param(5.0, fixed=False)
+    sa = s.add_param(0.0, fixed=False)
+    ea = s.add_param(math.pi / 2, fixed=False)
+    arc = s.add_arc(center, sp, ep, r, sa, ea)
+    # add_arc already calls arc_rules; calling again is redundant but exercises the method
+    tag = s.arc_rules(arc)
+    assert isinstance(tag, int)
+    status = s.solve()
+    assert status == SolveStatus.Success
 
 
 def test_add_ellipse_and_get_ellipse():
@@ -166,9 +185,7 @@ def test_equal_radius_ca():
     c_center = s.add_fixed_point(0, 0)
     c = s.add_circle(c_center, 3.0)
     s.set_circle_radius(c, 3.0)
-    a_center = s.add_fixed_point(10, 0)
-    a = s.add_arc_from_center(a_center, 5.0, 0.0, math.pi / 2)
-    s.arc_rules(a)
+    a = s.add_arc3p((10, 0), 5.0, 0.0, math.pi / 2)
     s.equal_radius_ca(c, a)
     status = s.solve()
     assert status == SolveStatus.Success
@@ -176,13 +193,9 @@ def test_equal_radius_ca():
 
 def test_equal_radius_aa():
     s = Sketch()
-    a1_center = s.add_fixed_point(0, 0)
-    a1 = s.add_arc_from_center(a1_center, 3.0, 0.0, math.pi / 2)
-    s.arc_rules(a1)
+    a1 = s.add_arc3p((0, 0), 3.0, 0.0, math.pi / 2)
     s.set_arc_radius(a1, 3.0)
-    a2_center = s.add_fixed_point(10, 0)
-    a2 = s.add_arc_from_center(a2_center, 5.0, 0.0, math.pi / 2)
-    s.arc_rules(a2)
+    a2 = s.add_arc3p((10, 0), 5.0, 0.0, math.pi / 2)
     s.equal_radius_aa(a1, a2)
     status = s.solve()
     assert status == SolveStatus.Success
@@ -190,9 +203,7 @@ def test_equal_radius_aa():
 
 def test_point_on_arc():
     s = Sketch()
-    center = s.add_fixed_point(0, 0)
-    arc = s.add_arc_from_center(center, 5.0, 0.0, math.pi)
-    s.arc_rules(arc)
+    arc = s.add_arc3p((0, 0), 5.0, 0.0, math.pi)
     pt = s.add_point(3, 4)
     s.point_on_arc(pt, arc)
     status = s.solve()
@@ -233,9 +244,7 @@ def test_set_circle_diameter():
 
 def test_arc_radius():
     s = Sketch()
-    center = s.add_fixed_point(0, 0)
-    arc = s.add_arc_from_center(center, 5.0, 0.0, math.pi / 2)
-    s.arc_rules(arc)
+    arc = s.add_arc3p((0, 0), 5.0, 0.0, math.pi / 2)
     r = s.add_param(3.0, fixed=True)
     s.arc_radius(arc, r)
     status = s.solve()
@@ -244,9 +253,7 @@ def test_arc_radius():
 
 def test_arc_diameter():
     s = Sketch()
-    center = s.add_fixed_point(0, 0)
-    arc = s.add_arc_from_center(center, 5.0, 0.0, math.pi / 2)
-    s.arc_rules(arc)
+    arc = s.add_arc3p((0, 0), 5.0, 0.0, math.pi / 2)
     d = s.add_param(6.0, fixed=True)
     s.arc_diameter(arc, d)
     status = s.solve()
@@ -255,9 +262,7 @@ def test_arc_diameter():
 
 def test_set_arc_diameter():
     s = Sketch()
-    center = s.add_fixed_point(0, 0)
-    arc = s.add_arc_from_center(center, 5.0, 0.0, math.pi / 2)
-    s.arc_rules(arc)
+    arc = s.add_arc3p((0, 0), 5.0, 0.0, math.pi / 2)
     s.set_arc_diameter(arc, 6.0)
     status = s.solve()
     assert status == SolveStatus.Success
@@ -278,13 +283,9 @@ def test_tangent_line_ellipse():
 
 def test_tangent_arc_arc():
     s = Sketch()
-    c1 = s.add_fixed_point(0, 0)
-    a1 = s.add_arc_from_center(c1, 3.0, 0.0, math.pi)
-    s.arc_rules(a1)
+    a1 = s.add_arc3p((0, 0), 3.0, 0.0, math.pi)
     s.set_arc_radius(a1, 3.0)
-    c2 = s.add_point(6, 0)
-    a2 = s.add_arc_from_center(c2, 3.0, 0.0, math.pi)
-    s.arc_rules(a2)
+    a2 = s.add_arc3p((6, 0), 3.0, 0.0, math.pi)
     s.set_arc_radius(a2, 3.0)
     s.tangent_arc_arc(a1, a2)
     status = s.solve()
@@ -296,9 +297,7 @@ def test_tangent_circle_arc():
     c_center = s.add_fixed_point(0, 0)
     c = s.add_circle(c_center, 3.0)
     s.set_circle_radius(c, 3.0)
-    a_center = s.add_point(6, 0)
-    arc = s.add_arc_from_center(a_center, 3.0, 0.0, math.pi)
-    s.arc_rules(arc)
+    arc = s.add_arc3p((6, 0), 3.0, 0.0, math.pi)
     s.set_arc_radius(arc, 3.0)
     s.tangent_circle_arc(c, arc)
     status = s.solve()
@@ -395,9 +394,7 @@ def test_set_c2l_distance():
 
 def test_arc_length():
     s = Sketch()
-    center = s.add_fixed_point(0, 0)
-    arc = s.add_arc_from_center(center, 5.0, 0.0, math.pi / 2)
-    s.arc_rules(arc)
+    arc = s.add_arc3p((0, 0), 5.0, 0.0, math.pi / 2)
     length = s.add_param(math.pi * 5.0 / 2, fixed=True)
     s.arc_length(arc, length)
     status = s.solve()
@@ -406,9 +403,7 @@ def test_arc_length():
 
 def test_set_arc_length():
     s = Sketch()
-    center = s.add_fixed_point(0, 0)
-    arc = s.add_arc_from_center(center, 5.0, 0.0, math.pi / 2)
-    s.arc_rules(arc)
+    arc = s.add_arc3p((0, 0), 5.0, 0.0, math.pi / 2)
     s.set_arc_length(arc, math.pi * 5.0 / 2)
     status = s.solve()
     assert status == SolveStatus.Success

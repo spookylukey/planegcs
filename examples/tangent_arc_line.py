@@ -49,11 +49,11 @@ def main() -> None:
     corner_pt = s.add_point(-20.0, 0.0)  # Line2.end   = Arc.end
 
     # ── Geometry ───────────────────────────────────────────────────
-    # Arc: add_arc_from_start_end creates an internal center point,
-    # arc-rules constraints, and coincident constraints tying the
-    # arc's start/end to our points.
-    arc_radius = s.add_param(20.0, fixed=False)
-    arc = s.add_arc_from_start_end(tangent_pt, corner_pt, arc_radius)
+    # Arc: center at (-20, 20), radius 20, from 0 to 3π/2.
+    # add_arc takes explicit center/start/end points + params;
+    # arc-rules are applied automatically.
+    arc_center = s.add_point(-20.0, 20.0)
+    arc = s.add_arc_cse(arc_center, tangent_pt, corner_pt, 20.0, 0.0, 3 * math.pi / 2)
 
     line1 = s.add_line(origin, tangent_pt)
     line2 = s.add_line(origin, corner_pt)

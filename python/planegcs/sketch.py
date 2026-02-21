@@ -1,5 +1,6 @@
 """High-level Pythonic interface for the PlaneGCS constraint solver."""
 
+import math
 from dataclasses import dataclass
 from typing import NewType
 
@@ -22,8 +23,7 @@ CircleId = NewType("CircleId", int)
 """ID for a circle (returned by :meth:`Sketch.add_circle`)."""
 
 ArcId = NewType("ArcId", int)
-"""ID for an arc (returned by :meth:`Sketch.add_arc_from_center`
-or :meth:`Sketch.add_arc_from_start_end`)."""
+"""ID for an arc (returned by :meth:`Sketch.add_arc`)."""
 
 EllipseId = NewType("EllipseId", int)
 """ID for an ellipse (returned by :meth:`Sketch.add_ellipse`)."""
@@ -301,40 +301,105 @@ class Sketch:
             radius=self._solver.get_circle_radius(circle_id),
         )
 
-    def add_arc_from_center(
+    def add_arc(
         self,
         center_id: PointId,
-        radius: float,
-        start_angle: float,
-        end_angle: float,
-    ) -> ArcId:
-        """Add an arc from center point, radius and angles. Returns arc ID."""
-        return ArcId(self._solver.add_arc_from_center(center_id, radius, start_angle, end_angle))
-
-    def add_arc_from_start_end(
-        self,
         start_id: PointId,
         end_id: PointId,
         radius_id: ParamId,
+        start_angle_id: ParamId,
+        end_angle_id: ParamId,
     ) -> ArcId:
-        """Add an arc from start/end points and a radius parameter.
+        """Add an arc from explicit points and angle/radius parameters.
 
-        Automatically adds arc rules and coincident constraints so that the
-        arc passes through the given start and end points.
+        The caller supplies all six components that define an arc:
+        three points (center, start, end) and three scalar parameters
+        (radius, start angle, end angle).  Arc-rules constraints are
+        added automatically so that the start and end points are kept
+        consistent with ``center + radius * (cos θ, sin θ)``.
 
-        The caller supplies a :class:`ParamId` for the radius (created via
-        :meth:`add_param`).  Use ``fixed=True`` (the default) to lock the
-        radius, or ``fixed=False`` to let the solver adjust it.
+        No hidden geometry or parameters are created.
 
         Args:
-            start_id: Start point of the arc.
-            end_id: End point of the arc.
-            radius_id: Parameter ID for the radius (from :meth:`add_param`).
+            center_id: Center point of the arc.
+            start_id: Start point of the arc (at *start_angle*).
+            end_id: End point of the arc (at *end_angle*).
+            radius_id: Parameter for the radius.
+            start_angle_id: Parameter for the start angle (radians).
+            end_angle_id: Parameter for the end angle (radians).
 
         Returns:
             Arc ID.
         """
-        return ArcId(self._solver.add_arc_from_start_end(start_id, end_id, radius_id))
+        return ArcId(
+            self._solver.add_arc(
+                center_id, start_id, end_id, radius_id, start_angle_id, end_angle_id
+            )
+        )
+
+    def add_arc_cse(
+        self,
+        center_id: PointId,
+        start_id: PointId,
+        end_id: PointId,
+        radius: float,
+        start_angle: float,
+        end_angle: float,
+    ) -> ArcId:
+        """Add an arc from points and initial scalar values.
+
+        Like :meth:`add_arc`, but creates the radius and angle
+        parameters automatically.  *Center*, *start*, and *end* must
+        be existing points (created by :meth:`add_point`).
+
+        "CSE" stands for Center–Start–End.
+
+        Args:
+            center_id: Center point of the arc.
+            start_id: Start point of the arc.
+            end_id: End point of the arc.
+            radius: Initial radius value.
+            start_angle: Initial start angle (radians).
+            end_angle: Initial end angle (radians).
+
+        Returns:
+            Arc ID.
+        """
+        r = self.add_param(radius, fixed=False)
+        sa = self.add_param(start_angle, fixed=False)
+        ea = self.add_param(end_angle, fixed=False)
+        return self.add_arc(center_id, start_id, end_id, r, sa, ea)
+
+    def add_arc3p(
+        self,
+        center: tuple[float, float],
+        radius: float,
+        start_angle: float,
+        end_angle: float,
+    ) -> ArcId:
+        """Add a fully self-contained arc from center coords and angles.
+
+        Creates center, start, and end points plus radius/angle
+        parameters internally.  Useful for quick prototyping when
+        you don't need direct access to the individual points or
+        parameters.
+
+        Args:
+            center: (x, y) of the arc center.
+            radius: Arc radius.
+            start_angle: Start angle in radians.
+            end_angle: End angle in radians.
+
+        Returns:
+            Arc ID.
+        """
+        cx, cy = center
+        c = self.add_point(cx, cy)
+        sp = self.add_point(
+            cx + radius * math.cos(start_angle), cy + radius * math.sin(start_angle)
+        )
+        ep = self.add_point(cx + radius * math.cos(end_angle), cy + radius * math.sin(end_angle))
+        return self.add_arc_cse(c, sp, ep, radius, start_angle, end_angle)
 
     def get_arc(self, arc_id: ArcId) -> ArcInfo:
         """Get all properties of an arc.

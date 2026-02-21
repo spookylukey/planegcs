@@ -244,24 +244,17 @@ class InternalAlignmentType:
 
 class SketchSolver:
     def __init__(self) -> None: ...
-    def add_arc_from_center(
+    def add_arc(
         self,
         center_id: typing.SupportsInt | typing.SupportsIndex,
-        radius: typing.SupportsFloat | typing.SupportsIndex,
-        start_angle: typing.SupportsFloat | typing.SupportsIndex,
-        end_angle: typing.SupportsFloat | typing.SupportsIndex,
-    ) -> int:
-        """
-        Add an arc from center point, radius and angles. Returns arc ID.
-        """
-    def add_arc_from_start_end(
-        self,
         start_id: typing.SupportsInt | typing.SupportsIndex,
         end_id: typing.SupportsInt | typing.SupportsIndex,
         radius_id: typing.SupportsInt | typing.SupportsIndex,
+        start_angle_id: typing.SupportsInt | typing.SupportsIndex,
+        end_angle_id: typing.SupportsInt | typing.SupportsIndex,
     ) -> int:
         """
-        Add an arc from start/end points and a radius parameter. Automatically adds arc rules and coincident constraints. Returns arc ID.
+        Add an arc from explicit points and parameters. Automatically adds arc rules. Returns arc ID.
         """
     def add_arc_of_ellipse(
         self,

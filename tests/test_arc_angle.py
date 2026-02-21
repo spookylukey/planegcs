@@ -16,9 +16,8 @@ def test_arc_angle_45_degrees():
     """
     s = Sketch()
 
-    center = s.add_fixed_point(0, 0)
-    arc = s.add_arc_from_center(center, 5.0, 0.0, math.pi / 2)
-    s.arc_rules(arc)
+    s.add_fixed_point(0, 0)
+    arc = s.add_arc3p((0, 0), 5.0, 0.0, math.pi / 2)
 
     # Constrain the sweep to 45 degrees
     target_angle = math.pi / 4
@@ -43,9 +42,8 @@ def test_arc_angle_large_sweep():
     """
     s = Sketch()
 
-    center = s.add_fixed_point(0, 0)
-    arc = s.add_arc_from_center(center, 4.0, 0.0, math.pi / 2)
-    s.arc_rules(arc)
+    s.add_fixed_point(0, 0)
+    arc = s.add_arc3p((0, 0), 4.0, 0.0, math.pi / 2)
 
     target_angle = 3 * math.pi / 2
     s.set_arc_angle(arc, target_angle)
@@ -64,9 +62,8 @@ def test_arc_angle_param_version():
     """Test the parameter-based arc_angle (not the set_ convenience)."""
     s = Sketch()
 
-    center = s.add_fixed_point(0, 0)
-    arc = s.add_arc_from_center(center, 3.0, 0.0, math.pi)
-    s.arc_rules(arc)
+    s.add_fixed_point(0, 0)
+    arc = s.add_arc3p((0, 0), 3.0, 0.0, math.pi)
 
     angle_param = s.add_param(math.pi / 6, fixed=True)  # 30 degrees
     s.arc_angle(arc, angle_param)
