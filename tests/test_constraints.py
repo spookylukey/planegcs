@@ -46,8 +46,8 @@ def test_perpendicular_lines():
     s.horizontal(l1)
     s.perpendicular(l1, l2)
 
-    d1 = s.add_param(5.0)
-    d2 = s.add_param(5.0)
+    d1 = s.add_fixed_param(5.0)
+    d2 = s.add_fixed_param(5.0)
     s.p2p_distance(p1, p2, d1)
     s.p2p_distance(p3, p4, d2)
 
@@ -166,12 +166,12 @@ def test_l2l_angle():
 
     s.horizontal(l1)
 
-    d1 = s.add_param(5.0)
+    d1 = s.add_fixed_param(5.0)
     s.p2p_distance(p1, p2, d1)
-    d2 = s.add_param(5.0)
+    d2 = s.add_fixed_param(5.0)
     s.p2p_distance(p3, p4, d2)
 
-    angle = s.add_param(math.pi / 4)  # 45 degrees
+    angle = s.add_fixed_param(math.pi / 4)  # 45 degrees
     s.l2l_angle(l1, l2, angle)
 
     status = s.solve()
@@ -190,11 +190,11 @@ def test_p2l_distance():
     line = s.add_line(lp1, lp2)
 
     pt = s.add_point(5, 3)
-    d = s.add_param(7.0)
+    d = s.add_fixed_param(7.0)
     s.p2l_distance(pt, line, d)
 
     # Also fix x of pt
-    px = s.add_param(5.0)
+    px = s.add_fixed_param(5.0)
     s.coordinate_x(pt, px)
 
     status = s.solve()
@@ -210,7 +210,7 @@ def test_constraint_error():
     solver = SketchSolver()
     p1 = solver.add_point(0, 0)
     p2 = solver.add_point(3, 4)
-    d = solver.add_param(10.0)  # wrong distance
+    d = solver.add_param(10.0, fixed=True)  # wrong distance
     tag = solver.p2p_distance(p1, p2, d)
     # Before solving, the error should be non-zero
     err = solver.constraint_error(tag)
@@ -222,7 +222,7 @@ def test_clear_by_tag():
     solver = SketchSolver()
     p1 = solver.add_point(0, 0)
     p2 = solver.add_point(5, 0)
-    d = solver.add_param(5.0)
+    d = solver.add_param(5.0, fixed=True)
     tag = solver.p2p_distance(p1, p2, d)
     solver.clear_by_tag(tag)  # should not crash
 
@@ -250,12 +250,12 @@ def test_coordinate_x():
     """Fix just the x-coordinate of a point."""
     s = Sketch()
     p = s.add_point(3, 7)
-    x_val = s.add_param(5.0)
+    x_val = s.add_fixed_param(5.0)
     tag = s.coordinate_x(p, x_val)
     assert tag > 0
 
     # Fix y too so the system is fully constrained.
-    y_val = s.add_param(7.0)
+    y_val = s.add_fixed_param(7.0)
     s.coordinate_y(p, y_val)
 
     status = s.solve()
@@ -268,12 +268,12 @@ def test_coordinate_y():
     """Fix just the y-coordinate of a point."""
     s = Sketch()
     p = s.add_point(3, 7)
-    y_val = s.add_param(2.0)
+    y_val = s.add_fixed_param(2.0)
     tag = s.coordinate_y(p, y_val)
     assert tag > 0
 
     # Fix x too so the system is fully constrained.
-    x_val = s.add_param(3.0)
+    x_val = s.add_fixed_param(3.0)
     s.coordinate_x(p, x_val)
 
     status = s.solve()

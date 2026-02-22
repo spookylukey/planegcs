@@ -15,7 +15,7 @@ def test_point_on_circle():
     center = s.add_fixed_point(0, 0)
 
     c = s.add_circle(center, 5.0)
-    r_param = s.add_param(5.0)
+    r_param = s.add_fixed_param(5.0)
     s.circle_radius(c, r_param)
 
     pt = s.add_point(3, 4)  # initial guess on the circle
@@ -70,7 +70,7 @@ def test_concentric_circles_equal_radius():
 
     s.solver.equal_radius_cc(c1, c2)
 
-    r_param = s.add_param(5.0)
+    r_param = s.add_fixed_param(5.0)
     s.circle_radius(c1, r_param)
 
     status = s.solve()
@@ -91,8 +91,8 @@ def test_two_tangent_circles():
     c1 = s.add_circle(c1_center, 3.0)
     c2 = s.add_circle(c2_center, 5.0)
 
-    r1 = s.add_param(3.0)
-    r2 = s.add_param(5.0)
+    r1 = s.add_fixed_param(3.0)
+    r2 = s.add_fixed_param(5.0)
     s.circle_radius(c1, r1)
     s.circle_radius(c2, r2)
 

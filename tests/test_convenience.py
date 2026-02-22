@@ -73,7 +73,7 @@ def test_set_p2l_distance():
     s.set_p2l_distance(pt, line, 7.0)
 
     # Also fix x of pt via a param
-    px = s.add_param(5.0)
+    px = s.add_param(5.0, fixed=True)
     s.coordinate_x(pt, px)
 
     status = s.solve()

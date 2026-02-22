@@ -398,14 +398,17 @@ class Sketch:
 
     # ── Parameters ─────────────────────────────────────────────────
 
-    def add_param(self, value: float = 0.0, *, fixed: bool = True) -> ParamId:
+    def add_param(self, value: float = 0.0, *, fixed: bool = False) -> ParamId:
         """Allocate a standalone parameter.
+
+        By default the parameter is **free** — the solver may change it.
+        For driving-constraint values that the solver should not touch,
+        use :meth:`add_fixed_param` or pass ``fixed=True``.
 
         Args:
             value: Initial value.
-            fixed: If True (default), this is a driving constraint value
-                   that the solver will not change. Set False to make it
-                   an unknown the solver can adjust.
+            fixed: If True, the solver treats this as a constant.
+                   Defaults to False (free unknown).
 
         Returns:
             Parameter ID.

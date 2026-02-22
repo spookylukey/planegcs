@@ -44,7 +44,7 @@ def test_arc_basic():
     p1 = s.add_fixed_point(0, 0)
     p2 = s.add_fixed_point(3, 0)
 
-    rad = s.add_param(3.0)
+    rad = s.add_param(3.0, fixed=True)
     _make_arc_between(s, p1, p2, rad)
     status = s.solve()
     assert status == SolveStatus.Success
@@ -66,7 +66,7 @@ def test_arc_tangent_to_line():
     line = s.add_line(p1, p2)
     s.horizontal(line)
 
-    rad = s.add_param(5.0)
+    rad = s.add_param(5.0, fixed=True)
     arc = _make_arc_between(s, p2, p3, rad)
     s.tangent_line_arc(line, arc)
 
@@ -113,7 +113,7 @@ def test_equilateral_triangle_rounded_corners():
     line_r = s.add_line(p_rs, p_re)
     line_l = s.add_line(p_ls, p_le)
 
-    rad = s.add_param(r)
+    rad = s.add_param(r, fixed=True)
     arc_bl = _make_arc_between(s, p_le, p_bs, rad)
     arc_br = _make_arc_between(s, p_be, p_rs, rad)
     arc_top = _make_arc_between(s, p_re, p_ls, rad)

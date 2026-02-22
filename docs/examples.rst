@@ -64,8 +64,8 @@ tangent to its two adjacent line segments.
     line_r = s.add_line(p_rs, p_re)   # right
     line_l = s.add_line(p_ls, p_le)   # left
 
-    # Radius parameter – fixed by default, shared by all three arcs
-    rad = s.add_param(r)
+    # Radius parameter – fixed so the solver treats it as a driving value
+    rad = s.add_fixed_param(r)
 
     # Three corner arcs
     arc_bl  = s.add_arc_from_start_end(p_le, p_bs, rad)   # bottom-left

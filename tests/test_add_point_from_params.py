@@ -34,7 +34,7 @@ def test_shared_param_between_points():
     p2 = s.add_point_from_params(shared_x, py2)
 
     # Fix x via a coordinate constraint to 4.0
-    x_val = s.add_param(4.0)
+    x_val = s.add_fixed_param(4.0)
     s.coordinate_x(p1, x_val)
 
     status = s.solve()
@@ -60,7 +60,7 @@ def test_difference_without_get_point_param_ids():
     p2 = s.add_point_from_params(x2, y2)
 
     # Constrain x2 - x1 = 10
-    diff = s.add_param(10.0)
+    diff = s.add_fixed_param(10.0)
     s.difference(x1, x2, diff)
 
     status = s.solve()

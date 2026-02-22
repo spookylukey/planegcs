@@ -50,16 +50,24 @@ returned by ``add_*`` methods.
 ``int`` — no runtime cost, but static type checkers will catch mix-ups.
 
 **Parameters**: Standalone doubles used as constraint values (distances, angles,
-radii). Created with ``add_param(value, fixed=True)``.
+radii) or as free unknowns.
 
-- ``fixed=True`` (default): The solver will not change this value
-  (driving constraint).
-- ``fixed=False``: The solver may adjust this value.
+- ``add_param(value)`` creates a **free** parameter the solver may adjust.
+- ``add_fixed_param(value)`` (or ``add_param(value, fixed=True)``) creates a
+  **driving** parameter the solver will not change.
+
+For driving constraint values, prefer ``add_fixed_param``:
+``d = add_fixed_param(5.0); p2p_distance(p1, p2, d)``.
 
 Many constraints also have ``set_*`` convenience methods that accept a
-float directly and create the parameter internally (e.g.
-``set_p2p_distance(p1, p2, 5.0)`` instead of
-``d = add_param(5.0); p2p_distance(p1, p2, d)``).
+float directly and create a fixed parameter internally (e.g.
+``set_p2p_distance(p1, p2, 5.0)``).
+
+.. note::
+
+   Point coordinates created by ``add_point()`` are always free.
+   ``add_fixed_point()`` is a convenience that creates a point and
+   then fixes both coordinates.
 
 **Constraints**: Return a ``ConstraintTag`` that can be used to query errors
 or remove the constraint.

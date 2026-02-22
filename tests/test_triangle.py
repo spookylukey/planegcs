@@ -31,7 +31,7 @@ def test_equilateral_triangle():
     s.horizontal(l1)
 
     # Side length = 5
-    d = s.add_param(5.0)
+    d = s.add_fixed_param(5.0)
     s.p2p_distance(p1, p2, d)
 
     status = s.solve()
@@ -81,8 +81,8 @@ def test_right_triangle():
     s.perpendicular(l_base, l_height)
 
     # Set lengths
-    d_base = s.add_param(3.0)
-    d_height = s.add_param(4.0)
+    d_base = s.add_fixed_param(3.0)
+    d_height = s.add_fixed_param(4.0)
     s.p2p_distance(p1, p2, d_base)
     s.p2p_distance(p1, p3, d_height)
 
@@ -119,11 +119,11 @@ def test_isoceles_triangle():
     s.equal_length(l2, l3)
 
     # Base = 6
-    d = s.add_param(6.0)
+    d = s.add_fixed_param(6.0)
     s.p2p_distance(p1, p2, d)
 
     # Side = 5
-    d_side = s.add_param(5.0)
+    d_side = s.add_fixed_param(5.0)
     s.p2p_distance(p1, p3, d_side)
 
     status = s.solve()

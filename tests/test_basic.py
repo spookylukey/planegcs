@@ -109,7 +109,7 @@ def test_distance_constraint():
     p2 = s.add_point(1, 0)
     s.horizontal_points(p1, p2)
 
-    d = s.add_param(7.0)
+    d = s.add_fixed_param(7.0)
     s.p2p_distance(p1, p2, d)
     status = s.solve()
     assert status == SolveStatus.Success
@@ -136,7 +136,7 @@ def test_add_fixed_point_with_other_geometry():
     p2 = s.add_point(5.0, 3.0)
     line = s.add_line(p1, p2)
     s.horizontal(line)
-    d = s.add_param(7.0)
+    d = s.add_fixed_param(7.0)
     s.p2p_distance(p1, p2, d)
     status = s.solve()
     assert status == SolveStatus.Success

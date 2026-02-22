@@ -202,7 +202,7 @@ class TestAngleViaTwoPoints:
         l1 = s.add_line(p1, p2)
         l2 = s.add_line(p3, p4)
 
-        angle_param = s.add_param(math.pi / 2)
+        angle_param = s.add_param(math.pi / 2, fixed=True)
         tag = s.angle_via_two_points(l1, l2, p1, p3, angle_param)
         assert tag > 0
 
@@ -230,7 +230,7 @@ class TestAngleViaPointAndParam:
         s.point_on_circle(pt, circ)
 
         cparam = s.add_param(0.0, fixed=False)
-        angle_p = s.add_param(math.pi / 4)
+        angle_p = s.add_param(math.pi / 4, fixed=True)
         tag = s.angle_via_point_and_param(line, circ, pt, cparam, angle_p)
         assert tag > 0
 
@@ -254,7 +254,7 @@ class TestAngleViaPointAndParam:
 
         cp1 = s.add_param(0.0, fixed=False)
         cp2 = s.add_param(math.pi, fixed=False)
-        angle_p = s.add_param(math.pi)
+        angle_p = s.add_param(math.pi, fixed=True)
         tag = s.angle_via_point_and_two_params(circ1, circ2, pt, cp1, cp2, angle_p)
         assert tag > 0
 
@@ -287,8 +287,8 @@ class TestSnellsLaw:
         rp2 = s.add_point(3, -4)
         ray2 = s.add_line(pt, rp2)
 
-        n1 = s.add_param(1.0)  # refractive index medium 1
-        n2 = s.add_param(1.5)  # refractive index medium 2
+        n1 = s.add_param(1.0, fixed=True)  # refractive index medium 1
+        n2 = s.add_param(1.5, fixed=True)  # refractive index medium 2
 
         tag = s.snells_law(
             ray1,
