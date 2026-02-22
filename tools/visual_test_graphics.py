@@ -12,7 +12,7 @@ import os
 
 from planegcs import Sketch, SolveStatus
 
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "visual_test_output")
+OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "visual_test_output")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
