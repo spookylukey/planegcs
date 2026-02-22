@@ -1836,3 +1836,52 @@ class Sketch:
     def constraint_error(self, tag: ConstraintTag) -> float:
         """Calculate the RMS error of all constraints with the given tag."""
         return self._solver.constraint_error(tag)
+
+    def to_image(
+        self,
+        *,
+        width: int | None = None,
+        height: int | None = None,
+        scale: float | None = None,
+        padding: int = 40,
+        background: str = "white",
+        line_color: str = "black",
+        circle_color: str = "blue",
+        arc_color: str = "red",
+        ellipse_color: str = "green",
+        line_width: int = 2,
+        point_radius: int = 3,
+        point_color: str = "gray",
+    ) -> object:
+        """Render the sketch geometry to a Pillow image.
+
+        This is a convenience wrapper around
+        :func:`planegcs.graphics.sketch_to_image`.
+
+        Requires the ``graphics`` extra::
+
+            pip install planegcs[graphics]
+
+        All keyword arguments are forwarded to
+        :func:`~planegcs.graphics.sketch_to_image`.
+
+        Returns:
+            A :class:`PIL.Image.Image` showing the current sketch geometry.
+        """
+        from planegcs.graphics import sketch_to_image
+
+        return sketch_to_image(
+            self,
+            width=width,
+            height=height,
+            scale=scale,
+            padding=padding,
+            background=background,
+            line_color=line_color,
+            circle_color=circle_color,
+            arc_color=arc_color,
+            ellipse_color=ellipse_color,
+            line_width=line_width,
+            point_radius=point_radius,
+            point_color=point_color,
+        )

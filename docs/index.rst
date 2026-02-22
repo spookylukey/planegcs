@@ -12,6 +12,7 @@ find a configuration satisfying all constraints.
 
    quickstart
    examples
+   graphics
    api
    history
    releasing

@@ -21,6 +21,9 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 
+[project.optional-dependencies]
+graphics = ["Pillow>=10.0"]
+
 [project.urls]
 Homepage = "https://github.com/spookylukey/planegcs"
 Documentation = "https://planegcs.readthedocs.io/en/latest/"
@@ -40,6 +43,7 @@ addopts = "--cov=python --cov-report=term-missing --cov-fail-under=100"
 
 [dependency-groups]
 dev = [
+    "Pillow>=10.0",
     "pybind11-stubgen>=2.5",
     "pre-commit>=4.3.0",
     "pytest>=8.0",
