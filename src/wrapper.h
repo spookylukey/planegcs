@@ -112,14 +112,12 @@ public:
     }
 
     // ── Geometry: Circles ────────────────────────────────────────────
-    int add_circle(int center_id, double radius) {
-        int rad_id = add_param(radius);
+    int add_circle(int center_id, int radius_id) {
         int id = next_geo_id_++;
         GCS::Circle c;
         c.center = points_.at(center_id);
-        c.rad = param_ptr(rad_id);
+        c.rad = param_ptr(radius_id);
         circles_[id] = c;
-        circle_rad_param_[id] = rad_id;
         return id;
     }
 
@@ -362,7 +360,6 @@ public:
         point_param_ids_.clear();
         lines_.clear();
         circles_.clear();
-        circle_rad_param_.clear();
         arcs_.clear();
         ellipses_.clear();
         arcs_of_ellipse_.clear();
@@ -895,7 +892,6 @@ private:
     std::map<int, std::pair<int,int>> point_param_ids_;  // point_id -> (px_id, py_id)
     std::map<int, GCS::Line> lines_;
     std::map<int, GCS::Circle> circles_;
-    std::map<int, int> circle_rad_param_;
     std::map<int, GCS::Arc> arcs_;
     std::map<int, GCS::Ellipse> ellipses_;
     std::map<int, GCS::ArcOfEllipse> arcs_of_ellipse_;

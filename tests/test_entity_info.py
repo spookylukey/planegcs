@@ -51,7 +51,7 @@ def test_get_entity_line_xy():
 def test_get_entity_circle():
     s = Sketch()
     c = s.add_point(0.0, 0.0)
-    circle = s.add_circle(c, 5.0)
+    circle = s.add_circle(c, s.add_param(5.0))
     info = s.get_entity(circle)
     assert info is not None
     assert info.id == circle
@@ -219,7 +219,7 @@ def test_get_entities_point_on_circle():
     """point_on_circle references a point and a circle."""
     s = Sketch()
     center = s.add_point(0.0, 0.0)
-    circle = s.add_circle(center, 5.0)
+    circle = s.add_circle(center, s.add_param(5.0))
     pt = s.add_point(5.0, 0.0)
     tag = s.point_on_circle(pt, circle)
 

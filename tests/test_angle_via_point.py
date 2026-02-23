@@ -62,7 +62,7 @@ class TestAngleViaPointLineCircle:
         s = Sketch()
         # Circle centred at origin, radius 5
         center = s.add_fixed_point(0, 0)
-        circ = s.add_circle(center, 5.0)
+        circ = s.add_circle(center, s.add_param(5.0))
 
         # A point on the circle (will be intersection)
         pt = s.add_point(5, 0)
@@ -122,7 +122,7 @@ class TestCurveValue:
     def test_point_on_circle(self):
         s = Sketch()
         center = s.add_fixed_point(0, 0)
-        circ = s.add_circle(center, 5.0)
+        circ = s.add_circle(center, s.add_param(5.0))
         s.set_circle_radius(circ, 5.0)
 
         pt = s.add_point(5, 0)
@@ -139,7 +139,7 @@ class TestCurveValue:
     def test_point_on_circle_quarter(self):
         s = Sketch()
         center = s.add_fixed_point(0, 0)
-        circ = s.add_circle(center, 5.0)
+        circ = s.add_circle(center, s.add_param(5.0))
         s.set_circle_radius(circ, 5.0)
 
         pt = s.add_point(0, 5)
@@ -219,7 +219,7 @@ class TestAngleViaPointAndParam:
     def test_angle_via_point_and_param(self):
         s = Sketch()
         center = s.add_fixed_point(0, 0)
-        circ = s.add_circle(center, 5.0)
+        circ = s.add_circle(center, s.add_param(5.0))
         s.set_circle_radius(circ, 5.0)
 
         origin = s.add_fixed_point(0, 0)
@@ -240,11 +240,11 @@ class TestAngleViaPointAndParam:
     def test_angle_via_point_and_two_params(self):
         s = Sketch()
         center1 = s.add_fixed_point(0, 0)
-        circ1 = s.add_circle(center1, 5.0)
+        circ1 = s.add_circle(center1, s.add_param(5.0))
         s.set_circle_radius(circ1, 5.0)
 
         center2 = s.add_fixed_point(10, 0)
-        circ2 = s.add_circle(center2, 5.0)
+        circ2 = s.add_circle(center2, s.add_param(5.0))
         s.set_circle_radius(circ2, 5.0)
 
         # Point at (5, 0) is on both circles

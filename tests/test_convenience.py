@@ -111,7 +111,7 @@ def test_set_circle_radius():
     s = Sketch()
     center = s.add_fixed_point(0, 0)
 
-    c = s.add_circle(center, 3.0)  # initial guess radius 3
+    c = s.add_circle(center, s.add_param(3.0))  # initial guess radius 3
     s.set_circle_radius(c, 5.0)  # constrain to 5
 
     pt = s.add_point(5, 0)

@@ -43,7 +43,7 @@ def test_line():
 def test_circle():
     s = Sketch()
     c = s.add_point(0.0, 0.0)
-    s.add_circle(c, 5.0)
+    s.add_circle(c, s.add_fixed_param(5.0))
     img = sketch_to_image(s)
     assert img.size[0] > 0
 
@@ -86,7 +86,7 @@ def test_mixed_geometry():
     s.add_line(p1, p2)
     s.add_line(p2, p3)
     c = s.add_point(5, 5)
-    s.add_circle(c, 3.0)
+    s.add_circle(c, s.add_fixed_param(3.0))
     s.add_arc3p((5, 0), 2.0, 0.0, math.pi)
     s.solve()
     img = sketch_to_image(s)
@@ -136,7 +136,7 @@ def test_custom_colors():
     p2 = s.add_point(5, 5)
     s.add_line(p1, p2)
     c = s.add_point(2.5, 2.5)
-    s.add_circle(c, 1.0)
+    s.add_circle(c, s.add_fixed_param(1.0))
     img = sketch_to_image(
         s,
         background="black",

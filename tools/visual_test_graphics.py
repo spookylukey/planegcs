@@ -63,7 +63,7 @@ save(s, "02_right_triangle")
 print("3. Circle")
 s = Sketch()
 c = s.add_point(0, 0)
-s.add_circle(c, 5.0)
+s.add_circle(c, s.add_param(5.0))
 save(s, "03_circle")
 
 
@@ -71,8 +71,8 @@ save(s, "03_circle")
 print("4. Concentric circles")
 s = Sketch()
 c = s.add_point(0, 0)
-s.add_circle(c, 3.0)
-s.add_circle(c, 5.0)
+s.add_circle(c, s.add_param(3.0))
+s.add_circle(c, s.add_param(5.0))
 save(s, "04_concentric_circles")
 
 
@@ -151,7 +151,7 @@ s.set_p2p_distance(p1, p2, 10.0)
 assert s.solve() == SolveStatus.Success
 # Add a circle at approximate incenter
 c = s.add_point(5, 2.5)
-s.add_circle(c, 2.5)
+s.add_circle(c, s.add_param(2.5))
 save(s, "11_triangle_with_circle")
 
 
@@ -182,7 +182,7 @@ s.add_line(p2, p3)
 s.add_line(p3, p4)
 s.add_line(p4, p1)
 c = s.add_point(4, 3)
-s.add_circle(c, 2.5)
+s.add_circle(c, s.add_param(2.5))
 save(
     s,
     "13_custom_colors",

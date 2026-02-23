@@ -83,8 +83,9 @@ Circles and Arcs
    s = Sketch()
 
    center = s.add_fixed_point(0, 0)
+   radius_id = s.add_param(5.0)
 
-   c = s.add_circle(center, 5.0)
+   c = s.add_circle(center, radius_id)
 
    # Constrain radius
    s.set_circle_radius(c, 5.0)

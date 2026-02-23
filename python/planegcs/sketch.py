@@ -513,9 +513,9 @@ class Sketch:
             p2=self._solver.get_line_p2(line_id),
         )
 
-    def add_circle(self, center_id: PointId, radius: float) -> CircleId:
+    def add_circle(self, center_id: PointId, radius_id: ParamId) -> CircleId:
         """Add a circle. Returns circle ID."""
-        cid = CircleId(self._solver.add_circle(center_id, radius))
+        cid = CircleId(self._solver.add_circle(center_id, radius_id))
         self._entity_types[cid] = "circle"
         return cid
 

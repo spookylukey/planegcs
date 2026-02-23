@@ -297,7 +297,7 @@ class SketchSolver:
     def add_circle(
         self,
         center_id: typing.SupportsInt | typing.SupportsIndex,
-        radius: typing.SupportsFloat | typing.SupportsIndex,
+        radius_id: typing.SupportsInt | typing.SupportsIndex,
     ) -> int:
         """
         Add a circle. Returns circle ID.

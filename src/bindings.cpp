@@ -100,7 +100,7 @@ PYBIND11_MODULE(_planegcs, m) {
 
         // Geometry: Circles
         .def("add_circle", &SketchSolver::add_circle,
-             py::arg("center_id"), py::arg("radius"),
+             py::arg("center_id"), py::arg("radius_id"),
              "Add a circle. Returns circle ID.")
 
         // Geometry: Circle accessors

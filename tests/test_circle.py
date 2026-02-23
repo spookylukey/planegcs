@@ -14,7 +14,7 @@ def test_point_on_circle():
     s = Sketch()
     center = s.add_fixed_point(0, 0)
 
-    c = s.add_circle(center, 5.0)
+    c = s.add_circle(center, s.add_param(5.0))
     r_param = s.add_fixed_param(5.0)
     s.circle_radius(c, r_param)
 
@@ -34,7 +34,7 @@ def test_tangent_line_circle():
     """A line tangent to a circle touches at exactly one point."""
     s = Sketch()
     center = s.add_fixed_point(0, 0)
-    c = s.add_circle(center, 3.0)
+    c = s.add_circle(center, s.add_param(3.0))
 
     # Horizontal line at y=3 (tangent to circle of radius 3)
     lp1 = s.add_point(-5, 3)
@@ -65,8 +65,8 @@ def test_concentric_circles_equal_radius():
     s = Sketch()
     center = s.add_fixed_point(0, 0)
 
-    c1 = s.add_circle(center, 3.0)
-    c2 = s.add_circle(center, 7.0)  # different initial radius
+    c1 = s.add_circle(center, s.add_param(3.0))
+    c2 = s.add_circle(center, s.add_param(7.0))  # different initial radius
 
     s.solver.equal_radius_cc(c1, c2)
 
@@ -88,8 +88,8 @@ def test_two_tangent_circles():
     c2_center = s.add_point(8, 0)
     s.horizontal_points(c1_center, c2_center)
 
-    c1 = s.add_circle(c1_center, 3.0)
-    c2 = s.add_circle(c2_center, 5.0)
+    c1 = s.add_circle(c1_center, s.add_param(3.0))
+    c2 = s.add_circle(c2_center, s.add_param(5.0))
 
     r1 = s.add_fixed_param(3.0)
     r2 = s.add_fixed_param(5.0)
