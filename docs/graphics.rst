@@ -105,7 +105,7 @@ Using with IPython (terminal)
 When using `IPython <https://ipython.readthedocs.io/>`_ in a terminal that
 supports the `kitty graphics protocol <https://sw.kovidgoyal.net/kitty/graphics-protocol/>`_
 (e.g. kitty, WezTerm, Ghostty), you can display sketch images inline with
-`ipython-icat <https://github.com/ethanabrooks/ipython-icat>`_.
+`ipython-icat <https://github.com/Kabilan108/ipython-icat>`_.
 
 **Setup:**
 
