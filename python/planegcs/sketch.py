@@ -1365,6 +1365,83 @@ class Sketch:
         d = self.add_param(distance, fixed=True)
         return self.c2l_distance(circle_id, line_id, d, driving=driving)
 
+    def p2a_distance(
+        self,
+        pt_id: PointId,
+        arc_id: ArcId,
+        distance_id: ParamId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain point-to-arc distance using a parameter.
+
+        This measures the shortest distance from the point to the arc's
+        underlying circle (center and radius).  It is the arc analogue of
+        :meth:`p2c_distance`.
+
+        For a simpler API that takes a float directly, see
+        :meth:`set_p2a_distance`.
+        """
+        return self._record(
+            self._solver.p2a_distance(pt_id, arc_id, distance_id, driving),
+            "p2a_distance",
+            (pt_id, arc_id, distance_id),
+            driving,
+        )
+
+    def set_p2a_distance(
+        self,
+        pt_id: PointId,
+        arc_id: ArcId,
+        distance: float,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain point-to-arc distance to a value.
+
+        Convenience method that creates the parameter internally.
+        """
+        d = self.add_param(distance, fixed=True)
+        return self.p2a_distance(pt_id, arc_id, d, driving=driving)
+
+    def a2l_distance(
+        self,
+        arc_id: ArcId,
+        line_id: LineId,
+        dist_id: ParamId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain arc-to-line distance using a parameter.
+
+        This measures the distance between the arc's underlying circle
+        and the line.  It is the arc analogue of :meth:`c2l_distance`.
+
+        For a simpler API that takes a float directly, see
+        :meth:`set_a2l_distance`.
+        """
+        return self._record(
+            self._solver.a2l_distance(arc_id, line_id, dist_id, driving),
+            "a2l_distance",
+            (arc_id, line_id, dist_id),
+            driving,
+        )
+
+    def set_a2l_distance(
+        self,
+        arc_id: ArcId,
+        line_id: LineId,
+        distance: float,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain arc-to-line distance to a value.
+
+        Convenience method that creates the parameter internally.
+        """
+        d = self.add_param(distance, fixed=True)
+        return self.a2l_distance(arc_id, line_id, d, driving=driving)
+
     def arc_length(
         self, arc_id: ArcId, length_id: ParamId, *, driving: bool = True
     ) -> ConstraintTag:

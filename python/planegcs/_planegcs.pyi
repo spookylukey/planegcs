@@ -244,6 +244,16 @@ class InternalAlignmentType:
 
 class SketchSolver:
     def __init__(self) -> None: ...
+    def a2l_distance(
+        self,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        line_id: typing.SupportsInt | typing.SupportsIndex,
+        dist_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Add arc-to-line distance constraint.
+        """
     def add_arc(
         self,
         center_id: typing.SupportsInt | typing.SupportsIndex,
@@ -723,6 +733,16 @@ class SketchSolver:
     ) -> int:
         """
         Constrain midpoint of l1 to lie on l2.
+        """
+    def p2a_distance(
+        self,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        distance_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Add point-to-arc distance constraint.
         """
     def p2c_distance(
         self,

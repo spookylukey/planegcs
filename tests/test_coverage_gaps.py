@@ -392,6 +392,56 @@ def test_set_c2l_distance():
     assert status == SolveStatus.Success
 
 
+def test_p2a_distance():
+    """Point-to-arc distance constraint (param-based)."""
+    s = Sketch()
+    arc = s.add_arc3p((0.0, 0.0), 3.0, 0.0, math.pi / 2)
+    s.set_arc_radius(arc, 3.0)
+    pt = s.add_fixed_point(5, 0)
+    d = s.add_param(2.0, fixed=True)
+    s.p2a_distance(pt, arc, d)
+    status = s.solve()
+    assert status == SolveStatus.Success
+
+
+def test_set_p2a_distance():
+    """Point-to-arc distance constraint (convenience float-based)."""
+    s = Sketch()
+    arc = s.add_arc3p((0.0, 0.0), 3.0, 0.0, math.pi / 2)
+    s.set_arc_radius(arc, 3.0)
+    pt = s.add_fixed_point(5, 0)
+    s.set_p2a_distance(pt, arc, 2.0)
+    status = s.solve()
+    assert status == SolveStatus.Success
+
+
+def test_a2l_distance():
+    """Arc-to-line distance constraint (param-based)."""
+    s = Sketch()
+    arc = s.add_arc3p((0.0, 0.0), 2.0, 0.0, math.pi / 2)
+    s.set_arc_radius(arc, 2.0)
+    lp1 = s.add_fixed_point(-10, 10)
+    lp2 = s.add_fixed_point(10, 10)
+    line = s.add_line(lp1, lp2)
+    d = s.add_param(3.0, fixed=True)
+    s.a2l_distance(arc, line, d)
+    status = s.solve()
+    assert status == SolveStatus.Success
+
+
+def test_set_a2l_distance():
+    """Arc-to-line distance constraint (convenience float-based)."""
+    s = Sketch()
+    arc = s.add_arc3p((0.0, 0.0), 2.0, 0.0, math.pi / 2)
+    s.set_arc_radius(arc, 2.0)
+    lp1 = s.add_fixed_point(-10, 10)
+    lp2 = s.add_fixed_point(10, 10)
+    line = s.add_line(lp1, lp2)
+    s.set_a2l_distance(arc, line, 3.0)
+    status = s.solve()
+    assert status == SolveStatus.Success
+
+
 def test_arc_length():
     s = Sketch()
     arc = s.add_arc3p((0, 0), 5.0, 0.0, math.pi / 2)

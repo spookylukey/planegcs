@@ -712,6 +712,23 @@ public:
         return tag;
     }
 
+    // Arc variants: Arc inherits from Circle, so the same GCS constraints
+    // apply — they only use center + radius (i.e. the underlying circle).
+
+    int p2a_distance(int pt_id, int arc_id, int distance_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintP2CDistance(
+            points_.at(pt_id), arcs_.at(arc_id), param_ptr(distance_id), tag, driving);
+        return tag;
+    }
+
+    int a2l_distance(int arc_id, int line_id, int dist_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintC2LDistance(
+            arcs_.at(arc_id), lines_.at(line_id), param_ptr(dist_id), tag, driving);
+        return tag;
+    }
+
     int arc_length(int arc_id, int dist_id, bool driving = true) {
         int tag = next_constraint_tag_++;
         system_.addConstraintArcLength(

@@ -315,6 +315,14 @@ PYBIND11_MODULE(_planegcs, m) {
              py::arg("circle_id"), py::arg("line_id"), py::arg("dist_id"),
              py::arg("driving") = true,
              "Add circle-to-line distance constraint.")
+        .def("p2a_distance", &SketchSolver::p2a_distance,
+             py::arg("pt_id"), py::arg("arc_id"), py::arg("distance_id"),
+             py::arg("driving") = true,
+             "Add point-to-arc distance constraint.")
+        .def("a2l_distance", &SketchSolver::a2l_distance,
+             py::arg("arc_id"), py::arg("line_id"), py::arg("dist_id"),
+             py::arg("driving") = true,
+             "Add arc-to-line distance constraint.")
         .def("arc_length", &SketchSolver::arc_length,
              py::arg("arc_id"), py::arg("dist_id"), py::arg("driving") = true,
              "Constrain arc length.")
