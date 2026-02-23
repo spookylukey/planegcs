@@ -59,11 +59,7 @@ ty check \
 
 info "Checking _planegcs.pyi is up to date …"
 uv run pytest tests/test_stubs.py -x -q \
-    || die "Type stubs are out of date — regenerate with:\n" \
-           "  python -m pybind11_stubgen planegcs._planegcs" \
-           "    --enum-class-locations 'Algorithm:planegcs._planegcs' -o python\n" \
-           "  ruff check --fix python/planegcs/_planegcs.pyi\n" \
-           "  ruff format python/planegcs/_planegcs.pyi"
+    || die "Type stubs are out of date — regenerate with ./update_stubs.sh"
 
 # --- step 1: bump version ---------------------------------------------------
 

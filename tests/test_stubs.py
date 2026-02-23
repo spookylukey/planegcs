@@ -3,11 +3,7 @@
 Run ``pybind11-stubgen`` against the live module and compare the output
 to the committed stub file.  If this test fails, regenerate with::
 
-    python -m pybind11_stubgen planegcs._planegcs \
-        --enum-class-locations 'Algorithm:planegcs._planegcs' \
-        -o python
-    ruff check --fix python/planegcs/_planegcs.pyi
-    ruff format python/planegcs/_planegcs.pyi
+  ./update_stubs.sh
 """
 
 import importlib.util
@@ -22,12 +18,7 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 STUB_PATH = ROOT / "python" / "planegcs" / "_planegcs.pyi"
 
-REGEN_CMD = textwrap.dedent("""\
-    python -m pybind11_stubgen planegcs._planegcs \\
-        --enum-class-locations 'Algorithm:planegcs._planegcs' \\
-        -o python
-    ruff check --fix python/planegcs/_planegcs.pyi
-    ruff format python/planegcs/_planegcs.pyi""")
+REGEN_CMD = textwrap.dedent("./update_stubs.sh")
 
 
 def _stubgen_available() -> bool:
