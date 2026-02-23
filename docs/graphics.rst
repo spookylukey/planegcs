@@ -32,18 +32,16 @@ Basic Usage
    p1 = s.add_fixed_point(0, 0)
    p2 = s.add_point(5, 0)
    p3 = s.add_point(2.5, 4)
-   s.add_line(p1, p2)
-   s.add_line(p2, p3)
+   l1 = s.add_line(p1, p2)
+   l2 = s.add_line(p2, p3)
    s.add_line(p3, p1)
-   s.equal_length(s.add_line(p1, p2), s.add_line(p2, p3))  # (simplified)
+   s.equal_length(l1, l2)
 
    s.solve()
 
-   # Get a PIL Image object
-   img = s.to_image()
+   # Get a PIL Image object and show it in a GUI window
+   s.to_image().show()
 
-   # Save to file
-   img.save("my_sketch.png")
 
 The :meth:`~planegcs.Sketch.to_image` method automatically:
 
@@ -115,7 +113,7 @@ supports the `kitty graphics protocol <https://sw.kovidgoyal.net/kitty/graphics-
 
    pip install ipython ipython-icat planegcs[graphics]
 
-Enable the extension in your IPython config or load it per-session:
+Enable the extension in your IPython config:
 
 .. code-block:: bash
 
@@ -123,6 +121,12 @@ Enable the extension in your IPython config or load it per-session:
    ipython profile create
    echo "c.InteractiveShellApp.extensions.append('ipython_icat')" \
        >> ~/.ipython/profile_default/ipython_config.py
+
+
+…or load it per-session::
+
+  %load_ext icat
+  %icat
 
 **Example session:**
 
