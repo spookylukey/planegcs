@@ -113,20 +113,16 @@ supports the `kitty graphics protocol <https://sw.kovidgoyal.net/kitty/graphics-
 
    pip install ipython ipython-icat planegcs[graphics]
 
-Enable the extension in your IPython config:
+Load the extension and install to use for PIL graphics from within IPython::
 
-.. code-block:: bash
+    %load_ext icat
+    %icat
 
-   # One-time setup (adds to ~/.ipython/profile_default/ipython_config.py):
-   ipython profile create
-   echo "c.InteractiveShellApp.extensions.append('ipython_icat')" \
-       >> ~/.ipython/profile_default/ipython_config.py
+Or `add it to your IPython config
+<https://github.com/Kabilan108/ipython-icat?tab=readme-ov-file#use-as-a-default-backend>`_::
 
+  python -m icat setup
 
-…or load it per-session::
-
-  %load_ext icat
-  %icat
 
 **Example session:**
 
