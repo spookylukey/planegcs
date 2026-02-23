@@ -442,6 +442,58 @@ def test_set_a2l_distance():
     assert status == SolveStatus.Success
 
 
+def test_c2a_distance():
+    """Circle-to-arc distance constraint (param-based)."""
+    s = Sketch()
+    arc = s.add_arc3p((0.0, 0.0), 2.0, 0.0, math.pi / 2)
+    s.set_arc_radius(arc, 2.0)
+    c_center = s.add_point(10.0, 0.0)
+    circle = s.add_circle(c_center, s.add_param(3.0))
+    s.set_circle_radius(circle, 3.0)
+    d = s.add_param(1.0, fixed=True)
+    s.c2a_distance(circle, arc, d)
+    status = s.solve()
+    assert status == SolveStatus.Success
+
+
+def test_set_c2a_distance():
+    """Circle-to-arc distance constraint (convenience float-based)."""
+    s = Sketch()
+    arc = s.add_arc3p((0.0, 0.0), 2.0, 0.0, math.pi / 2)
+    s.set_arc_radius(arc, 2.0)
+    c_center = s.add_point(10.0, 0.0)
+    circle = s.add_circle(c_center, s.add_param(3.0))
+    s.set_circle_radius(circle, 3.0)
+    s.set_c2a_distance(circle, arc, 1.0)
+    status = s.solve()
+    assert status == SolveStatus.Success
+
+
+def test_a2a_distance():
+    """Arc-to-arc distance constraint (param-based)."""
+    s = Sketch()
+    a1 = s.add_arc3p((0.0, 0.0), 2.0, 0.0, math.pi / 2)
+    s.set_arc_radius(a1, 2.0)
+    a2 = s.add_arc3p((10.0, 0.0), 2.0, 0.0, math.pi / 2)
+    s.set_arc_radius(a2, 2.0)
+    d = s.add_param(2.0, fixed=True)
+    s.a2a_distance(a1, a2, d)
+    status = s.solve()
+    assert status == SolveStatus.Success
+
+
+def test_set_a2a_distance():
+    """Arc-to-arc distance constraint (convenience float-based)."""
+    s = Sketch()
+    a1 = s.add_arc3p((0.0, 0.0), 2.0, 0.0, math.pi / 2)
+    s.set_arc_radius(a1, 2.0)
+    a2 = s.add_arc3p((10.0, 0.0), 2.0, 0.0, math.pi / 2)
+    s.set_arc_radius(a2, 2.0)
+    s.set_a2a_distance(a1, a2, 2.0)
+    status = s.solve()
+    assert status == SolveStatus.Success
+
+
 def test_arc_length():
     s = Sketch()
     arc = s.add_arc3p((0, 0), 5.0, 0.0, math.pi / 2)

@@ -729,6 +729,20 @@ public:
         return tag;
     }
 
+    int c2a_distance(int circle_id, int arc_id, int dist_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintC2CDistance(
+            circles_.at(circle_id), arcs_.at(arc_id), param_ptr(dist_id), tag, driving);
+        return tag;
+    }
+
+    int a2a_distance(int a1_id, int a2_id, int dist_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintC2CDistance(
+            arcs_.at(a1_id), arcs_.at(a2_id), param_ptr(dist_id), tag, driving);
+        return tag;
+    }
+
     int arc_length(int arc_id, int dist_id, bool driving = true) {
         int tag = next_constraint_tag_++;
         system_.addConstraintArcLength(

@@ -244,6 +244,16 @@ class InternalAlignmentType:
 
 class SketchSolver:
     def __init__(self) -> None: ...
+    def a2a_distance(
+        self,
+        a1_id: typing.SupportsInt | typing.SupportsIndex,
+        a2_id: typing.SupportsInt | typing.SupportsIndex,
+        dist_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Add arc-to-arc distance constraint.
+        """
     def a2l_distance(
         self,
         arc_id: typing.SupportsInt | typing.SupportsIndex,
@@ -469,6 +479,16 @@ class SketchSolver:
     ) -> int:
         """
         Add arc rules constraint (start/end computed from center+radius+angles).
+        """
+    def c2a_distance(
+        self,
+        circle_id: typing.SupportsInt | typing.SupportsIndex,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        dist_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Add circle-to-arc distance constraint.
         """
     def c2c_distance(
         self,
