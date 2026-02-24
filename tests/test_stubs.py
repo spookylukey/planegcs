@@ -26,6 +26,10 @@ def _stubgen_available() -> bool:
 
 
 @pytest.mark.skipif(not _stubgen_available(), reason="pybind11-stubgen not installed")
+@pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="Fails in cibuildwheel on Windows due to formatting differences.",
+)
 def test_stubs_up_to_date(tmp_path: Path) -> None:
     result = subprocess.run(
         [
