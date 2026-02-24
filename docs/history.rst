@@ -44,7 +44,7 @@
     point.
   - ``arc_size`` property on ``ArcInfo`` (``end_angle - start_angle``).
   - Improved ``CurveId`` type checking.
-  - Script to regenerate type stubs (``scripts/regenerate_stubs.py``).
+  - Script to regenerate type stubs (``update_stubs.py``).
 
   **Documentation:**
 
