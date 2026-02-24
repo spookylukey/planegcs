@@ -3,7 +3,7 @@
  History/change log
 ====================
 
-* 0.5 (unreleased)
+* 0.5 (2026-02-24)
 
   **Breaking changes:**
 
