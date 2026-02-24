@@ -56,8 +56,11 @@ dev = [
 [tool.cibuildwheel]
 build = ["cp312-*", "cp313-*", "cp314-*"]
 skip = ["*-musllinux_*", "*-manylinux_i686", "*-win32"]
-test-requires = "pytest"
-test-command = "pytest {project}/tests -x"
+# TODO this should be done with uv, can't figure it out yet.
+test-requires = "pytest pytest-cov pybind11-stubgen ty ruff pillow toml"
+# No code coverage because it doesn't seem to work right due
+# to different directories?
+test-command = "pytest {project}/tests -x --no-cov"
 
 [tool.cibuildwheel.linux]
 before-all = """
