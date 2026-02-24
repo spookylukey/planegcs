@@ -3,6 +3,55 @@
  History/change log
 ====================
 
+* 0.5 (unreleased)
+
+  **Breaking changes:**
+
+  - Replaced ``add_arc_from_center`` / ``add_arc_from_start_end`` with a
+    single unified ``add_arc`` method.
+  - Changed ``add_circle`` to take ``radius_id: Param`` instead of
+    ``radius: float``, for consistency with other entity constructors.
+  - Changed ``add_param()`` default to ``fixed=False`` for consistency.
+
+  **New constraints:**
+
+  - ``difference``, ``proportional``, ``p2p_angle``
+  - ``point_on_perp_bisector``, ``point_on_arc``, ``point_on_ellipse``
+  - ``circle_diameter``, ``arc_radius``, ``arc_diameter``
+  - ``equal_radius_cc``, ``equal_radius_ca``, ``equal_radius_aa``
+  - ``tangent_line_ellipse``, ``tangent_arc_arc``, ``tangent_circle_arc``,
+    ``tangent_circumf``
+  - ``p2c_distance``, ``c2c_distance``, ``c2l_distance``
+  - ``p2a_distance``, ``a2l_distance``, ``c2a_distance``, ``a2a_distance``
+  - ``arc_length``
+  - ``internal_alignment_point2ellipse``
+  - ``arc_angle`` / ``set_arc_angle`` for constraining arc sweep angles
+  - ``*ViaPoint`` family: ``angle_via_point``, ``curve_value``,
+    ``snells_law``, etc.
+  - ``coordinate_x``, ``coordinate_y``
+  - ``clear_by_tag``, ``constraint_error``
+
+  **New features:**
+
+  - Debugging graphics: ``Sketch.to_image()`` renders the sketch to a
+    PIL/Pillow image for visual inspection.
+  - Entity lookup API: ``ConstraintInfo.get_entities()`` to inspect which
+    geometric entities a constraint references.
+  - Rich constraint info in diagnosis results (``diagnose()`` now returns
+    ``ConstraintInfo`` objects for conflicting/redundant constraints).
+  - ``add_point_from_params()`` to build points from existing param IDs.
+  - ``get_point_param_ids()`` to retrieve the underlying param IDs of a
+    point.
+  - ``arc_size`` property on ``ArcInfo`` (``end_angle - start_angle``).
+  - Improved ``CurveId`` type checking.
+  - Script to regenerate type stubs (``scripts/regenerate_stubs.py``).
+
+  **Documentation:**
+
+  - Documented arc direction conventions in docstrings.
+  - Added tangent arc-line example.
+  - Added graphics/visualization docs.
+
 * 0.4 (2026-02-13)
 
   - **Breaking:** removed ``get_arc_center()``, ``get_arc_radius()``,
