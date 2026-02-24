@@ -27,8 +27,8 @@ open_url() {
 
 # --- pre-flight checks ------------------------------------------------------
 
-[[ $# -eq 1 ]] || die "Usage: $0 <bump>  (e.g. major, minor, patch, ...)"
-BUMP="$1"
+[[ $# -eq 1 ]] || die "Usage: $0 <version>"
+NEW_VERSION="$1"
 
 command -v uv  &>/dev/null || die "'uv' not found — install it first"
 command -v git &>/dev/null || die "'git' not found"
@@ -63,9 +63,8 @@ uv run pytest tests/test_stubs.py -x -q \
 
 # --- step 1: bump version ---------------------------------------------------
 
-info "Bumping version (uv version --bump $BUMP) …"
-uv version --bump "$BUMP"
-NEW_VERSION=$(uv version --short)          # reads back the version from pyproject.toml
+info "Bumping version to $NEW_VERSION (uv version $NEW_VERSION) …"
+uv version "$NEW_VERSION"
 TAG="v${NEW_VERSION}"
 
 info "New version: $NEW_VERSION  (tag: $TAG)"
