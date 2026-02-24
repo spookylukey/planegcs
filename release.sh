@@ -48,7 +48,7 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD)
 # --- run tests and type checking --------------------------------------------
 
 info "Running tests with coverage …"
-uv run pytest -x -q --cov --cov-fail-under=100 \
+uv run pytest \
     || die "Tests failed — fix before releasing"
 
 info "Running ty type checker …"
@@ -58,7 +58,7 @@ ty check \
 # --- verify type stubs are up to date ---------------------------------------
 
 info "Checking _planegcs.pyi is up to date …"
-uv run pytest tests/test_stubs.py -x -q \
+uv run pytest tests/test_stubs.py --no-cov \
     || die "Type stubs are out of date — regenerate with ./update_stubs.sh"
 
 # --- step 1: bump version ---------------------------------------------------
