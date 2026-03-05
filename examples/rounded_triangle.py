@@ -11,57 +11,37 @@ from planegcs import Sketch, SolveStatus
 # ── Parameters ──────────────────────────────────────────────
 side = 10.0  # side length of the underlying triangle
 r = 1.5  # corner arc radius
-h = side * math.sqrt(3) / 2  # triangle height
 
-# Tangent length from each vertex to the tangent point.
-# For an interior angle of 60°: t = r / tan(30°) = r * √3
+# For an interior angle of 60°, the tangent length from vertex to
+# tangent point is t = r / tan(30°) = r * √3.  We need this to set
+# the exact edge length in the constraint below.
 t = r * math.sqrt(3)
 
-# ── Compute initial guesses ─────────────────────────────────
+# ── Rough initial guesses ───────────────────────────────────
+# These don't need to be exact — the solver will find the right
+# positions.  They just need to be in roughly the right place so
+# the solver converges to the intended configuration.
+
 # Triangle vertices
-v1, v2, v3 = (0.0, 0.0), (side, 0.0), (side / 2, h)
+v1, v2, v3 = (0.0, 0.0), (side, 0.0), (side / 2, side * 0.87)
 
-# Unit edge directions
-d_r = ((v3[0] - v2[0]) / side, (v3[1] - v2[1]) / side)
-d_l = ((v1[0] - v3[0]) / side, (v1[1] - v3[1]) / side)
+# Tangent points: inset each vertex along each edge by ~r.
+bs = (v1[0] + r, v1[1])  # bottom-left tangent point
+be = (v2[0] - r, v2[1])  # bottom-right tangent point
+rs = (v2[0] - r / 2, v2[1] + r)  # right-side start
+re = (v3[0] + r / 2, v3[1] - r)  # right-side end
+ls = (v3[0] - r / 2, v3[1] - r)  # left-side start
+le = (v1[0] + r / 2, v1[1] + r)  # left-side end
 
-# Tangent points (where arcs meet lines)
-bs = (v1[0] + t, v1[1])  # bottom start
-be = (v2[0] - t, v2[1])  # bottom end
-rs = (v2[0] + t * d_r[0], v2[1] + t * d_r[1])  # right start
-re = (v3[0] - t * d_r[0], v3[1] - t * d_r[1])  # right end
-ls = (v3[0] + t * d_l[0], v3[1] + t * d_l[1])  # left start
-le = (v1[0] - t * d_l[0], v1[1] - t * d_l[1])  # left end
-
-
-def _arc_center_and_angles(
-    sx: float, sy: float, ex: float, ey: float, radius: float
-) -> tuple[tuple[float, float], float, float]:
-    """Compute a plausible center and start/end angles for an arc
-    through (sx, sy) -> (ex, ey) with the given radius.
-
-    Returns ((cx, cy), start_angle, end_angle).
-    The center is placed on the *inward* side of the triangle.
-    """
-    mx, my = (sx + ex) / 2, (sy + ey) / 2
-    dx, dy = ex - sx, ey - sy
-    half_chord = math.sqrt(dx * dx + dy * dy) / 2.0
-    h_arc = math.sqrt(max(radius * radius - half_chord * half_chord, 0.0))
-    # Perpendicular direction pointing inward (to the left of start→end)
-    perp_x, perp_y = -dy / (2 * half_chord), dx / (2 * half_chord)
-    cx, cy = mx + h_arc * perp_x, my + h_arc * perp_y
-    sa = math.atan2(sy - cy, sx - cx)
-    ea = math.atan2(ey - cy, ex - cx)
-    # Ensure CCW sweep (positive direction)
-    if ea < sa:
-        ea += 2 * math.pi
-    return (cx, cy), sa, ea
-
+# Arc centers: roughly at each vertex, shifted inward by r.
+center_bl = (v1[0] + r, v1[1] + r)
+center_br = (v2[0] - r, v2[1] + r)
+center_top = (v3[0], v3[1] - r)
 
 # ── Build the sketch ────────────────────────────────────────
 s = Sketch()
 
-# Six tangent-point vertices
+# Six tangent-point vertices (rough positions)
 p_bs = s.add_fixed_point(*bs)  # anchor one point
 p_be = s.add_point(*be)
 p_rs = s.add_point(*rs)
@@ -77,24 +57,17 @@ line_l = s.add_line(p_ls, p_le)  # left
 # Radius parameter – fixed so the solver treats it as a driving value
 rad = s.add_fixed_param(r)
 
-# Three corner arcs – each arc needs its own center point and angles.
-# We use add_arc_cse to create arcs from center/start/end points,
-# then coincident constraints to tie the arc endpoints to the tangent points.
-
-# Bottom-left corner arc: from p_le to p_bs
-center_bl, sa_bl, ea_bl = _arc_center_and_angles(*le, *bs, r)
+# Three corner arcs.  add_arc_cse takes center/start/end points
+# plus rough initial values for radius and angles.  The angles
+# don't need to be precise — just approximate the sweep.
 c_bl = s.add_point(*center_bl)
-arc_bl = s.add_arc_cse(c_bl, p_le, p_bs, r, sa_bl, ea_bl)
+arc_bl = s.add_arc_cse(c_bl, p_le, p_bs, r, -math.pi / 2, 0.0)
 
-# Bottom-right corner arc: from p_be to p_rs
-center_br, sa_br, ea_br = _arc_center_and_angles(*be, *rs, r)
 c_br = s.add_point(*center_br)
-arc_br = s.add_arc_cse(c_br, p_be, p_rs, r, sa_br, ea_br)
+arc_br = s.add_arc_cse(c_br, p_be, p_rs, r, math.pi / 2, math.pi)
 
-# Top corner arc: from p_re to p_ls
-center_top, sa_top, ea_top = _arc_center_and_angles(*re, *ls, r)
 c_top = s.add_point(*center_top)
-arc_top = s.add_arc_cse(c_top, p_re, p_ls, r, sa_top, ea_top)
+arc_top = s.add_arc_cse(c_top, p_re, p_ls, r, math.pi, 2 * math.pi)
 
 # ── Tangency constraints ────────────────────────────────────
 # Each arc must be tangent to its two adjacent lines.
@@ -106,7 +79,7 @@ s.tangent_line_arc(line_l, arc_top)
 s.tangent_line_arc(line_l, arc_bl)
 
 # ── Arc radius constraints ──────────────────────────────────
-# Constrain each arc's radius to the shared parameter.
+# Constrain each arc's radius to the shared fixed parameter.
 s.arc_radius(arc_bl, rad)
 s.arc_radius(arc_br, rad)
 s.arc_radius(arc_top, rad)
@@ -122,6 +95,7 @@ s.set_p2p_distance(p_bs, p_be, side - 2 * t)  # set edge length
 # ── Solve ───────────────────────────────────────────────────
 status = s.solve()
 assert status == SolveStatus.Success
+assert s.dof() == 0, f"{s.dof()=}"
 
 # ── Read results ────────────────────────────────────────────
 for name, pid in [
