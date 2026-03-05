@@ -7,8 +7,10 @@ Equilateral Triangle with Rounded Corners
 This example builds an equilateral triangle whose sharp corners are
 replaced by circular arcs of a given radius.  It demonstrates:
 
-* :meth:`~planegcs.Sketch.add_arc_from_start_end` — creating arcs from
-  endpoint geometry instead of center/angle parameters.
+* :meth:`~planegcs.Sketch.add_arc_cse` — creating arcs from center, start,
+  and end points with initial radius and angle values.
+* :meth:`~planegcs.Sketch.arc_radius` — constraining multiple arcs to share
+  a single fixed radius parameter.
 * :meth:`~planegcs.Sketch.tangent_line_arc` — constraining an arc to be
   tangent to a line, ensuring smooth transitions at each corner.
 * Combining positional, dimensional, and geometric constraints to fully
@@ -48,6 +50,23 @@ tangent to its two adjacent line segments.
     ls = (v3[0] + t * d_l[0], v3[1] + t * d_l[1])     # left start
     le = (v1[0] - t * d_l[0], v1[1] - t * d_l[1])     # left end
 
+    def _arc_center_and_angles(
+        sx: float, sy: float, ex: float, ey: float, radius: float
+    ) -> tuple[tuple[float, float], float, float]:
+        """Compute center and start/end angles for an arc through two points."""
+        mx, my = (sx + ex) / 2, (sy + ey) / 2
+        dx, dy = ex - sx, ey - sy
+        half_chord = math.sqrt(dx * dx + dy * dy) / 2.0
+        h_arc = math.sqrt(max(radius * radius - half_chord * half_chord, 0.0))
+        # Perpendicular towards the interior of the triangle
+        perp_x, perp_y = -dy / (2 * half_chord), dx / (2 * half_chord)
+        cx, cy = mx + h_arc * perp_x, my + h_arc * perp_y
+        sa = math.atan2(sy - cy, sx - cx)
+        ea = math.atan2(ey - cy, ex - cx)
+        if ea < sa:
+            ea += 2 * math.pi
+        return (cx, cy), sa, ea
+
     # ── Build the sketch ────────────────────────────────────────
     s = Sketch()
 
@@ -67,10 +86,24 @@ tangent to its two adjacent line segments.
     # Radius parameter – fixed so the solver treats it as a driving value
     rad = s.add_fixed_param(r)
 
-    # Three corner arcs
-    arc_bl  = s.add_arc_from_start_end(p_le, p_bs, rad)   # bottom-left
-    arc_br  = s.add_arc_from_start_end(p_be, p_rs, rad)   # bottom-right
-    arc_top = s.add_arc_from_start_end(p_re, p_ls, rad)   # top
+    # Three corner arcs – each needs a center point and angle estimates.
+    # add_arc_cse creates the arc from center/start/end points plus
+    # initial radius and angle values.
+
+    # Bottom-left corner arc: from p_le to p_bs
+    center_bl, sa_bl, ea_bl = _arc_center_and_angles(*le, *bs, r)
+    c_bl = s.add_point(*center_bl)
+    arc_bl = s.add_arc_cse(c_bl, p_le, p_bs, r, sa_bl, ea_bl)
+
+    # Bottom-right corner arc: from p_be to p_rs
+    center_br, sa_br, ea_br = _arc_center_and_angles(*be, *rs, r)
+    c_br = s.add_point(*center_br)
+    arc_br = s.add_arc_cse(c_br, p_be, p_rs, r, sa_br, ea_br)
+
+    # Top corner arc: from p_re to p_ls
+    center_top, sa_top, ea_top = _arc_center_and_angles(*re, *ls, r)
+    c_top = s.add_point(*center_top)
+    arc_top = s.add_arc_cse(c_top, p_re, p_ls, r, sa_top, ea_top)
 
     # ── Tangency constraints ────────────────────────────────────
     # Each arc must be tangent to its two adjacent lines.
@@ -80,6 +113,12 @@ tangent to its two adjacent line segments.
     s.tangent_line_arc(line_r, arc_top)
     s.tangent_line_arc(line_l, arc_top)
     s.tangent_line_arc(line_l, arc_bl)
+
+    # ── Arc radius constraints ──────────────────────────────────
+    # Constrain each arc's radius to the shared fixed parameter.
+    s.arc_radius(arc_bl, rad)
+    s.arc_radius(arc_br, rad)
+    s.arc_radius(arc_top, rad)
 
     # ── Equilateral constraint ──────────────────────────────────
     s.equal_length(line_b, line_r)
@@ -120,15 +159,18 @@ Running this prints::
 Key API methods used
 ~~~~~~~~~~~~~~~~~~~~
 
-:meth:`~planegcs.Sketch.add_arc_from_start_end`
-    Creates an arc that passes through two existing points with a given
-    radius parameter.  The radius is supplied as a :class:`~planegcs.ParamId`
-    created via :meth:`~planegcs.Sketch.add_param`, giving you explicit
-    control over whether it is fixed or free.  Internally this computes the
-    arc center and angles, adds ``arc_rules`` constraints (so the arc's
-    start/end points stay consistent with center + radius + angles), and adds
-    ``coincident`` constraints tying the arc endpoints to the supplied points.
-    Multiple arcs can share the same radius parameter.
+:meth:`~planegcs.Sketch.add_arc_cse`
+    Creates an arc from center, start, and end points plus initial scalar
+    values for radius, start angle, and end angle.  Internally creates the
+    radius and angle parameters and applies ``arc_rules`` constraints so the
+    arc's start/end points stay consistent with center + radius + angles.
+    "CSE" stands for Center–Start–End.
+
+:meth:`~planegcs.Sketch.arc_radius`
+    Constrains an arc's radius to match a :class:`~planegcs.ParamId`.
+    When multiple arcs share the same fixed radius parameter (created via
+    :meth:`~planegcs.Sketch.add_fixed_param`), they are all forced to the
+    same radius.
 
 :meth:`~planegcs.Sketch.tangent_line_arc`
     Constrains a line to be tangent to an arc.  Under the hood this is a
