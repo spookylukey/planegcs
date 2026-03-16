@@ -194,6 +194,107 @@ public:
         return *ellipses_.at(ellipse_id).radmin;
     }
 
+    // ── Geometry: ArcOfEllipse accessors ────────────────────────────
+    std::pair<double, double> get_arc_of_ellipse_center(int id) const {
+        auto& ae = arcs_of_ellipse_.at(id);
+        return {*ae.center.x, *ae.center.y};
+    }
+    std::pair<double, double> get_arc_of_ellipse_focus1(int id) const {
+        auto& ae = arcs_of_ellipse_.at(id);
+        return {*ae.focus1.x, *ae.focus1.y};
+    }
+    double get_arc_of_ellipse_radmin(int id) const {
+        return *arcs_of_ellipse_.at(id).radmin;
+    }
+    double get_arc_of_ellipse_start_angle(int id) const {
+        return *arcs_of_ellipse_.at(id).startAngle;
+    }
+    double get_arc_of_ellipse_end_angle(int id) const {
+        return *arcs_of_ellipse_.at(id).endAngle;
+    }
+    std::pair<double, double> get_arc_of_ellipse_start_point(int id) const {
+        auto& ae = arcs_of_ellipse_.at(id);
+        return {*ae.start.x, *ae.start.y};
+    }
+    std::pair<double, double> get_arc_of_ellipse_end_point(int id) const {
+        auto& ae = arcs_of_ellipse_.at(id);
+        return {*ae.end.x, *ae.end.y};
+    }
+
+    // ── Geometry: Hyperbola accessors ───────────────────────────────
+    std::pair<double, double> get_hyperbola_center(int id) const {
+        auto& h = hyperbolas_.at(id);
+        return {*h.center.x, *h.center.y};
+    }
+    std::pair<double, double> get_hyperbola_focus1(int id) const {
+        auto& h = hyperbolas_.at(id);
+        return {*h.focus1.x, *h.focus1.y};
+    }
+    double get_hyperbola_radmin(int id) const {
+        return *hyperbolas_.at(id).radmin;
+    }
+
+    // ── Geometry: ArcOfHyperbola accessors ──────────────────────────
+    std::pair<double, double> get_arc_of_hyperbola_center(int id) const {
+        auto& ah = arcs_of_hyperbola_.at(id);
+        return {*ah.center.x, *ah.center.y};
+    }
+    std::pair<double, double> get_arc_of_hyperbola_focus1(int id) const {
+        auto& ah = arcs_of_hyperbola_.at(id);
+        return {*ah.focus1.x, *ah.focus1.y};
+    }
+    double get_arc_of_hyperbola_radmin(int id) const {
+        return *arcs_of_hyperbola_.at(id).radmin;
+    }
+    double get_arc_of_hyperbola_start_angle(int id) const {
+        return *arcs_of_hyperbola_.at(id).startAngle;
+    }
+    double get_arc_of_hyperbola_end_angle(int id) const {
+        return *arcs_of_hyperbola_.at(id).endAngle;
+    }
+    std::pair<double, double> get_arc_of_hyperbola_start_point(int id) const {
+        auto& ah = arcs_of_hyperbola_.at(id);
+        return {*ah.start.x, *ah.start.y};
+    }
+    std::pair<double, double> get_arc_of_hyperbola_end_point(int id) const {
+        auto& ah = arcs_of_hyperbola_.at(id);
+        return {*ah.end.x, *ah.end.y};
+    }
+
+    // ── Geometry: Parabola accessors ────────────────────────────────
+    std::pair<double, double> get_parabola_vertex(int id) const {
+        auto& p = parabolas_.at(id);
+        return {*p.vertex.x, *p.vertex.y};
+    }
+    std::pair<double, double> get_parabola_focus1(int id) const {
+        auto& p = parabolas_.at(id);
+        return {*p.focus1.x, *p.focus1.y};
+    }
+
+    // ── Geometry: ArcOfParabola accessors ───────────────────────────
+    std::pair<double, double> get_arc_of_parabola_vertex(int id) const {
+        auto& ap = arcs_of_parabola_.at(id);
+        return {*ap.vertex.x, *ap.vertex.y};
+    }
+    std::pair<double, double> get_arc_of_parabola_focus1(int id) const {
+        auto& ap = arcs_of_parabola_.at(id);
+        return {*ap.focus1.x, *ap.focus1.y};
+    }
+    double get_arc_of_parabola_start_angle(int id) const {
+        return *arcs_of_parabola_.at(id).startAngle;
+    }
+    double get_arc_of_parabola_end_angle(int id) const {
+        return *arcs_of_parabola_.at(id).endAngle;
+    }
+    std::pair<double, double> get_arc_of_parabola_start_point(int id) const {
+        auto& ap = arcs_of_parabola_.at(id);
+        return {*ap.start.x, *ap.start.y};
+    }
+    std::pair<double, double> get_arc_of_parabola_end_point(int id) const {
+        auto& ap = arcs_of_parabola_.at(id);
+        return {*ap.end.x, *ap.end.y};
+    }
+
     // ── Geometry: Ellipses ───────────────────────────────────────────
     int add_ellipse(int center_id, int focus1_id, double radmin) {
         int rm_id = add_param(radmin);
@@ -286,6 +387,44 @@ public:
         return id;
     }
 
+    // ── Geometry: BSpline ──────────────────────────────────────
+    int add_bspline(int start_id, int end_id,
+                    std::vector<int> pole_ids,
+                    std::vector<int> weight_ids,
+                    std::vector<int> knot_ids,
+                    std::vector<int> mult,
+                    int degree, bool periodic) {
+        int id = next_geo_id_++;
+        GCS::BSpline bs;
+        bs.start = points_.at(start_id);
+        bs.end = points_.at(end_id);
+        for (int pid : pole_ids) {
+            bs.poles.push_back(points_.at(pid));
+        }
+        for (int wid : weight_ids) {
+            bs.weights.push_back(param_ptr(wid));
+        }
+        for (int kid : knot_ids) {
+            bs.knots.push_back(param_ptr(kid));
+        }
+        bs.mult.assign(mult.begin(), mult.end());
+        bs.degree = degree;
+        bs.periodic = periodic;
+        bs.setupFlattenedKnots();
+        bsplines_[id] = bs;
+        return id;
+    }
+
+    // ── Geometry: BSpline accessors ───────────────────────────────
+    std::pair<double, double> get_bspline_start_point(int id) const {
+        auto& bs = bsplines_.at(id);
+        return {*bs.start.x, *bs.start.y};
+    }
+    std::pair<double, double> get_bspline_end_point(int id) const {
+        auto& bs = bsplines_.at(id);
+        return {*bs.end.x, *bs.end.y};
+    }
+
     // ── Solving ─────────────────────────────────────────────────────
     void declare_unknowns() {
         GCS::VEC_pD params;
@@ -367,6 +506,7 @@ public:
         arcs_of_hyperbola_.clear();
         parabolas_.clear();
         arcs_of_parabola_.clear();
+        bsplines_.clear();
         next_param_id_ = 0;
         next_geo_id_ = 0;
         next_constraint_tag_ = 1;
@@ -750,7 +890,7 @@ public:
         return tag;
     }
 
-    // Internal alignment constraints
+    // Internal alignment constraints — Ellipse
     int internal_alignment_point2ellipse(int ellipse_id, int pt_id,
                                          GCS::InternalAlignmentType alignmentType,
                                          bool driving = true) {
@@ -787,6 +927,119 @@ public:
         int tag = next_constraint_tag_++;
         system_.addConstraintInternalAlignmentEllipseFocus2(
             ellipses_.at(ellipse_id), points_.at(pt_id), tag, driving);
+        return tag;
+    }
+
+    // Internal alignment constraints — Hyperbola
+    int internal_alignment_point2hyperbola(int hyperbola_id, int pt_id,
+                                            GCS::InternalAlignmentType alignmentType,
+                                            bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintInternalAlignmentPoint2Hyperbola(
+            hyperbolas_.at(hyperbola_id), points_.at(pt_id), alignmentType, tag, driving);
+        return tag;
+    }
+
+    int internal_alignment_hyperbola_major_diameter(int hyperbola_id, int p1_id, int p2_id,
+                                                     bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintInternalAlignmentHyperbolaMajorDiameter(
+            hyperbolas_.at(hyperbola_id), points_.at(p1_id), points_.at(p2_id), tag, driving);
+        return tag;
+    }
+
+    int internal_alignment_hyperbola_minor_diameter(int hyperbola_id, int p1_id, int p2_id,
+                                                     bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintInternalAlignmentHyperbolaMinorDiameter(
+            hyperbolas_.at(hyperbola_id), points_.at(p1_id), points_.at(p2_id), tag, driving);
+        return tag;
+    }
+
+    int internal_alignment_hyperbola_focus(int hyperbola_id, int pt_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintInternalAlignmentHyperbolaFocus(
+            hyperbolas_.at(hyperbola_id), points_.at(pt_id), tag, driving);
+        return tag;
+    }
+
+    // Internal alignment constraints — Parabola
+    int internal_alignment_parabola_focus(int parabola_id, int pt_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintInternalAlignmentParabolaFocus(
+            parabolas_.at(parabola_id), points_.at(pt_id), tag, driving);
+        return tag;
+    }
+
+    // PointOnObject for conic arcs
+    int point_on_hyperbolic_arc(int pt_id, int arc_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintPointOnHyperbolicArc(
+            points_.at(pt_id), arcs_of_hyperbola_.at(arc_id), tag, driving);
+        return tag;
+    }
+
+    int point_on_parabolic_arc(int pt_id, int arc_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintPointOnParabolicArc(
+            points_.at(pt_id), arcs_of_parabola_.at(arc_id), tag, driving);
+        return tag;
+    }
+
+    // Equal constraints for conics
+    int equal_radii_ee(int e1_id, int e2_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintEqualRadii(
+            ellipses_.at(e1_id), ellipses_.at(e2_id), tag, driving);
+        return tag;
+    }
+
+    int equal_radii_hh(int h1_id, int h2_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintEqualRadii(
+            arcs_of_hyperbola_.at(h1_id), arcs_of_hyperbola_.at(h2_id), tag, driving);
+        return tag;
+    }
+
+    int equal_focus_pp(int p1_id, int p2_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintEqualFocus(
+            arcs_of_parabola_.at(p1_id), arcs_of_parabola_.at(p2_id), tag, driving);
+        return tag;
+    }
+
+    // BSpline constraints
+    int point_on_bspline(int pt_id, int bspline_id, int u_id, bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintPointOnBSpline(
+            points_.at(pt_id), bsplines_.at(bspline_id), param_ptr(u_id), tag, driving);
+        return tag;
+    }
+
+    int internal_alignment_bspline_control_point(int bspline_id, int circle_id,
+                                                  unsigned int pole_index,
+                                                  bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintInternalAlignmentBSplineControlPoint(
+            bsplines_.at(bspline_id), circles_.at(circle_id), pole_index, tag, driving);
+        return tag;
+    }
+
+    int internal_alignment_knot_point(int bspline_id, int pt_id,
+                                      unsigned int knot_index,
+                                      bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintInternalAlignmentKnotPoint(
+            bsplines_.at(bspline_id), points_.at(pt_id), knot_index, tag, driving);
+        return tag;
+    }
+
+    int tangent_at_bspline_knot(int bspline_id, int line_id,
+                                 unsigned int knot_index,
+                                 bool driving = true) {
+        int tag = next_constraint_tag_++;
+        system_.addConstraintTangentAtBSplineKnot(
+            bsplines_.at(bspline_id), lines_.at(line_id), knot_index, tag, driving);
         return tag;
     }
 
@@ -837,6 +1090,8 @@ public:
         if (it_p != parabolas_.end()) return it_p->second;
         auto it_ap = arcs_of_parabola_.find(id);
         if (it_ap != arcs_of_parabola_.end()) return it_ap->second;
+        auto it_bs = bsplines_.find(id);
+        if (it_bs != bsplines_.end()) return it_bs->second;
         throw std::out_of_range("get_curve: unknown geometry id " + std::to_string(id));
     }
 
@@ -930,6 +1185,7 @@ private:
     std::map<int, GCS::ArcOfHyperbola> arcs_of_hyperbola_;
     std::map<int, GCS::Parabola> parabolas_;
     std::map<int, GCS::ArcOfParabola> arcs_of_parabola_;
+    std::map<int, GCS::BSpline> bsplines_;
     int next_param_id_ = 0;
     int next_geo_id_ = 0;
     int next_constraint_tag_ = 1;
