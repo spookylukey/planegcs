@@ -131,6 +131,41 @@ PYBIND11_MODULE(_planegcs, m) {
         .def("get_ellipse_focus1", &SketchSolver::get_ellipse_focus1, py::arg("ellipse_id"))
         .def("get_ellipse_radmin", &SketchSolver::get_ellipse_radmin, py::arg("ellipse_id"))
 
+        // Geometry: ArcOfEllipse accessors
+        .def("get_arc_of_ellipse_center", &SketchSolver::get_arc_of_ellipse_center, py::arg("id"))
+        .def("get_arc_of_ellipse_focus1", &SketchSolver::get_arc_of_ellipse_focus1, py::arg("id"))
+        .def("get_arc_of_ellipse_radmin", &SketchSolver::get_arc_of_ellipse_radmin, py::arg("id"))
+        .def("get_arc_of_ellipse_start_angle", &SketchSolver::get_arc_of_ellipse_start_angle, py::arg("id"))
+        .def("get_arc_of_ellipse_end_angle", &SketchSolver::get_arc_of_ellipse_end_angle, py::arg("id"))
+        .def("get_arc_of_ellipse_start_point", &SketchSolver::get_arc_of_ellipse_start_point, py::arg("id"))
+        .def("get_arc_of_ellipse_end_point", &SketchSolver::get_arc_of_ellipse_end_point, py::arg("id"))
+
+        // Geometry: Hyperbola accessors
+        .def("get_hyperbola_center", &SketchSolver::get_hyperbola_center, py::arg("id"))
+        .def("get_hyperbola_focus1", &SketchSolver::get_hyperbola_focus1, py::arg("id"))
+        .def("get_hyperbola_radmin", &SketchSolver::get_hyperbola_radmin, py::arg("id"))
+
+        // Geometry: ArcOfHyperbola accessors
+        .def("get_arc_of_hyperbola_center", &SketchSolver::get_arc_of_hyperbola_center, py::arg("id"))
+        .def("get_arc_of_hyperbola_focus1", &SketchSolver::get_arc_of_hyperbola_focus1, py::arg("id"))
+        .def("get_arc_of_hyperbola_radmin", &SketchSolver::get_arc_of_hyperbola_radmin, py::arg("id"))
+        .def("get_arc_of_hyperbola_start_angle", &SketchSolver::get_arc_of_hyperbola_start_angle, py::arg("id"))
+        .def("get_arc_of_hyperbola_end_angle", &SketchSolver::get_arc_of_hyperbola_end_angle, py::arg("id"))
+        .def("get_arc_of_hyperbola_start_point", &SketchSolver::get_arc_of_hyperbola_start_point, py::arg("id"))
+        .def("get_arc_of_hyperbola_end_point", &SketchSolver::get_arc_of_hyperbola_end_point, py::arg("id"))
+
+        // Geometry: Parabola accessors
+        .def("get_parabola_vertex", &SketchSolver::get_parabola_vertex, py::arg("id"))
+        .def("get_parabola_focus1", &SketchSolver::get_parabola_focus1, py::arg("id"))
+
+        // Geometry: ArcOfParabola accessors
+        .def("get_arc_of_parabola_vertex", &SketchSolver::get_arc_of_parabola_vertex, py::arg("id"))
+        .def("get_arc_of_parabola_focus1", &SketchSolver::get_arc_of_parabola_focus1, py::arg("id"))
+        .def("get_arc_of_parabola_start_angle", &SketchSolver::get_arc_of_parabola_start_angle, py::arg("id"))
+        .def("get_arc_of_parabola_end_angle", &SketchSolver::get_arc_of_parabola_end_angle, py::arg("id"))
+        .def("get_arc_of_parabola_start_point", &SketchSolver::get_arc_of_parabola_start_point, py::arg("id"))
+        .def("get_arc_of_parabola_end_point", &SketchSolver::get_arc_of_parabola_end_point, py::arg("id"))
+
         // Geometry: ArcOfEllipse
         .def("add_arc_of_ellipse", &SketchSolver::add_arc_of_ellipse,
              py::arg("center_id"), py::arg("focus1_id"), py::arg("radmin"),
@@ -161,6 +196,16 @@ PYBIND11_MODULE(_planegcs, m) {
              py::arg("start_angle"), py::arg("end_angle"),
              py::arg("start_id"), py::arg("end_id"),
              "Add an arc of parabola. Returns ID.")
+
+        // Geometry: BSpline
+        .def("add_bspline", &SketchSolver::add_bspline,
+             py::arg("start_id"), py::arg("end_id"),
+             py::arg("pole_ids"), py::arg("weight_ids"),
+             py::arg("knot_ids"), py::arg("mult"),
+             py::arg("degree"), py::arg("periodic"),
+             "Add a B-spline. Returns ID.")
+        .def("get_bspline_start_point", &SketchSolver::get_bspline_start_point, py::arg("id"))
+        .def("get_bspline_end_point", &SketchSolver::get_bspline_end_point, py::arg("id"))
 
         // Solving
         .def("solve", &SketchSolver::solve,
@@ -250,6 +295,15 @@ PYBIND11_MODULE(_planegcs, m) {
         .def("arc_rules", &SketchSolver::arc_rules,
              py::arg("arc_id"), py::arg("driving") = true,
              "Add arc rules constraint (start/end computed from center+radius+angles).")
+        .def("arc_of_ellipse_rules", &SketchSolver::arc_of_ellipse_rules,
+             py::arg("aoe_id"), py::arg("driving") = true,
+             "Add arc-of-ellipse rules (start/end tied to ellipse parametric equation).")
+        .def("arc_of_hyperbola_rules", &SketchSolver::arc_of_hyperbola_rules,
+             py::arg("aoh_id"), py::arg("driving") = true,
+             "Add arc-of-hyperbola rules (start/end tied to hyperbola parametric equation).")
+        .def("arc_of_parabola_rules", &SketchSolver::arc_of_parabola_rules,
+             py::arg("aop_id"), py::arg("driving") = true,
+             "Add arc-of-parabola rules (start/end tied to parabola parametric equation).")
         .def("tangent_line_circle", &SketchSolver::tangent_line_circle,
              py::arg("line_id"), py::arg("circle_id"), py::arg("driving") = true,
              "Add line-circle tangent constraint.")
@@ -338,6 +392,73 @@ PYBIND11_MODULE(_planegcs, m) {
              py::arg("ellipse_id"), py::arg("pt_id"), py::arg("alignment_type"),
              py::arg("driving") = true,
              "Internal alignment: point to ellipse.")
+        .def("internal_alignment_ellipse_major_diameter", &SketchSolver::internal_alignment_ellipse_major_diameter,
+             py::arg("ellipse_id"), py::arg("p1_id"), py::arg("p2_id"),
+             py::arg("driving") = true,
+             "Internal alignment: ellipse major diameter.")
+        .def("internal_alignment_ellipse_minor_diameter", &SketchSolver::internal_alignment_ellipse_minor_diameter,
+             py::arg("ellipse_id"), py::arg("p1_id"), py::arg("p2_id"),
+             py::arg("driving") = true,
+             "Internal alignment: ellipse minor diameter.")
+        .def("internal_alignment_ellipse_focus1", &SketchSolver::internal_alignment_ellipse_focus1,
+             py::arg("ellipse_id"), py::arg("pt_id"),
+             py::arg("driving") = true,
+             "Internal alignment: ellipse focus 1.")
+        .def("internal_alignment_ellipse_focus2", &SketchSolver::internal_alignment_ellipse_focus2,
+             py::arg("ellipse_id"), py::arg("pt_id"),
+             py::arg("driving") = true,
+             "Internal alignment: ellipse focus 2.")
+        .def("internal_alignment_point2hyperbola", &SketchSolver::internal_alignment_point2hyperbola,
+             py::arg("hyperbola_id"), py::arg("pt_id"), py::arg("alignment_type"),
+             py::arg("driving") = true,
+             "Internal alignment: point to hyperbola.")
+        .def("internal_alignment_hyperbola_major_diameter", &SketchSolver::internal_alignment_hyperbola_major_diameter,
+             py::arg("hyperbola_id"), py::arg("p1_id"), py::arg("p2_id"),
+             py::arg("driving") = true,
+             "Internal alignment: hyperbola major diameter.")
+        .def("internal_alignment_hyperbola_minor_diameter", &SketchSolver::internal_alignment_hyperbola_minor_diameter,
+             py::arg("hyperbola_id"), py::arg("p1_id"), py::arg("p2_id"),
+             py::arg("driving") = true,
+             "Internal alignment: hyperbola minor diameter.")
+        .def("internal_alignment_hyperbola_focus", &SketchSolver::internal_alignment_hyperbola_focus,
+             py::arg("hyperbola_id"), py::arg("pt_id"),
+             py::arg("driving") = true,
+             "Internal alignment: hyperbola focus.")
+        .def("internal_alignment_parabola_focus", &SketchSolver::internal_alignment_parabola_focus,
+             py::arg("parabola_id"), py::arg("pt_id"),
+             py::arg("driving") = true,
+             "Internal alignment: parabola focus.")
+        .def("internal_alignment_bspline_control_point", &SketchSolver::internal_alignment_bspline_control_point,
+             py::arg("bspline_id"), py::arg("circle_id"), py::arg("pole_index"),
+             py::arg("driving") = true,
+             "Internal alignment: B-spline control point.")
+        .def("internal_alignment_knot_point", &SketchSolver::internal_alignment_knot_point,
+             py::arg("bspline_id"), py::arg("pt_id"), py::arg("knot_index"),
+             py::arg("driving") = true,
+             "Internal alignment: B-spline knot point.")
+        .def("point_on_hyperbolic_arc", &SketchSolver::point_on_hyperbolic_arc,
+             py::arg("pt_id"), py::arg("arc_id"), py::arg("driving") = true,
+             "Constrain point to lie on hyperbolic arc.")
+        .def("point_on_parabolic_arc", &SketchSolver::point_on_parabolic_arc,
+             py::arg("pt_id"), py::arg("arc_id"), py::arg("driving") = true,
+             "Constrain point to lie on parabolic arc.")
+        .def("point_on_bspline", &SketchSolver::point_on_bspline,
+             py::arg("pt_id"), py::arg("bspline_id"), py::arg("u_id"),
+             py::arg("driving") = true,
+             "Constrain point to lie on B-spline at parameter u.")
+        .def("equal_radii_ee", &SketchSolver::equal_radii_ee,
+             py::arg("e1_id"), py::arg("e2_id"), py::arg("driving") = true,
+             "Constrain two ellipses to have equal major radii.")
+        .def("equal_radii_hh", &SketchSolver::equal_radii_hh,
+             py::arg("h1_id"), py::arg("h2_id"), py::arg("driving") = true,
+             "Constrain two arcs of hyperbola to have equal major radii.")
+        .def("equal_focus_pp", &SketchSolver::equal_focus_pp,
+             py::arg("p1_id"), py::arg("p2_id"), py::arg("driving") = true,
+             "Constrain two arcs of parabola to have equal focal distance.")
+        .def("tangent_at_bspline_knot", &SketchSolver::tangent_at_bspline_knot,
+             py::arg("bspline_id"), py::arg("line_id"), py::arg("knot_index"),
+             py::arg("driving") = true,
+             "Constrain line tangent to B-spline at a knot.")
         .def("tangent_circumf", &SketchSolver::tangent_circumf,
              py::arg("p1_id"), py::arg("p2_id"),
              py::arg("rd1_id"), py::arg("rd2_id"),
