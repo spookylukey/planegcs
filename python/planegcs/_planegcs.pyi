@@ -4,6 +4,7 @@ Python bindings for FreeCAD's PlaneGCS 2D geometric constraint solver
 
 from __future__ import annotations
 
+import collections.abc
 import typing
 
 __all__: list[str] = [
@@ -314,6 +315,20 @@ class SketchSolver:
         """
         Add an arc of parabola. Returns ID.
         """
+    def add_bspline(
+        self,
+        start_id: typing.SupportsInt | typing.SupportsIndex,
+        end_id: typing.SupportsInt | typing.SupportsIndex,
+        pole_ids: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex],
+        weight_ids: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex],
+        knot_ids: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex],
+        mult: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex],
+        degree: typing.SupportsInt | typing.SupportsIndex,
+        periodic: bool,
+    ) -> int:
+        """
+        Add a B-spline. Returns ID.
+        """
     def add_circle(
         self,
         center_id: typing.SupportsInt | typing.SupportsIndex,
@@ -464,6 +479,24 @@ class SketchSolver:
     ) -> int:
         """
         Constrain arc length.
+        """
+    def arc_of_ellipse_rules(
+        self, aoe_id: typing.SupportsInt | typing.SupportsIndex, driving: bool = True
+    ) -> int:
+        """
+        Add arc-of-ellipse rules (start/end tied to ellipse parametric equation).
+        """
+    def arc_of_hyperbola_rules(
+        self, aoh_id: typing.SupportsInt | typing.SupportsIndex, driving: bool = True
+    ) -> int:
+        """
+        Add arc-of-hyperbola rules (start/end tied to hyperbola parametric equation).
+        """
+    def arc_of_parabola_rules(
+        self, aop_id: typing.SupportsInt | typing.SupportsIndex, driving: bool = True
+    ) -> int:
+        """
+        Add arc-of-parabola rules (start/end tied to parabola parametric equation).
         """
     def arc_radius(
         self,
@@ -623,6 +656,15 @@ class SketchSolver:
         """
         Add equality constraint between two parameters.
         """
+    def equal_focus_pp(
+        self,
+        p1_id: typing.SupportsInt | typing.SupportsIndex,
+        p2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain two arcs of parabola to have equal focal distance.
+        """
     def equal_length(
         self,
         l1_id: typing.SupportsInt | typing.SupportsIndex,
@@ -631,6 +673,24 @@ class SketchSolver:
     ) -> int:
         """
         Constrain two lines to have equal length.
+        """
+    def equal_radii_ee(
+        self,
+        e1_id: typing.SupportsInt | typing.SupportsIndex,
+        e2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain two ellipses to have equal major radii.
+        """
+    def equal_radii_hh(
+        self,
+        h1_id: typing.SupportsInt | typing.SupportsIndex,
+        h2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain two arcs of hyperbola to have equal major radii.
         """
     def equal_radius_aa(
         self,
@@ -666,10 +726,76 @@ class SketchSolver:
     def get_arc_end_point(
         self, arc_id: typing.SupportsInt | typing.SupportsIndex
     ) -> tuple[float, float]: ...
+    def get_arc_of_ellipse_center(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_of_ellipse_end_angle(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> float: ...
+    def get_arc_of_ellipse_end_point(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_of_ellipse_focus1(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_of_ellipse_radmin(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> float: ...
+    def get_arc_of_ellipse_start_angle(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> float: ...
+    def get_arc_of_ellipse_start_point(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_of_hyperbola_center(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_of_hyperbola_end_angle(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> float: ...
+    def get_arc_of_hyperbola_end_point(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_of_hyperbola_focus1(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_of_hyperbola_radmin(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> float: ...
+    def get_arc_of_hyperbola_start_angle(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> float: ...
+    def get_arc_of_hyperbola_start_point(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_of_parabola_end_angle(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> float: ...
+    def get_arc_of_parabola_end_point(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_of_parabola_focus1(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_of_parabola_start_angle(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> float: ...
+    def get_arc_of_parabola_start_point(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_arc_of_parabola_vertex(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
     def get_arc_radius(self, arc_id: typing.SupportsInt | typing.SupportsIndex) -> float: ...
     def get_arc_start_angle(self, arc_id: typing.SupportsInt | typing.SupportsIndex) -> float: ...
     def get_arc_start_point(
         self, arc_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_bspline_end_point(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_bspline_start_point(
+        self, id: typing.SupportsInt | typing.SupportsIndex
     ) -> tuple[float, float]: ...
     def get_circle_center(
         self, circle_id: typing.SupportsInt | typing.SupportsIndex
@@ -684,11 +810,24 @@ class SketchSolver:
     def get_ellipse_radmin(
         self, ellipse_id: typing.SupportsInt | typing.SupportsIndex
     ) -> float: ...
+    def get_hyperbola_center(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_hyperbola_focus1(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_hyperbola_radmin(self, id: typing.SupportsInt | typing.SupportsIndex) -> float: ...
     def get_line_p1(
         self, line_id: typing.SupportsInt | typing.SupportsIndex
     ) -> tuple[float, float]: ...
     def get_line_p2(
         self, line_id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_parabola_focus1(
+        self, id: typing.SupportsInt | typing.SupportsIndex
+    ) -> tuple[float, float]: ...
+    def get_parabola_vertex(
+        self, id: typing.SupportsInt | typing.SupportsIndex
     ) -> tuple[float, float]: ...
     def get_param(self, param_id: typing.SupportsInt | typing.SupportsIndex) -> float:
         """
@@ -721,6 +860,102 @@ class SketchSolver:
         """
         Constrain two points to have same Y.
         """
+    def internal_alignment_bspline_control_point(
+        self,
+        bspline_id: typing.SupportsInt | typing.SupportsIndex,
+        circle_id: typing.SupportsInt | typing.SupportsIndex,
+        pole_index: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Internal alignment: B-spline control point.
+        """
+    def internal_alignment_ellipse_focus1(
+        self,
+        ellipse_id: typing.SupportsInt | typing.SupportsIndex,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Internal alignment: ellipse focus 1.
+        """
+    def internal_alignment_ellipse_focus2(
+        self,
+        ellipse_id: typing.SupportsInt | typing.SupportsIndex,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Internal alignment: ellipse focus 2.
+        """
+    def internal_alignment_ellipse_major_diameter(
+        self,
+        ellipse_id: typing.SupportsInt | typing.SupportsIndex,
+        p1_id: typing.SupportsInt | typing.SupportsIndex,
+        p2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Internal alignment: ellipse major diameter.
+        """
+    def internal_alignment_ellipse_minor_diameter(
+        self,
+        ellipse_id: typing.SupportsInt | typing.SupportsIndex,
+        p1_id: typing.SupportsInt | typing.SupportsIndex,
+        p2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Internal alignment: ellipse minor diameter.
+        """
+    def internal_alignment_hyperbola_focus(
+        self,
+        hyperbola_id: typing.SupportsInt | typing.SupportsIndex,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Internal alignment: hyperbola focus.
+        """
+    def internal_alignment_hyperbola_major_diameter(
+        self,
+        hyperbola_id: typing.SupportsInt | typing.SupportsIndex,
+        p1_id: typing.SupportsInt | typing.SupportsIndex,
+        p2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Internal alignment: hyperbola major diameter.
+        """
+    def internal_alignment_hyperbola_minor_diameter(
+        self,
+        hyperbola_id: typing.SupportsInt | typing.SupportsIndex,
+        p1_id: typing.SupportsInt | typing.SupportsIndex,
+        p2_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Internal alignment: hyperbola minor diameter.
+        """
+    def internal_alignment_knot_point(
+        self,
+        bspline_id: typing.SupportsInt | typing.SupportsIndex,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        knot_index: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Internal alignment: B-spline knot point.
+        """
+    def internal_alignment_parabola_focus(
+        self,
+        parabola_id: typing.SupportsInt | typing.SupportsIndex,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Internal alignment: parabola focus.
+        """
     def internal_alignment_point2ellipse(
         self,
         ellipse_id: typing.SupportsInt | typing.SupportsIndex,
@@ -730,6 +965,16 @@ class SketchSolver:
     ) -> int:
         """
         Internal alignment: point to ellipse.
+        """
+    def internal_alignment_point2hyperbola(
+        self,
+        hyperbola_id: typing.SupportsInt | typing.SupportsIndex,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        alignment_type: InternalAlignmentType,
+        driving: bool = True,
+    ) -> int:
+        """
+        Internal alignment: point to hyperbola.
         """
     def is_param_fixed(self, param_id: typing.SupportsInt | typing.SupportsIndex) -> bool:
         """
@@ -831,6 +1076,16 @@ class SketchSolver:
         """
         Constrain point to lie on arc.
         """
+    def point_on_bspline(
+        self,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        bspline_id: typing.SupportsInt | typing.SupportsIndex,
+        u_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain point to lie on B-spline at parameter u.
+        """
     def point_on_circle(
         self,
         pt_id: typing.SupportsInt | typing.SupportsIndex,
@@ -849,6 +1104,15 @@ class SketchSolver:
         """
         Constrain point to lie on ellipse.
         """
+    def point_on_hyperbolic_arc(
+        self,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain point to lie on hyperbolic arc.
+        """
     def point_on_line(
         self,
         pt_id: typing.SupportsInt | typing.SupportsIndex,
@@ -857,6 +1121,15 @@ class SketchSolver:
     ) -> int:
         """
         Constrain point to lie on line.
+        """
+    def point_on_parabolic_arc(
+        self,
+        pt_id: typing.SupportsInt | typing.SupportsIndex,
+        arc_id: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain point to lie on parabolic arc.
         """
     def point_on_perp_bisector(
         self,
@@ -938,6 +1211,16 @@ class SketchSolver:
     ) -> int:
         """
         Add arc-arc tangent constraint.
+        """
+    def tangent_at_bspline_knot(
+        self,
+        bspline_id: typing.SupportsInt | typing.SupportsIndex,
+        line_id: typing.SupportsInt | typing.SupportsIndex,
+        knot_index: typing.SupportsInt | typing.SupportsIndex,
+        driving: bool = True,
+    ) -> int:
+        """
+        Constrain line tangent to B-spline at a knot.
         """
     def tangent_circle_arc(
         self,
