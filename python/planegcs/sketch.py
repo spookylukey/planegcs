@@ -50,7 +50,36 @@ ArcId = NewType("ArcId", int)
 EllipseId = NewType("EllipseId", int)
 """ID for an ellipse (returned by :meth:`Sketch.add_ellipse`)."""
 
-type CurveId = CircleId | EllipseId | ArcId | LineId
+ArcOfEllipseId = NewType("ArcOfEllipseId", int)
+"""ID for an arc of ellipse (returned by :meth:`Sketch.add_arc_of_ellipse`)."""
+
+HyperbolaId = NewType("HyperbolaId", int)
+"""ID for a hyperbola (returned by :meth:`Sketch.add_hyperbola`)."""
+
+ArcOfHyperbolaId = NewType("ArcOfHyperbolaId", int)
+"""ID for an arc of hyperbola (returned by :meth:`Sketch.add_arc_of_hyperbola`)."""
+
+ParabolaId = NewType("ParabolaId", int)
+"""ID for a parabola (returned by :meth:`Sketch.add_parabola`)."""
+
+ArcOfParabolaId = NewType("ArcOfParabolaId", int)
+"""ID for an arc of parabola (returned by :meth:`Sketch.add_arc_of_parabola`)."""
+
+BSplineId = NewType("BSplineId", int)
+"""ID for a B-spline (returned by :meth:`Sketch.add_bspline`)."""
+
+type CurveId = (
+    CircleId
+    | EllipseId
+    | ArcId
+    | LineId
+    | ArcOfEllipseId
+    | HyperbolaId
+    | ArcOfHyperbolaId
+    | ParabolaId
+    | ArcOfParabolaId
+    | BSplineId
+)
 """ID for any geometry usable as a curve (line, circle, arc, ellipse, etc.)."""
 
 ConstraintTag = NewType("ConstraintTag", int)
@@ -59,7 +88,20 @@ ConstraintTag = NewType("ConstraintTag", int)
 type PointInfo = tuple[float, float]
 """(x, y) coordinates of a point, returned by :meth:`Sketch.get_point`."""
 
-EntityType = Literal["point", "line", "circle", "arc", "ellipse", "param"]
+EntityType = Literal[
+    "point",
+    "line",
+    "circle",
+    "arc",
+    "ellipse",
+    "arc_of_ellipse",
+    "hyperbola",
+    "arc_of_hyperbola",
+    "parabola",
+    "arc_of_parabola",
+    "bspline",
+    "param",
+]
 """The kind of geometric entity or parameter an ID refers to."""
 
 
@@ -78,7 +120,20 @@ class EntityInfo:
     """Kind of entity: ``"point"``, ``"line"``, ``"circle"``, ``"arc"``,
     ``"ellipse"``, or ``"param"``."""
 
-    value: PointInfo | LineInfo | CircleInfo | ArcInfo | EllipseInfo | float
+    value: (
+        PointInfo
+        | LineInfo
+        | CircleInfo
+        | ArcInfo
+        | EllipseInfo
+        | ArcOfEllipseInfo
+        | HyperbolaInfo
+        | ArcOfHyperbolaInfo
+        | ParabolaInfo
+        | ArcOfParabolaInfo
+        | BSplineInfo
+        | float
+    )
     """Current solver value.
 
     The concrete type depends on :attr:`type`:
@@ -88,6 +143,12 @@ class EntityInfo:
     - ``"circle"`` → :class:`CircleInfo`
     - ``"arc"`` → :class:`ArcInfo`
     - ``"ellipse"`` → :class:`EllipseInfo`
+    - ``"arc_of_ellipse"`` → :class:`ArcOfEllipseInfo`
+    - ``"hyperbola"`` → :class:`HyperbolaInfo`
+    - ``"arc_of_hyperbola"`` → :class:`ArcOfHyperbolaInfo`
+    - ``"parabola"`` → :class:`ParabolaInfo`
+    - ``"arc_of_parabola"`` → :class:`ArcOfParabolaInfo`
+    - ``"bspline"`` → :class:`BSplineInfo`
     - ``"param"`` → ``float``
     """
 
@@ -237,6 +298,117 @@ class EllipseInfo:
 
 
 @dataclass(frozen=True, slots=True)
+class ArcOfEllipseInfo:
+    """Properties of an arc of ellipse, returned by :meth:`Sketch.get_arc_of_ellipse`."""
+
+    center: PointInfo
+    """(x, y) of the ellipse center."""
+
+    focus1: PointInfo
+    """(x, y) of the first focus."""
+
+    radmin: float
+    """Semi-minor axis radius."""
+
+    start_angle: float
+    """Start angle in radians."""
+
+    end_angle: float
+    """End angle in radians."""
+
+    start: PointInfo
+    """(x, y) of the arc start point."""
+
+    end: PointInfo
+    """(x, y) of the arc end point."""
+
+
+@dataclass(frozen=True, slots=True)
+class HyperbolaInfo:
+    """Properties of a hyperbola, returned by :meth:`Sketch.get_hyperbola`."""
+
+    center: PointInfo
+    """(x, y) of the hyperbola center."""
+
+    focus1: PointInfo
+    """(x, y) of the first focus."""
+
+    radmin: float
+    """Semi-minor axis radius."""
+
+
+@dataclass(frozen=True, slots=True)
+class ArcOfHyperbolaInfo:
+    """Properties of an arc of hyperbola, returned by :meth:`Sketch.get_arc_of_hyperbola`."""
+
+    center: PointInfo
+    """(x, y) of the hyperbola center."""
+
+    focus1: PointInfo
+    """(x, y) of the first focus."""
+
+    radmin: float
+    """Semi-minor axis radius."""
+
+    start_angle: float
+    """Start angle (hyperbolic parameter) in radians."""
+
+    end_angle: float
+    """End angle (hyperbolic parameter) in radians."""
+
+    start: PointInfo
+    """(x, y) of the arc start point."""
+
+    end: PointInfo
+    """(x, y) of the arc end point."""
+
+
+@dataclass(frozen=True, slots=True)
+class ParabolaInfo:
+    """Properties of a parabola, returned by :meth:`Sketch.get_parabola`."""
+
+    vertex: PointInfo
+    """(x, y) of the parabola vertex."""
+
+    focus1: PointInfo
+    """(x, y) of the focus."""
+
+
+@dataclass(frozen=True, slots=True)
+class ArcOfParabolaInfo:
+    """Properties of an arc of parabola, returned by :meth:`Sketch.get_arc_of_parabola`."""
+
+    vertex: PointInfo
+    """(x, y) of the parabola vertex."""
+
+    focus1: PointInfo
+    """(x, y) of the focus."""
+
+    start_angle: float
+    """Start parameter."""
+
+    end_angle: float
+    """End parameter."""
+
+    start: PointInfo
+    """(x, y) of the arc start point."""
+
+    end: PointInfo
+    """(x, y) of the arc end point."""
+
+
+@dataclass(frozen=True, slots=True)
+class BSplineInfo:
+    """Properties of a B-spline, returned by :meth:`Sketch.get_bspline`."""
+
+    start: PointInfo
+    """(x, y) of the spline start point."""
+
+    end: PointInfo
+    """(x, y) of the spline end point."""
+
+
+@dataclass(frozen=True, slots=True)
 class Diagnosis:
     """Result of constraint system diagnosis.
 
@@ -380,6 +552,18 @@ class Sketch:
             value = self.get_arc(ArcId(entity_id))
         elif etype == "ellipse":
             value = self.get_ellipse(EllipseId(entity_id))
+        elif etype == "arc_of_ellipse":
+            value = self.get_arc_of_ellipse(ArcOfEllipseId(entity_id))
+        elif etype == "hyperbola":
+            value = self.get_hyperbola(HyperbolaId(entity_id))
+        elif etype == "arc_of_hyperbola":
+            value = self.get_arc_of_hyperbola(ArcOfHyperbolaId(entity_id))
+        elif etype == "parabola":
+            value = self.get_parabola(ParabolaId(entity_id))
+        elif etype == "arc_of_parabola":
+            value = self.get_arc_of_parabola(ArcOfParabolaId(entity_id))
+        elif etype == "bspline":
+            value = self.get_bspline(BSplineId(entity_id))
         elif etype == "param":
             value = self.get_param(ParamId(entity_id))
         else:  # pragma: no cover
@@ -696,6 +880,221 @@ class Sketch:
             radmin=self._solver.get_ellipse_radmin(ellipse_id),
         )
 
+    # ── Geometry: ArcOfEllipse ──────────────────────────────────────
+
+    def add_arc_of_ellipse(
+        self,
+        center_id: PointId,
+        focus1_id: PointId,
+        radmin: float,
+        start_angle: float,
+        end_angle: float,
+        start_id: PointId,
+        end_id: PointId,
+    ) -> ArcOfEllipseId:
+        """Add an arc of ellipse.
+
+        The arc is defined by an ellipse (center, focus, semi-minor radius)
+        and angular parameters.  Start/end points must be provided and
+        are constrained to the ellipse parametric curve via arc-of-ellipse
+        rules (added automatically).
+
+        Args:
+            center_id: Ellipse center point.
+            focus1_id: First focus point.
+            radmin: Semi-minor axis radius.
+            start_angle: Start angle in radians.
+            end_angle: End angle in radians.
+            start_id: Start point of the arc.
+            end_id: End point of the arc.
+
+        Returns:
+            ArcOfEllipseId.
+        """
+        aoe_id = ArcOfEllipseId(
+            self._solver.add_arc_of_ellipse(
+                center_id, focus1_id, radmin, start_angle, end_angle, start_id, end_id
+            )
+        )
+        self._entity_types[aoe_id] = "arc_of_ellipse"
+        # Add arc-of-ellipse rules to tie start/end to parametric equation
+        self._solver.arc_of_ellipse_rules(aoe_id)
+        return aoe_id
+
+    def get_arc_of_ellipse(self, aoe_id: ArcOfEllipseId) -> ArcOfEllipseInfo:
+        """Get all properties of an arc of ellipse."""
+        return ArcOfEllipseInfo(
+            center=self._solver.get_arc_of_ellipse_center(aoe_id),
+            focus1=self._solver.get_arc_of_ellipse_focus1(aoe_id),
+            radmin=self._solver.get_arc_of_ellipse_radmin(aoe_id),
+            start_angle=self._solver.get_arc_of_ellipse_start_angle(aoe_id),
+            end_angle=self._solver.get_arc_of_ellipse_end_angle(aoe_id),
+            start=self._solver.get_arc_of_ellipse_start_point(aoe_id),
+            end=self._solver.get_arc_of_ellipse_end_point(aoe_id),
+        )
+
+    # ── Geometry: Hyperbola ────────────────────────────────────────
+
+    def add_hyperbola(self, center_id: PointId, focus1_id: PointId, radmin: float) -> HyperbolaId:
+        """Add a hyperbola.
+
+        Defined by center, first focus, and semi-minor axis radius.
+        The major radius is derived: ``radmaj = sqrt(dist(center, focus1)² - radmin²)``.
+        """
+        hid = HyperbolaId(self._solver.add_hyperbola(center_id, focus1_id, radmin))
+        self._entity_types[hid] = "hyperbola"
+        return hid
+
+    def get_hyperbola(self, hyperbola_id: HyperbolaId) -> HyperbolaInfo:
+        """Get all properties of a hyperbola."""
+        return HyperbolaInfo(
+            center=self._solver.get_hyperbola_center(hyperbola_id),
+            focus1=self._solver.get_hyperbola_focus1(hyperbola_id),
+            radmin=self._solver.get_hyperbola_radmin(hyperbola_id),
+        )
+
+    # ── Geometry: ArcOfHyperbola ──────────────────────────────────
+
+    def add_arc_of_hyperbola(
+        self,
+        center_id: PointId,
+        focus1_id: PointId,
+        radmin: float,
+        start_angle: float,
+        end_angle: float,
+        start_id: PointId,
+        end_id: PointId,
+    ) -> ArcOfHyperbolaId:
+        """Add an arc of hyperbola.
+
+        Start/end points are constrained to the hyperbola parametric
+        curve via arc-of-hyperbola rules (added automatically).
+        """
+        ahid = ArcOfHyperbolaId(
+            self._solver.add_arc_of_hyperbola(
+                center_id, focus1_id, radmin, start_angle, end_angle, start_id, end_id
+            )
+        )
+        self._entity_types[ahid] = "arc_of_hyperbola"
+        self._solver.arc_of_hyperbola_rules(ahid)
+        return ahid
+
+    def get_arc_of_hyperbola(self, ahid: ArcOfHyperbolaId) -> ArcOfHyperbolaInfo:
+        """Get all properties of an arc of hyperbola."""
+        return ArcOfHyperbolaInfo(
+            center=self._solver.get_arc_of_hyperbola_center(ahid),
+            focus1=self._solver.get_arc_of_hyperbola_focus1(ahid),
+            radmin=self._solver.get_arc_of_hyperbola_radmin(ahid),
+            start_angle=self._solver.get_arc_of_hyperbola_start_angle(ahid),
+            end_angle=self._solver.get_arc_of_hyperbola_end_angle(ahid),
+            start=self._solver.get_arc_of_hyperbola_start_point(ahid),
+            end=self._solver.get_arc_of_hyperbola_end_point(ahid),
+        )
+
+    # ── Geometry: Parabola ────────────────────────────────────────
+
+    def add_parabola(self, vertex_id: PointId, focus1_id: PointId) -> ParabolaId:
+        """Add a parabola.
+
+        Defined by vertex and focus.  The focal length is ``dist(vertex, focus)``.
+        """
+        pid = ParabolaId(self._solver.add_parabola(vertex_id, focus1_id))
+        self._entity_types[pid] = "parabola"
+        return pid
+
+    def get_parabola(self, parabola_id: ParabolaId) -> ParabolaInfo:
+        """Get all properties of a parabola."""
+        return ParabolaInfo(
+            vertex=self._solver.get_parabola_vertex(parabola_id),
+            focus1=self._solver.get_parabola_focus1(parabola_id),
+        )
+
+    # ── Geometry: ArcOfParabola ───────────────────────────────────
+
+    def add_arc_of_parabola(
+        self,
+        vertex_id: PointId,
+        focus1_id: PointId,
+        start_angle: float,
+        end_angle: float,
+        start_id: PointId,
+        end_id: PointId,
+    ) -> ArcOfParabolaId:
+        """Add an arc of parabola.
+
+        Start/end points are constrained to the parabola parametric
+        curve via arc-of-parabola rules (added automatically).
+        """
+        apid = ArcOfParabolaId(
+            self._solver.add_arc_of_parabola(
+                vertex_id, focus1_id, start_angle, end_angle, start_id, end_id
+            )
+        )
+        self._entity_types[apid] = "arc_of_parabola"
+        self._solver.arc_of_parabola_rules(apid)
+        return apid
+
+    def get_arc_of_parabola(self, apid: ArcOfParabolaId) -> ArcOfParabolaInfo:
+        """Get all properties of an arc of parabola."""
+        return ArcOfParabolaInfo(
+            vertex=self._solver.get_arc_of_parabola_vertex(apid),
+            focus1=self._solver.get_arc_of_parabola_focus1(apid),
+            start_angle=self._solver.get_arc_of_parabola_start_angle(apid),
+            end_angle=self._solver.get_arc_of_parabola_end_angle(apid),
+            start=self._solver.get_arc_of_parabola_start_point(apid),
+            end=self._solver.get_arc_of_parabola_end_point(apid),
+        )
+
+    # ── Geometry: BSpline ─────────────────────────────────────────
+
+    def add_bspline(
+        self,
+        start_id: PointId,
+        end_id: PointId,
+        pole_ids: list[PointId],
+        weight_ids: list[ParamId],
+        knot_ids: list[ParamId],
+        mult: list[int],
+        degree: int,
+        periodic: bool = False,
+    ) -> BSplineId:
+        """Add a B-spline curve.
+
+        Args:
+            start_id: Start point of the spline.
+            end_id: End point of the spline.
+            pole_ids: Control point IDs (as :class:`PointId`).
+            weight_ids: Weight parameter IDs (one per pole).
+            knot_ids: Knot parameter IDs.
+            mult: Multiplicity vector (one per knot).
+            degree: Spline degree.
+            periodic: Whether the spline is periodic.
+
+        Returns:
+            BSplineId.
+        """
+        bsid = BSplineId(
+            self._solver.add_bspline(
+                start_id,
+                end_id,
+                list(pole_ids),
+                list(weight_ids),
+                list(knot_ids),
+                list(mult),
+                degree,
+                periodic,
+            )
+        )
+        self._entity_types[bsid] = "bspline"
+        return bsid
+
+    def get_bspline(self, bspline_id: BSplineId) -> BSplineInfo:
+        """Get start and end points of a B-spline."""
+        return BSplineInfo(
+            start=self._solver.get_bspline_start_point(bspline_id),
+            end=self._solver.get_bspline_end_point(bspline_id),
+        )
+
     # ── Constraints ────────────────────────────────────────────────
 
     def coincident(
@@ -968,6 +1367,39 @@ class Sketch:
             driving,
         )
 
+    def equal_radii_ee(
+        self, e1_id: EllipseId, e2_id: EllipseId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain two ellipses to have equal major radii."""
+        return self._record(
+            self._solver.equal_radii_ee(e1_id, e2_id, driving),
+            "equal_radii_ee",
+            (e1_id, e2_id),
+            driving,
+        )
+
+    def equal_radii_hh(
+        self, h1_id: ArcOfHyperbolaId, h2_id: ArcOfHyperbolaId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain two arcs of hyperbola to have equal major radii."""
+        return self._record(
+            self._solver.equal_radii_hh(h1_id, h2_id, driving),
+            "equal_radii_hh",
+            (h1_id, h2_id),
+            driving,
+        )
+
+    def equal_focus_pp(
+        self, p1_id: ArcOfParabolaId, p2_id: ArcOfParabolaId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain two arcs of parabola to have equal focal distance."""
+        return self._record(
+            self._solver.equal_focus_pp(p1_id, p2_id, driving),
+            "equal_focus_pp",
+            (p1_id, p2_id),
+            driving,
+        )
+
     def l2l_angle(
         self, l1_id: LineId, l2_id: LineId, angle_id: ParamId, *, driving: bool = True
     ) -> ConstraintTag:
@@ -1024,6 +1456,39 @@ class Sketch:
             self._solver.point_on_ellipse(pt_id, ellipse_id, driving),
             "point_on_ellipse",
             (pt_id, ellipse_id),
+            driving,
+        )
+
+    def point_on_hyperbolic_arc(
+        self, pt_id: PointId, arc_id: ArcOfHyperbolaId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain point to lie on an arc of hyperbola."""
+        return self._record(
+            self._solver.point_on_hyperbolic_arc(pt_id, arc_id, driving),
+            "point_on_hyperbolic_arc",
+            (pt_id, arc_id),
+            driving,
+        )
+
+    def point_on_parabolic_arc(
+        self, pt_id: PointId, arc_id: ArcOfParabolaId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain point to lie on an arc of parabola."""
+        return self._record(
+            self._solver.point_on_parabolic_arc(pt_id, arc_id, driving),
+            "point_on_parabolic_arc",
+            (pt_id, arc_id),
+            driving,
+        )
+
+    def point_on_bspline(
+        self, pt_id: PointId, bspline_id: BSplineId, u_id: ParamId, *, driving: bool = True
+    ) -> ConstraintTag:
+        """Constrain point to lie on a B-spline at parameter *u*."""
+        return self._record(
+            self._solver.point_on_bspline(pt_id, bspline_id, u_id, driving),
+            "point_on_bspline",
+            (pt_id, bspline_id, u_id),
             driving,
         )
 
@@ -1618,6 +2083,209 @@ class Sketch:
             ),
             "internal_alignment_point2ellipse",
             (ellipse_id, pt_id),
+            driving,
+        )
+
+    def internal_alignment_ellipse_major_diameter(
+        self,
+        ellipse_id: EllipseId,
+        p1_id: PointId,
+        p2_id: PointId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Internal alignment: tie line endpoints to ellipse major diameter."""
+        return self._record(
+            self._solver.internal_alignment_ellipse_major_diameter(
+                ellipse_id, p1_id, p2_id, driving
+            ),
+            "internal_alignment_ellipse_major_diameter",
+            (ellipse_id, p1_id, p2_id),
+            driving,
+        )
+
+    def internal_alignment_ellipse_minor_diameter(
+        self,
+        ellipse_id: EllipseId,
+        p1_id: PointId,
+        p2_id: PointId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Internal alignment: tie line endpoints to ellipse minor diameter."""
+        return self._record(
+            self._solver.internal_alignment_ellipse_minor_diameter(
+                ellipse_id, p1_id, p2_id, driving
+            ),
+            "internal_alignment_ellipse_minor_diameter",
+            (ellipse_id, p1_id, p2_id),
+            driving,
+        )
+
+    def internal_alignment_ellipse_focus1(
+        self,
+        ellipse_id: EllipseId,
+        pt_id: PointId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Internal alignment: constrain point to ellipse focus 1."""
+        return self._record(
+            self._solver.internal_alignment_ellipse_focus1(ellipse_id, pt_id, driving),
+            "internal_alignment_ellipse_focus1",
+            (ellipse_id, pt_id),
+            driving,
+        )
+
+    def internal_alignment_ellipse_focus2(
+        self,
+        ellipse_id: EllipseId,
+        pt_id: PointId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Internal alignment: constrain point to ellipse focus 2."""
+        return self._record(
+            self._solver.internal_alignment_ellipse_focus2(ellipse_id, pt_id, driving),
+            "internal_alignment_ellipse_focus2",
+            (ellipse_id, pt_id),
+            driving,
+        )
+
+    def internal_alignment_point2hyperbola(
+        self,
+        hyperbola_id: HyperbolaId,
+        pt_id: PointId,
+        alignment_type: InternalAlignmentType,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Internal alignment: constrain a point relative to a hyperbola."""
+        return self._record(
+            self._solver.internal_alignment_point2hyperbola(
+                hyperbola_id, pt_id, alignment_type, driving
+            ),
+            "internal_alignment_point2hyperbola",
+            (hyperbola_id, pt_id),
+            driving,
+        )
+
+    def internal_alignment_hyperbola_major_diameter(
+        self,
+        hyperbola_id: HyperbolaId,
+        p1_id: PointId,
+        p2_id: PointId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Internal alignment: tie line endpoints to hyperbola major diameter."""
+        return self._record(
+            self._solver.internal_alignment_hyperbola_major_diameter(
+                hyperbola_id, p1_id, p2_id, driving
+            ),
+            "internal_alignment_hyperbola_major_diameter",
+            (hyperbola_id, p1_id, p2_id),
+            driving,
+        )
+
+    def internal_alignment_hyperbola_minor_diameter(
+        self,
+        hyperbola_id: HyperbolaId,
+        p1_id: PointId,
+        p2_id: PointId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Internal alignment: tie line endpoints to hyperbola minor diameter."""
+        return self._record(
+            self._solver.internal_alignment_hyperbola_minor_diameter(
+                hyperbola_id, p1_id, p2_id, driving
+            ),
+            "internal_alignment_hyperbola_minor_diameter",
+            (hyperbola_id, p1_id, p2_id),
+            driving,
+        )
+
+    def internal_alignment_hyperbola_focus(
+        self,
+        hyperbola_id: HyperbolaId,
+        pt_id: PointId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Internal alignment: constrain point to hyperbola focus."""
+        return self._record(
+            self._solver.internal_alignment_hyperbola_focus(hyperbola_id, pt_id, driving),
+            "internal_alignment_hyperbola_focus",
+            (hyperbola_id, pt_id),
+            driving,
+        )
+
+    def internal_alignment_parabola_focus(
+        self,
+        parabola_id: ParabolaId,
+        pt_id: PointId,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Internal alignment: constrain point to parabola focus."""
+        return self._record(
+            self._solver.internal_alignment_parabola_focus(parabola_id, pt_id, driving),
+            "internal_alignment_parabola_focus",
+            (parabola_id, pt_id),
+            driving,
+        )
+
+    def internal_alignment_bspline_control_point(
+        self,
+        bspline_id: BSplineId,
+        circle_id: CircleId,
+        pole_index: int,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Internal alignment: B-spline control point.
+
+        Ties a circle (center = pole, radius = weight) to a control point.
+        """
+        return self._record(
+            self._solver.internal_alignment_bspline_control_point(
+                bspline_id, circle_id, pole_index, driving
+            ),
+            "internal_alignment_bspline_control_point",
+            (bspline_id, circle_id),
+            driving,
+        )
+
+    def internal_alignment_knot_point(
+        self,
+        bspline_id: BSplineId,
+        pt_id: PointId,
+        knot_index: int,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Internal alignment: constrain point to B-spline knot."""
+        return self._record(
+            self._solver.internal_alignment_knot_point(bspline_id, pt_id, knot_index, driving),
+            "internal_alignment_knot_point",
+            (bspline_id, pt_id),
+            driving,
+        )
+
+    def tangent_at_bspline_knot(
+        self,
+        bspline_id: BSplineId,
+        line_id: LineId,
+        knot_index: int,
+        *,
+        driving: bool = True,
+    ) -> ConstraintTag:
+        """Constrain a line to be tangent to a B-spline at a knot."""
+        return self._record(
+            self._solver.tangent_at_bspline_knot(bspline_id, line_id, knot_index, driving),
+            "tangent_at_bspline_knot",
+            (bspline_id, line_id),
             driving,
         )
 
