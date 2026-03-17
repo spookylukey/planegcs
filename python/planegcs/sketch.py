@@ -1101,34 +1101,19 @@ class Sketch:
         self, pt1_id: PointId, pt2_id: PointId, *, driving: bool = True
     ) -> ConstraintTag:
         """Make two points coincident. Returns constraint tag."""
-        return self._record(
-            self._solver.coincident(pt1_id, pt2_id, driving),
-            "coincident",
-            (pt1_id, pt2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.coincident(pt1_id, pt2_id, driving))
 
     def coordinate_x(
         self, pt_id: PointId, x_id: ParamId, *, driving: bool = True
     ) -> ConstraintTag:
         """Fix the X coordinate of a point to a parameter value."""
-        return self._record(
-            self._solver.coordinate_x(pt_id, x_id, driving),
-            "coordinate_x",
-            (pt_id, x_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.coordinate_x(pt_id, x_id, driving))
 
     def coordinate_y(
         self, pt_id: PointId, y_id: ParamId, *, driving: bool = True
     ) -> ConstraintTag:
         """Fix the Y coordinate of a point to a parameter value."""
-        return self._record(
-            self._solver.coordinate_y(pt_id, y_id, driving),
-            "coordinate_y",
-            (pt_id, y_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.coordinate_y(pt_id, y_id, driving))
 
     def fix_point(
         self, pt_id: PointId, x: float, y: float, *, driving: bool = True
@@ -1146,43 +1131,23 @@ class Sketch:
 
     def horizontal(self, line_id: LineId, *, driving: bool = True) -> ConstraintTag:
         """Constrain a line to be horizontal."""
-        return self._record(
-            self._solver.horizontal_line(line_id, driving),
-            "horizontal",
-            (line_id,),
-            driving,
-        )
+        return ConstraintTag(self._solver.horizontal_line(line_id, driving))
 
     def vertical(self, line_id: LineId, *, driving: bool = True) -> ConstraintTag:
         """Constrain a line to be vertical."""
-        return self._record(
-            self._solver.vertical_line(line_id, driving),
-            "vertical",
-            (line_id,),
-            driving,
-        )
+        return ConstraintTag(self._solver.vertical_line(line_id, driving))
 
     def horizontal_points(
         self, p1_id: PointId, p2_id: PointId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain two points to be at the same Y."""
-        return self._record(
-            self._solver.horizontal_points(p1_id, p2_id, driving),
-            "horizontal_points",
-            (p1_id, p2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.horizontal_points(p1_id, p2_id, driving))
 
     def vertical_points(
         self, p1_id: PointId, p2_id: PointId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain two points to be at the same X."""
-        return self._record(
-            self._solver.vertical_points(p1_id, p2_id, driving),
-            "vertical_points",
-            (p1_id, p2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.vertical_points(p1_id, p2_id, driving))
 
     def p2p_distance(
         self, pt1_id: PointId, pt2_id: PointId, distance_id: ParamId, *, driving: bool = True
@@ -1191,12 +1156,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_p2p_distance`.
         """
-        return self._record(
-            self._solver.p2p_distance(pt1_id, pt2_id, distance_id, driving),
-            "p2p_distance",
-            (pt1_id, pt2_id, distance_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.p2p_distance(pt1_id, pt2_id, distance_id, driving))
 
     def set_p2p_distance(
         self, pt1_id: PointId, pt2_id: PointId, distance: float, *, driving: bool = True
@@ -1223,12 +1183,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_p2p_angle`.
         """
-        return self._record(
-            self._solver.p2p_angle(pt1_id, pt2_id, angle_id, driving),
-            "p2p_angle",
-            (pt1_id, pt2_id, angle_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.p2p_angle(pt1_id, pt2_id, angle_id, driving))
 
     def set_p2p_angle(
         self,
@@ -1253,12 +1208,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_p2l_distance`.
         """
-        return self._record(
-            self._solver.p2l_distance(pt_id, line_id, distance_id, driving),
-            "p2l_distance",
-            (pt_id, line_id, distance_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.p2l_distance(pt_id, line_id, distance_id, driving))
 
     def set_p2l_distance(
         self, pt_id: PointId, line_id: LineId, distance: float, *, driving: bool = True
@@ -1276,129 +1226,69 @@ class Sketch:
         self, pt_id: PointId, line_id: LineId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain point on line."""
-        return self._record(
-            self._solver.point_on_line(pt_id, line_id, driving),
-            "point_on_line",
-            (pt_id, line_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.point_on_line(pt_id, line_id, driving))
 
     def point_on_perp_bisector(
         self, pt_id: PointId, line_id: LineId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain point to lie on the perpendicular bisector of a line."""
-        return self._record(
-            self._solver.point_on_perp_bisector(pt_id, line_id, driving),
-            "point_on_perp_bisector",
-            (pt_id, line_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.point_on_perp_bisector(pt_id, line_id, driving))
 
     def parallel(self, l1_id: LineId, l2_id: LineId, *, driving: bool = True) -> ConstraintTag:
         """Constrain lines to be parallel."""
-        return self._record(
-            self._solver.parallel(l1_id, l2_id, driving),
-            "parallel",
-            (l1_id, l2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.parallel(l1_id, l2_id, driving))
 
     def perpendicular(
         self, l1_id: LineId, l2_id: LineId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain lines to be perpendicular."""
-        return self._record(
-            self._solver.perpendicular(l1_id, l2_id, driving),
-            "perpendicular",
-            (l1_id, l2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.perpendicular(l1_id, l2_id, driving))
 
     def equal_length(self, l1_id: LineId, l2_id: LineId, *, driving: bool = True) -> ConstraintTag:
         """Constrain two lines to equal length."""
-        return self._record(
-            self._solver.equal_length(l1_id, l2_id, driving),
-            "equal_length",
-            (l1_id, l2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.equal_length(l1_id, l2_id, driving))
 
     def equal(
         self, param1_id: ParamId, param2_id: ParamId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain two parameters to be equal."""
-        return self._record(
-            self._solver.equal(param1_id, param2_id, driving),
-            "equal",
-            (param1_id, param2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.equal(param1_id, param2_id, driving))
 
     def equal_radius_cc(
         self, c1_id: CircleId, c2_id: CircleId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain two circles to have equal radius."""
-        return self._record(
-            self._solver.equal_radius_cc(c1_id, c2_id, driving),
-            "equal_radius_cc",
-            (c1_id, c2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.equal_radius_cc(c1_id, c2_id, driving))
 
     def equal_radius_ca(
         self, circle_id: CircleId, arc_id: ArcId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain a circle and an arc to have equal radius."""
-        return self._record(
-            self._solver.equal_radius_ca(circle_id, arc_id, driving),
-            "equal_radius_ca",
-            (circle_id, arc_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.equal_radius_ca(circle_id, arc_id, driving))
 
     def equal_radius_aa(
         self, a1_id: ArcId, a2_id: ArcId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain two arcs to have equal radius."""
-        return self._record(
-            self._solver.equal_radius_aa(a1_id, a2_id, driving),
-            "equal_radius_aa",
-            (a1_id, a2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.equal_radius_aa(a1_id, a2_id, driving))
 
     def equal_radii_ee(
         self, e1_id: EllipseId, e2_id: EllipseId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain two ellipses to have equal major radii."""
-        return self._record(
-            self._solver.equal_radii_ee(e1_id, e2_id, driving),
-            "equal_radii_ee",
-            (e1_id, e2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.equal_radii_ee(e1_id, e2_id, driving))
 
     def equal_radii_hh(
         self, h1_id: ArcOfHyperbolaId, h2_id: ArcOfHyperbolaId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain two arcs of hyperbola to have equal major radii."""
-        return self._record(
-            self._solver.equal_radii_hh(h1_id, h2_id, driving),
-            "equal_radii_hh",
-            (h1_id, h2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.equal_radii_hh(h1_id, h2_id, driving))
 
     def equal_focus_pp(
         self, p1_id: ArcOfParabolaId, p2_id: ArcOfParabolaId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain two arcs of parabola to have equal focal distance."""
-        return self._record(
-            self._solver.equal_focus_pp(p1_id, p2_id, driving),
-            "equal_focus_pp",
-            (p1_id, p2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.equal_focus_pp(p1_id, p2_id, driving))
 
     def l2l_angle(
         self, l1_id: LineId, l2_id: LineId, angle_id: ParamId, *, driving: bool = True
@@ -1407,12 +1297,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_l2l_angle`.
         """
-        return self._record(
-            self._solver.l2l_angle(l1_id, l2_id, angle_id, driving),
-            "l2l_angle",
-            (l1_id, l2_id, angle_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.l2l_angle(l1_id, l2_id, angle_id, driving))
 
     def set_l2l_angle(
         self, l1_id: LineId, l2_id: LineId, angle: float, *, driving: bool = True
@@ -1430,67 +1315,37 @@ class Sketch:
         self, pt_id: PointId, circle_id: CircleId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain point on circle."""
-        return self._record(
-            self._solver.point_on_circle(pt_id, circle_id, driving),
-            "point_on_circle",
-            (pt_id, circle_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.point_on_circle(pt_id, circle_id, driving))
 
     def point_on_arc(
         self, pt_id: PointId, arc_id: ArcId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain point to lie on arc."""
-        return self._record(
-            self._solver.point_on_arc(pt_id, arc_id, driving),
-            "point_on_arc",
-            (pt_id, arc_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.point_on_arc(pt_id, arc_id, driving))
 
     def point_on_ellipse(
         self, pt_id: PointId, ellipse_id: EllipseId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain point to lie on ellipse."""
-        return self._record(
-            self._solver.point_on_ellipse(pt_id, ellipse_id, driving),
-            "point_on_ellipse",
-            (pt_id, ellipse_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.point_on_ellipse(pt_id, ellipse_id, driving))
 
     def point_on_hyperbolic_arc(
         self, pt_id: PointId, arc_id: ArcOfHyperbolaId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain point to lie on an arc of hyperbola."""
-        return self._record(
-            self._solver.point_on_hyperbolic_arc(pt_id, arc_id, driving),
-            "point_on_hyperbolic_arc",
-            (pt_id, arc_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.point_on_hyperbolic_arc(pt_id, arc_id, driving))
 
     def point_on_parabolic_arc(
         self, pt_id: PointId, arc_id: ArcOfParabolaId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain point to lie on an arc of parabola."""
-        return self._record(
-            self._solver.point_on_parabolic_arc(pt_id, arc_id, driving),
-            "point_on_parabolic_arc",
-            (pt_id, arc_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.point_on_parabolic_arc(pt_id, arc_id, driving))
 
     def point_on_bspline(
         self, pt_id: PointId, bspline_id: BSplineId, u_id: ParamId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain point to lie on a B-spline at parameter *u*."""
-        return self._record(
-            self._solver.point_on_bspline(pt_id, bspline_id, u_id, driving),
-            "point_on_bspline",
-            (pt_id, bspline_id, u_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.point_on_bspline(pt_id, bspline_id, u_id, driving))
 
     def circle_radius(
         self, circle_id: CircleId, radius_id: ParamId, *, driving: bool = True
@@ -1499,12 +1354,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_circle_radius`.
         """
-        return self._record(
-            self._solver.circle_radius(circle_id, radius_id, driving),
-            "circle_radius",
-            (circle_id, radius_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.circle_radius(circle_id, radius_id, driving))
 
     def set_circle_radius(
         self, circle_id: CircleId, radius: float, *, driving: bool = True
@@ -1525,12 +1375,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_circle_diameter`.
         """
-        return self._record(
-            self._solver.circle_diameter(circle_id, diameter_id, driving),
-            "circle_diameter",
-            (circle_id, diameter_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.circle_diameter(circle_id, diameter_id, driving))
 
     def set_circle_diameter(
         self, circle_id: CircleId, diameter: float, *, driving: bool = True
@@ -1549,12 +1394,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_arc_radius`.
         """
-        return self._record(
-            self._solver.arc_radius(arc_id, radius_id, driving),
-            "arc_radius",
-            (arc_id, radius_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.arc_radius(arc_id, radius_id, driving))
 
     def set_arc_radius(
         self, arc_id: ArcId, radius: float, *, driving: bool = True
@@ -1573,12 +1413,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_arc_diameter`.
         """
-        return self._record(
-            self._solver.arc_diameter(arc_id, diameter_id, driving),
-            "arc_diameter",
-            (arc_id, diameter_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.arc_diameter(arc_id, diameter_id, driving))
 
     def set_arc_diameter(
         self, arc_id: ArcId, diameter: float, *, driving: bool = True
@@ -1602,12 +1437,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_arc_angle`.
         """
-        return self._record(
-            self._solver.arc_angle(arc_id, angle_id, driving),
-            "arc_angle",
-            (arc_id, angle_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.arc_angle(arc_id, angle_id, driving))
 
     def set_arc_angle(self, arc_id: ArcId, angle: float, *, driving: bool = True) -> ConstraintTag:
         """Constrain the angular sweep of an arc to a value (in radians).
@@ -1626,67 +1456,37 @@ class Sketch:
         self, line_id: LineId, circle_id: CircleId, *, driving: bool = True
     ) -> ConstraintTag:
         """Line tangent to circle."""
-        return self._record(
-            self._solver.tangent_line_circle(line_id, circle_id, driving),
-            "tangent_line_circle",
-            (line_id, circle_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.tangent_line_circle(line_id, circle_id, driving))
 
     def tangent_circle_circle(
         self, c1_id: CircleId, c2_id: CircleId, *, driving: bool = True
     ) -> ConstraintTag:
         """Circle tangent to circle."""
-        return self._record(
-            self._solver.tangent_circle_circle(c1_id, c2_id, driving),
-            "tangent_circle_circle",
-            (c1_id, c2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.tangent_circle_circle(c1_id, c2_id, driving))
 
     def tangent_line_arc(
         self, line_id: LineId, arc_id: ArcId, *, driving: bool = True
     ) -> ConstraintTag:
         """Line tangent to arc."""
-        return self._record(
-            self._solver.tangent_line_arc(line_id, arc_id, driving),
-            "tangent_line_arc",
-            (line_id, arc_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.tangent_line_arc(line_id, arc_id, driving))
 
     def tangent_line_ellipse(
         self, line_id: LineId, ellipse_id: EllipseId, *, driving: bool = True
     ) -> ConstraintTag:
         """Line tangent to ellipse."""
-        return self._record(
-            self._solver.tangent_line_ellipse(line_id, ellipse_id, driving),
-            "tangent_line_ellipse",
-            (line_id, ellipse_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.tangent_line_ellipse(line_id, ellipse_id, driving))
 
     def tangent_arc_arc(
         self, a1_id: ArcId, a2_id: ArcId, *, driving: bool = True
     ) -> ConstraintTag:
         """Arc tangent to arc."""
-        return self._record(
-            self._solver.tangent_arc_arc(a1_id, a2_id, driving),
-            "tangent_arc_arc",
-            (a1_id, a2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.tangent_arc_arc(a1_id, a2_id, driving))
 
     def tangent_circle_arc(
         self, circle_id: CircleId, arc_id: ArcId, *, driving: bool = True
     ) -> ConstraintTag:
         """Circle tangent to arc."""
-        return self._record(
-            self._solver.tangent_circle_arc(circle_id, arc_id, driving),
-            "tangent_circle_arc",
-            (circle_id, arc_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.tangent_circle_arc(circle_id, arc_id, driving))
 
     def tangent_circumf(
         self,
@@ -1699,34 +1499,21 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Tangent circumference constraint."""
-        return self._record(
-            self._solver.tangent_circumf(p1_id, p2_id, rd1_id, rd2_id, internal, driving),
-            "tangent_circumf",
-            (p1_id, p2_id, rd1_id, rd2_id),
-            driving,
+        return ConstraintTag(
+            self._solver.tangent_circumf(p1_id, p2_id, rd1_id, rd2_id, internal, driving)
         )
 
     def symmetric_line(
         self, p1_id: PointId, p2_id: PointId, line_id: LineId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain points symmetric about a line."""
-        return self._record(
-            self._solver.symmetric_points_line(p1_id, p2_id, line_id, driving),
-            "symmetric_line",
-            (p1_id, p2_id, line_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.symmetric_points_line(p1_id, p2_id, line_id, driving))
 
     def symmetric_point(
         self, p1_id: PointId, p2_id: PointId, center_id: PointId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain points symmetric about a center point."""
-        return self._record(
-            self._solver.symmetric_points_point(p1_id, p2_id, center_id, driving),
-            "symmetric_point",
-            (p1_id, p2_id, center_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.symmetric_points_point(p1_id, p2_id, center_id, driving))
 
     def p2c_distance(
         self,
@@ -1740,12 +1527,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_p2c_distance`.
         """
-        return self._record(
-            self._solver.p2c_distance(pt_id, circle_id, distance_id, driving),
-            "p2c_distance",
-            (pt_id, circle_id, distance_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.p2c_distance(pt_id, circle_id, distance_id, driving))
 
     def set_p2c_distance(
         self,
@@ -1774,12 +1556,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_c2c_distance`.
         """
-        return self._record(
-            self._solver.c2c_distance(c1_id, c2_id, dist_id, driving),
-            "c2c_distance",
-            (c1_id, c2_id, dist_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.c2c_distance(c1_id, c2_id, dist_id, driving))
 
     def set_c2c_distance(
         self,
@@ -1808,12 +1585,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_c2l_distance`.
         """
-        return self._record(
-            self._solver.c2l_distance(circle_id, line_id, dist_id, driving),
-            "c2l_distance",
-            (circle_id, line_id, dist_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.c2l_distance(circle_id, line_id, dist_id, driving))
 
     def set_c2l_distance(
         self,
@@ -1847,12 +1619,7 @@ class Sketch:
         For a simpler API that takes a float directly, see
         :meth:`set_p2a_distance`.
         """
-        return self._record(
-            self._solver.p2a_distance(pt_id, arc_id, distance_id, driving),
-            "p2a_distance",
-            (pt_id, arc_id, distance_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.p2a_distance(pt_id, arc_id, distance_id, driving))
 
     def set_p2a_distance(
         self,
@@ -1885,12 +1652,7 @@ class Sketch:
         For a simpler API that takes a float directly, see
         :meth:`set_a2l_distance`.
         """
-        return self._record(
-            self._solver.a2l_distance(arc_id, line_id, dist_id, driving),
-            "a2l_distance",
-            (arc_id, line_id, dist_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.a2l_distance(arc_id, line_id, dist_id, driving))
 
     def set_a2l_distance(
         self,
@@ -1924,12 +1686,7 @@ class Sketch:
         For a simpler API that takes a float directly, see
         :meth:`set_c2a_distance`.
         """
-        return self._record(
-            self._solver.c2a_distance(circle_id, arc_id, dist_id, driving),
-            "c2a_distance",
-            (circle_id, arc_id, dist_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.c2a_distance(circle_id, arc_id, dist_id, driving))
 
     def set_c2a_distance(
         self,
@@ -1963,12 +1720,7 @@ class Sketch:
         For a simpler API that takes a float directly, see
         :meth:`set_a2a_distance`.
         """
-        return self._record(
-            self._solver.a2a_distance(a1_id, a2_id, dist_id, driving),
-            "a2a_distance",
-            (a1_id, a2_id, dist_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.a2a_distance(a1_id, a2_id, dist_id, driving))
 
     def set_a2a_distance(
         self,
@@ -1992,12 +1744,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_arc_length`.
         """
-        return self._record(
-            self._solver.arc_length(arc_id, length_id, driving),
-            "arc_length",
-            (arc_id, length_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.arc_length(arc_id, length_id, driving))
 
     def set_arc_length(
         self, arc_id: ArcId, length: float, *, driving: bool = True
@@ -2020,12 +1767,7 @@ class Sketch:
         These are added automatically by :meth:`add_arc`, so you normally
         do not need to call this directly.
         """
-        return self._record(
-            self._solver.arc_rules(arc_id, driving),
-            "arc_rules",
-            (arc_id,),
-            driving,
-        )
+        return ConstraintTag(self._solver.arc_rules(arc_id, driving))
 
     def proportional(
         self,
@@ -2036,12 +1778,7 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Constrain param1 = ratio * param2."""
-        return self._record(
-            self._solver.proportional(param1_id, param2_id, ratio, driving),
-            "proportional",
-            (param1_id, param2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.proportional(param1_id, param2_id, ratio, driving))
 
     def difference(
         self,
@@ -2057,12 +1794,7 @@ class Sketch:
         Use :meth:`get_point_param_ids` to obtain the x/y parameter
         IDs for a point.
         """
-        return self._record(
-            self._solver.difference(param1_id, param2_id, diff_id, driving),
-            "difference",
-            (param1_id, param2_id, diff_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.difference(param1_id, param2_id, diff_id, driving))
 
     def internal_alignment_point2ellipse(
         self,
@@ -2077,13 +1809,10 @@ class Sketch:
         The *alignment_type* specifies which feature of the ellipse the
         point is aligned to (e.g. major axis endpoint, focus, etc.).
         """
-        return self._record(
+        return ConstraintTag(
             self._solver.internal_alignment_point2ellipse(
                 ellipse_id, pt_id, alignment_type, driving
-            ),
-            "internal_alignment_point2ellipse",
-            (ellipse_id, pt_id),
-            driving,
+            )
         )
 
     def internal_alignment_ellipse_major_diameter(
@@ -2095,13 +1824,10 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Internal alignment: tie line endpoints to ellipse major diameter."""
-        return self._record(
+        return ConstraintTag(
             self._solver.internal_alignment_ellipse_major_diameter(
                 ellipse_id, p1_id, p2_id, driving
-            ),
-            "internal_alignment_ellipse_major_diameter",
-            (ellipse_id, p1_id, p2_id),
-            driving,
+            )
         )
 
     def internal_alignment_ellipse_minor_diameter(
@@ -2113,13 +1839,10 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Internal alignment: tie line endpoints to ellipse minor diameter."""
-        return self._record(
+        return ConstraintTag(
             self._solver.internal_alignment_ellipse_minor_diameter(
                 ellipse_id, p1_id, p2_id, driving
-            ),
-            "internal_alignment_ellipse_minor_diameter",
-            (ellipse_id, p1_id, p2_id),
-            driving,
+            )
         )
 
     def internal_alignment_ellipse_focus1(
@@ -2130,11 +1853,8 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Internal alignment: constrain point to ellipse focus 1."""
-        return self._record(
-            self._solver.internal_alignment_ellipse_focus1(ellipse_id, pt_id, driving),
-            "internal_alignment_ellipse_focus1",
-            (ellipse_id, pt_id),
-            driving,
+        return ConstraintTag(
+            self._solver.internal_alignment_ellipse_focus1(ellipse_id, pt_id, driving)
         )
 
     def internal_alignment_ellipse_focus2(
@@ -2145,11 +1865,8 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Internal alignment: constrain point to ellipse focus 2."""
-        return self._record(
-            self._solver.internal_alignment_ellipse_focus2(ellipse_id, pt_id, driving),
-            "internal_alignment_ellipse_focus2",
-            (ellipse_id, pt_id),
-            driving,
+        return ConstraintTag(
+            self._solver.internal_alignment_ellipse_focus2(ellipse_id, pt_id, driving)
         )
 
     def internal_alignment_point2hyperbola(
@@ -2161,13 +1878,10 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Internal alignment: constrain a point relative to a hyperbola."""
-        return self._record(
+        return ConstraintTag(
             self._solver.internal_alignment_point2hyperbola(
                 hyperbola_id, pt_id, alignment_type, driving
-            ),
-            "internal_alignment_point2hyperbola",
-            (hyperbola_id, pt_id),
-            driving,
+            )
         )
 
     def internal_alignment_hyperbola_major_diameter(
@@ -2179,13 +1893,10 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Internal alignment: tie line endpoints to hyperbola major diameter."""
-        return self._record(
+        return ConstraintTag(
             self._solver.internal_alignment_hyperbola_major_diameter(
                 hyperbola_id, p1_id, p2_id, driving
-            ),
-            "internal_alignment_hyperbola_major_diameter",
-            (hyperbola_id, p1_id, p2_id),
-            driving,
+            )
         )
 
     def internal_alignment_hyperbola_minor_diameter(
@@ -2197,13 +1908,10 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Internal alignment: tie line endpoints to hyperbola minor diameter."""
-        return self._record(
+        return ConstraintTag(
             self._solver.internal_alignment_hyperbola_minor_diameter(
                 hyperbola_id, p1_id, p2_id, driving
-            ),
-            "internal_alignment_hyperbola_minor_diameter",
-            (hyperbola_id, p1_id, p2_id),
-            driving,
+            )
         )
 
     def internal_alignment_hyperbola_focus(
@@ -2214,11 +1922,8 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Internal alignment: constrain point to hyperbola focus."""
-        return self._record(
-            self._solver.internal_alignment_hyperbola_focus(hyperbola_id, pt_id, driving),
-            "internal_alignment_hyperbola_focus",
-            (hyperbola_id, pt_id),
-            driving,
+        return ConstraintTag(
+            self._solver.internal_alignment_hyperbola_focus(hyperbola_id, pt_id, driving)
         )
 
     def internal_alignment_parabola_focus(
@@ -2229,11 +1934,8 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Internal alignment: constrain point to parabola focus."""
-        return self._record(
-            self._solver.internal_alignment_parabola_focus(parabola_id, pt_id, driving),
-            "internal_alignment_parabola_focus",
-            (parabola_id, pt_id),
-            driving,
+        return ConstraintTag(
+            self._solver.internal_alignment_parabola_focus(parabola_id, pt_id, driving)
         )
 
     def internal_alignment_bspline_control_point(
@@ -2248,13 +1950,10 @@ class Sketch:
 
         Ties a circle (center = pole, radius = weight) to a control point.
         """
-        return self._record(
+        return ConstraintTag(
             self._solver.internal_alignment_bspline_control_point(
                 bspline_id, circle_id, pole_index, driving
-            ),
-            "internal_alignment_bspline_control_point",
-            (bspline_id, circle_id),
-            driving,
+            )
         )
 
     def internal_alignment_knot_point(
@@ -2266,11 +1965,8 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Internal alignment: constrain point to B-spline knot."""
-        return self._record(
-            self._solver.internal_alignment_knot_point(bspline_id, pt_id, knot_index, driving),
-            "internal_alignment_knot_point",
-            (bspline_id, pt_id),
-            driving,
+        return ConstraintTag(
+            self._solver.internal_alignment_knot_point(bspline_id, pt_id, knot_index, driving)
         )
 
     def tangent_at_bspline_knot(
@@ -2282,23 +1978,15 @@ class Sketch:
         driving: bool = True,
     ) -> ConstraintTag:
         """Constrain a line to be tangent to a B-spline at a knot."""
-        return self._record(
-            self._solver.tangent_at_bspline_knot(bspline_id, line_id, knot_index, driving),
-            "tangent_at_bspline_knot",
-            (bspline_id, line_id),
-            driving,
+        return ConstraintTag(
+            self._solver.tangent_at_bspline_knot(bspline_id, line_id, knot_index, driving)
         )
 
     def midpoint_on_line(
         self, l1_id: LineId, l2_id: LineId, *, driving: bool = True
     ) -> ConstraintTag:
         """Constrain midpoint of l1 to lie on l2."""
-        return self._record(
-            self._solver.midpoint_on_line(l1_id, l2_id, driving),
-            "midpoint_on_line",
-            (l1_id, l2_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.midpoint_on_line(l1_id, l2_id, driving))
 
     # ── Angle-via-point constraints ────────────────────────────────
 
@@ -2327,11 +2015,8 @@ class Sketch:
         Returns:
             Constraint tag.
         """
-        return self._record(
-            self._solver.angle_via_point(crv1_id, crv2_id, pt_id, angle_id, driving),
-            "angle_via_point",
-            (crv1_id, crv2_id, pt_id, angle_id),
-            driving,
+        return ConstraintTag(
+            self._solver.angle_via_point(crv1_id, crv2_id, pt_id, angle_id, driving)
         )
 
     def set_angle_via_point(
@@ -2375,11 +2060,8 @@ class Sketch:
         Returns:
             Constraint tag.
         """
-        return self._record(
-            self._solver.angle_via_two_points(crv1_id, crv2_id, pt1_id, pt2_id, angle_id, driving),
-            "angle_via_two_points",
-            (crv1_id, crv2_id, pt1_id, pt2_id, angle_id),
-            driving,
+        return ConstraintTag(
+            self._solver.angle_via_two_points(crv1_id, crv2_id, pt1_id, pt2_id, angle_id, driving)
         )
 
     def set_angle_via_two_points(
@@ -2422,13 +2104,10 @@ class Sketch:
         Returns:
             Constraint tag.
         """
-        return self._record(
+        return ConstraintTag(
             self._solver.angle_via_point_and_param(
                 crv1_id, crv2_id, pt_id, cparam_id, angle_id, driving
-            ),
-            "angle_via_point_and_param",
-            (crv1_id, crv2_id, pt_id, cparam_id, angle_id),
-            driving,
+            )
         )
 
     def angle_via_point_and_two_params(
@@ -2456,13 +2135,10 @@ class Sketch:
         Returns:
             Constraint tag.
         """
-        return self._record(
+        return ConstraintTag(
             self._solver.angle_via_point_and_two_params(
                 crv1_id, crv2_id, pt_id, cparam1_id, cparam2_id, angle_id, driving
-            ),
-            "angle_via_point_and_two_params",
-            (crv1_id, crv2_id, pt_id, cparam1_id, cparam2_id, angle_id),
-            driving,
+            )
         )
 
     def curve_value(
@@ -2484,12 +2160,7 @@ class Sketch:
         Returns:
             Constraint tag.
         """
-        return self._record(
-            self._solver.curve_value(pt_id, curve_id, u_id, driving),
-            "curve_value",
-            (pt_id, curve_id, u_id),
-            driving,
-        )
+        return ConstraintTag(self._solver.curve_value(pt_id, curve_id, u_id, driving))
 
     def snells_law(
         self,
@@ -2524,7 +2195,7 @@ class Sketch:
         Returns:
             Constraint tag.
         """
-        return self._record(
+        return ConstraintTag(
             self._solver.snells_law(
                 ray1_id,
                 ray2_id,
@@ -2535,10 +2206,7 @@ class Sketch:
                 flipn1,
                 flipn2,
                 driving,
-            ),
-            "snells_law",
-            (ray1_id, ray2_id, boundary_id, pt_id, n1_id, n2_id),
-            driving,
+            )
         )
 
     def calculate_angle_via_point(
