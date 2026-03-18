@@ -26,6 +26,7 @@ import functools
 import math
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from types import FunctionType
 from typing import Literal, NewType
 
 from planegcs._planegcs import Algorithm, InternalAlignmentType, SketchSolver, SolveStatus
@@ -2401,16 +2402,20 @@ class RecordingSketchSolver(SketchSolver):
         self._sketch = sketch
 
 
-def _make_recording_wrapper(solver_method: Callable, attr: str) -> Callable:
-
+def _make_recording_wrapper(solver_method: FunctionType) -> Callable:
     @functools.wraps(solver_method)
     def wrapper(self: RecordingSketchSolver, *args, **kwargs):
+        # solver_method is an unbound method here, so requires self to be passed
+        # explicitly.
         retval = solver_method(self, *args, **kwargs)
         assert isinstance(retval, int)
         ct = ConstraintTag(retval)
         # `driving` is always the last argument.
         self._sketch._constraints[ct] = ConstraintInfo(
-            tag=ct, type_name=attr, entities=tuple(list(args[0:-1])), driving=args[-1]
+            tag=ct,
+            type_name=solver_method.__name__,
+            entities=tuple(list(args[0:-1])),
+            driving=args[-1],
         )
         return retval
 
@@ -2418,6 +2423,4 @@ def _make_recording_wrapper(solver_method: Callable, attr: str) -> Callable:
 
 
 for attr in SKETCH_SOLVER_CONSTRAINT_METHODS:
-    setattr(
-        RecordingSketchSolver, attr, _make_recording_wrapper(getattr(SketchSolver, attr), attr)
-    )
+    setattr(RecordingSketchSolver, attr, _make_recording_wrapper(getattr(SketchSolver, attr)))
