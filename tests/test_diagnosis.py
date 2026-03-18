@@ -113,7 +113,7 @@ def test_redundant_constraint_info_details():
     assert tag_h in redundant_tags
 
     h_info = next(ci for ci in diag.redundant_info if ci.tag == tag_h)
-    assert h_info.type_name == "horizontal"
+    assert h_info.type_name == "horizontal_line"
     assert line in h_info.entities
 
 
