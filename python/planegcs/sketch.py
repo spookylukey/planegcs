@@ -22,7 +22,9 @@ equation ``point = center + radius * (cos θ, sin θ)``.
 
 from __future__ import annotations
 
+import functools
 import math
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Literal, NewType
 
@@ -496,7 +498,7 @@ class Sketch:
     """
 
     def __init__(self) -> None:
-        self._solver = SketchSolver()
+        self._solver = RecordingSketchSolver(self)
         self._constraints: dict[ConstraintTag, ConstraintInfo] = {}
         self._entity_types: dict[int, EntityType] = {}
 
@@ -569,16 +571,6 @@ class Sketch:
         else:  # pragma: no cover
             return None
         return EntityInfo(id=entity_id, type=etype, value=value)
-
-    def _record(
-        self, tag: int, type_name: str, entities: tuple[int, ...], driving: bool
-    ) -> ConstraintTag:
-        """Record constraint metadata and return the typed tag."""
-        ct = ConstraintTag(tag)
-        self._constraints[ct] = ConstraintInfo(
-            tag=ct, type_name=type_name, entities=entities, driving=driving
-        )
-        return ct
 
     # ── Parameters ─────────────────────────────────────────────────
 
@@ -2376,3 +2368,56 @@ class Sketch:
             point_radius=point_radius,
             point_color=point_color,
         )
+
+
+# Slightly hacky method of getting hold of SketchSolver methods that create
+# constraints, based on the docstring which includes a full type signature. If
+# this fails we could use an explicit list.
+SKETCH_SOLVER_CONSTRAINT_METHODS = [
+    n
+    for n in dir(SketchSolver)
+    if not n.startswith("__")
+    and callable(m := getattr(SketchSolver, n))
+    and isinstance(m.__doc__, str)
+    and "driving: bool" in m.__doc__  # All constraint methods have this.
+]
+
+
+class RecordingSketchSolver(SketchSolver):
+    """
+    SketchSolver subclass that tracks calls to constraint methods and saves them on a Sketch.
+    """
+
+    # This exists so that we can populate Sketch._constraints (mostly for debugging
+    # purposes).
+
+    # We really just want to proxy some method calls to a wrapped SketchSolver,
+    # rather than use inheritance, but to satisfy type checkers without a lot of
+    # boilerplate, RecordingSketchSolver inherits from SketchSolver, and then we
+    # use introspection to add wrappers that intercept some method calls.
+
+    def __init__(self, sketch: Sketch) -> None:
+        super().__init__()
+        self._sketch = sketch
+
+
+def _make_recording_wrapper(solver_method: Callable, attr: str) -> Callable:
+
+    @functools.wraps(solver_method)
+    def wrapper(self: RecordingSketchSolver, *args, **kwargs):
+        retval = solver_method(self, *args, **kwargs)
+        assert isinstance(retval, int)
+        ct = ConstraintTag(retval)
+        # `driving` is always the last argument.
+        self._sketch._constraints[ct] = ConstraintInfo(
+            tag=ct, type_name=attr, entities=tuple(list(args[0:-1])), driving=args[-1]
+        )
+        return retval
+
+    return wrapper
+
+
+for attr in SKETCH_SOLVER_CONSTRAINT_METHODS:
+    setattr(
+        RecordingSketchSolver, attr, _make_recording_wrapper(getattr(SketchSolver, attr), attr)
+    )
