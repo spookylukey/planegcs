@@ -410,6 +410,21 @@ class BSplineInfo:
     end: PointInfo
     """(x, y) of the spline end point."""
 
+    poles: list[PointInfo]
+    """Control points as a list of (x, y) tuples."""
+
+    weights: list[float]
+    """Weight values, one per pole."""
+
+    knots: list[float]
+    """Knot values."""
+
+    multiplicities: list[int]
+    """Multiplicity vector, one per knot."""
+
+    degree: int
+    """Spline degree."""
+
 
 @dataclass(frozen=True, slots=True)
 class Diagnosis:
@@ -473,6 +488,17 @@ class Diagnosis:
         return bool(self.conflicting)
 
 
+@dataclass(frozen=True, slots=True)
+class _BSplineData:
+    """Internal storage for B-spline construction data."""
+
+    pole_ids: list[PointId]
+    weight_ids: list[ParamId]
+    knot_ids: list[ParamId]
+    mult: list[int]
+    degree: int
+
+
 class Sketch:
     """A 2D constraint sketch.
 
@@ -502,6 +528,7 @@ class Sketch:
         self._solver = RecordingSketchSolver(self)
         self._constraints: dict[ConstraintTag, ConstraintInfo] = {}
         self._entity_types: dict[int, EntityType] = {}
+        self._bspline_data: dict[BSplineId, _BSplineData] = {}
 
     @property
     def solver(self) -> SketchSolver:
@@ -1079,13 +1106,26 @@ class Sketch:
             )
         )
         self._entity_types[bsid] = "bspline"
+        self._bspline_data[bsid] = _BSplineData(
+            pole_ids=list(pole_ids),
+            weight_ids=list(weight_ids),
+            knot_ids=list(knot_ids),
+            mult=list(mult),
+            degree=degree,
+        )
         return bsid
 
     def get_bspline(self, bspline_id: BSplineId) -> BSplineInfo:
-        """Get start and end points of a B-spline."""
+        """Get all properties of a B-spline."""
+        data = self._bspline_data[bspline_id]
         return BSplineInfo(
             start=self._solver.get_bspline_start_point(bspline_id),
             end=self._solver.get_bspline_end_point(bspline_id),
+            poles=[self._solver.get_point(pid) for pid in data.pole_ids],
+            weights=[self._solver.get_param(wid) for wid in data.weight_ids],
+            knots=[self._solver.get_param(kid) for kid in data.knot_ids],
+            multiplicities=list(data.mult),
+            degree=data.degree,
         )
 
     # ── Constraints ────────────────────────────────────────────────
