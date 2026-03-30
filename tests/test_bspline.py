@@ -232,3 +232,92 @@ class TestBSplineConstraints:
         # Tangent at knot index 0 (start)
         tag = s.tangent_at_bspline_knot(bs, line, knot_index=0)
         assert tag > 0
+
+
+class TestBSplineFullyConstrained:
+    """Test that a minimal BSpline can be fully constrained to 0 DOF
+    using InternalAlignment and Weight (circle_radius) constraints."""
+
+    def test_degree1_zero_dof(self):
+        """Degree-1 BSpline with 2 poles, fully pinned to 0 DOF.
+
+        This mirrors the FreeCAD approach:
+        1. Create a BSpline with start/end points and control poles.
+        2. Tie start/end to the first/last poles (clamped endpoints).
+        3. Create a helper circle per control point and link it via
+           InternalAlignment (pole.x==center.x, pole.y==center.y,
+           weight==radius).
+        4. Fix each circle's center position (pins the pole locations).
+        5. Apply a Weight constraint (= circle_radius with a fixed
+           target value) to pin each weight.
+        """
+        s = Sketch()
+
+        # -- Geometry: degree-1, 2 poles, knots [0,1], mult [2,2] --
+        pole0 = s.add_point(0.0, 0.0)
+        pole1 = s.add_point(10.0, 0.0)
+        w0 = s.add_param(1.0)
+        w1 = s.add_param(1.0)
+        k0 = s.add_param(0.0, fixed=True)
+        k1 = s.add_param(1.0, fixed=True)
+        start = s.add_point(0.0, 0.0)
+        end = s.add_point(10.0, 0.0)
+
+        bs = s.add_bspline(
+            start_id=start,
+            end_id=end,
+            pole_ids=[pole0, pole1],
+            weight_ids=[w0, w1],
+            knot_ids=[k0, k1],
+            mult=[2, 2],
+            degree=1,
+        )
+
+        # -- Clamped endpoints: tie start/end to first/last poles --
+        s.coincident(start, pole0)
+        s.coincident(end, pole1)
+        assert s.dof() == 6  # 4 pole coords + 2 weights
+
+        # -- InternalAlignment: one helper circle per control point --
+        #    Each circle's center ↔ pole position, radius ↔ weight.
+        cp0_center = s.add_point(0.0, 0.0)
+        cp0_radius = s.add_param(1.0)
+        cp0_circle = s.add_circle(cp0_center, cp0_radius)
+        s.internal_alignment_bspline_control_point(bs, cp0_circle, pole_index=0)
+
+        cp1_center = s.add_point(10.0, 0.0)
+        cp1_radius = s.add_param(1.0)
+        cp1_circle = s.add_circle(cp1_center, cp1_radius)
+        s.internal_alignment_bspline_control_point(bs, cp1_circle, pole_index=1)
+
+        # Internal alignment adds 3 equalities per pole but also 3 new
+        # free params per circle, so net DOF is unchanged.
+        assert s.dof() == 6
+
+        # -- Weight constraints (circle_radius on the helper circles) --
+        w0_target = s.add_param(1.0, fixed=True)
+        w1_target = s.add_param(1.0, fixed=True)
+        s.circle_radius(cp0_circle, w0_target)
+        s.circle_radius(cp1_circle, w1_target)
+        assert s.dof() == 4  # weights pinned, positions still free
+
+        # -- Fix circle centres (pins pole positions via alignment) --
+        s.fix_point(cp0_center, 0.0, 0.0)
+        s.fix_point(cp1_center, 10.0, 0.0)
+        assert s.dof() == 0  # fully constrained
+
+        # -- Solve and verify --
+        status = s.solve()
+        assert status == SolveStatus.Success
+
+        diag = s.diagnose()
+        assert diag.dof == 0
+        assert diag.conflicting == []
+        assert diag.redundant == []
+
+        info = s.get_bspline(bs)
+        assert info.poles[0] == pytest.approx((0.0, 0.0))
+        assert info.poles[1] == pytest.approx((10.0, 0.0))
+        assert info.weights == pytest.approx([1.0, 1.0])
+        assert info.start == pytest.approx((0.0, 0.0))
+        assert info.end == pytest.approx((10.0, 0.0))
