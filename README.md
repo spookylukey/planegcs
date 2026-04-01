@@ -68,6 +68,10 @@ print(s.get_point(p3))  # (~2.5, ~4.33)
 Full documentation at [readthedocs](https://planegcs.readthedocs.io/en/latest/),
 and in the `docs/` folder (requires Sphinx to build).
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details on coding standards.
+
 ## License
 
 LGPL-2.1-or-later (same as the FreeCAD source code it wraps).
