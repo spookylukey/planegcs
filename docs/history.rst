@@ -3,6 +3,11 @@
  History/change log
 ====================
 
+* 0.6 (2026-04-01)
+
+  - Support for conic arcs (parabolas, ellipses, hyperbolas) and BSplines
+  - Internally rewrote mechanism for tracking constraint calls.
+
 * 0.5 (2026-02-24)
 
   **Breaking changes:**
