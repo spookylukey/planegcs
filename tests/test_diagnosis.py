@@ -230,7 +230,7 @@ def test_constraint_info_is_frozen():
     info = s.get_constraint_info(tag)
 
     with pytest.raises(AttributeError):
-        info.type_name = "something_else"  # type: ignore[misc]
+        info.type_name = "something_else"  # type: ignore[invalid-assignment]
 
 
 def test_diagnosis_info_matches_tags():
