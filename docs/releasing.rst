@@ -24,10 +24,9 @@ push).  Run it from the repository root:
 
 .. code-block:: bash
 
-   ./release.sh <bump>
+   ./release.sh <version>
 
-where ``<bump>`` is the argument passed to ``uv version --bump`` — typically one
-of ``major``, ``minor``, or ``patch``.
+where ``<version>`` is the argument passed to ``uv version``.
 
 We roughly follow `Semantic Versioning <https://semver.org/>`_:
 
