@@ -9,5 +9,13 @@
   - `python/*` - the Python wrapper
     - The `_planegcs.pyi` should only be updated by running `update_stubs.sh`
 
-- All code needs to be 100% covered by unit tests.
-- We use pyright for static type checks, with zero errors allowed.
+- All code needs to be 100% covered by unit tests. Run the test suite with:
+  ```bash
+  uv run pytest
+  ```
+
+- We use pyright for static type checks, with zero errors allowed. Run the type checker with:
+
+  ```bash
+  uv run pyright
+  ```
