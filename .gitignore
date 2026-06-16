@@ -15,6 +15,7 @@ build/
 .idea/
 
 # Build artifacts
+build_lint/
 docs/_build/
 .pytest_cache/
 

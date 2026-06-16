@@ -389,10 +389,10 @@ public:
 
     // ── Geometry: BSpline ──────────────────────────────────────
     int add_bspline(int start_id, int end_id,
-                    std::vector<int> pole_ids,
-                    std::vector<int> weight_ids,
-                    std::vector<int> knot_ids,
-                    std::vector<int> mult,
+                    const std::vector<int>& pole_ids,
+                    const std::vector<int>& weight_ids,
+                    const std::vector<int>& knot_ids,
+                    const std::vector<int>& mult,
                     int degree, bool periodic) {
         int id = next_geo_id_++;
         GCS::BSpline bs;

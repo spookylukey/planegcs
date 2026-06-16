@@ -19,3 +19,21 @@
   ```bash
   uv run pyright
   ```
+
+- C++ wrapper code is checked with **cppcheck** and **clang-tidy**. Install
+  them with:
+
+  ```bash
+  sudo apt-get install cppcheck clang-tidy
+  ```
+
+  Run both tools:
+
+  ```bash
+  ./tools/lint_cpp.sh
+  ```
+
+  Or run individually: `./tools/lint_cpp.sh cppcheck` or `./tools/lint_cpp.sh clang-tidy`.
+
+  cppcheck also runs automatically as a pre-commit hook. clang-tidy (which
+  requires a CMake build step) runs in CI.

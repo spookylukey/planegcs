@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y libeigen3-dev libboost-dev
+        run: sudo apt-get update && sudo apt-get install -y libeigen3-dev libboost-dev cppcheck clang-tidy
       - name: Set up Python ${{ matrix.python-version }} with uv
         uses: drivendataorg/setup-python-uv-action@v1.0.0
         with:
@@ -44,3 +44,7 @@ jobs:
 
       - name: Run type checker
         run: uv run pyright
+
+      - name: Lint C++ wrapper code
+        if: ${{ matrix.python-version == '3.12' }}
+        run: ./tools/lint_cpp.sh

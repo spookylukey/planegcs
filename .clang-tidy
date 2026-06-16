@@ -1,0 +1,19 @@
+# clang-tidy configuration for wrapper code (not upstream FreeCAD code)
+#
+# Checks enabled:
+#   bugprone-*       — common bug patterns (use-after-move, dangling handles, etc.)
+#   performance-*    — unnecessary copies, moves, etc.
+#   clang-analyzer-* — Clang Static Analyzer deep checks (null deref, leaks, etc.)
+#
+# Disabled:
+#   bugprone-easily-swappable-parameters — too noisy for ID-based APIs
+
+Checks: >-
+  -*,
+  bugprone-*,
+  performance-*,
+  clang-analyzer-*,
+  -bugprone-easily-swappable-parameters
+
+HeaderFilterRegex: 'src/wrapper\.h'
+WarningsAsErrors: '*'

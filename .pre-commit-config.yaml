@@ -12,3 +12,13 @@ repos:
       - id: pyupgrade
         args: [--py312-plus]
 
+
+  - repo: local
+    hooks:
+      - id: cppcheck
+        name: cppcheck (wrapper code)
+        entry: cppcheck --enable=warning,style,performance,portability --std=c++20 --suppress=missingIncludeSystem --suppress=*:*/planegcs/* -I src -I src/planegcs -I src/planegcs/shims --error-exitcode=1
+        language: system
+        files: ^src/(wrapper\.h|bindings\.cpp)$
+        types_or: [c, c++]
+        # Also match .h files (identified as type 'c' by pre-commit)
