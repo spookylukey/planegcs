@@ -41,6 +41,7 @@ CMAKE_BUILD_TYPE = "Release"
 [dependency-groups]
 dev = [
     "Pillow>=10.0",
+    "pybind11>=2.12",
     "pybind11-stubgen>=2.5",
     "pre-commit>=4.3.0",
     "pytest>=8.0",
