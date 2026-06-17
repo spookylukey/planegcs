@@ -51,11 +51,12 @@ run_clang_tidy() {
     BUILD_DIR="$ROOT/build_lint"
     if [ ! -f "$BUILD_DIR/compile_commands.json" ]; then
         echo "Generating compile_commands.json..."
-        # Try several ways to locate pybind11's cmake dir:
-        #   1. uv run (works when uv manages the venv)
-        #   2. bare python3 (works when pybind11 is installed globally or venv is activated)
+        # Locate pybind11's cmake dir.  We avoid "uv run" here because it
+        # triggers a full project build (which itself needs pybind11 — circular).
+        # Instead, use the venv's python directly, then fall back to bare python3.
+        VENV_PYTHON="$ROOT/.venv/bin/python3"
         PYBIND11_DIR=$(
-            uv run python3 -c "import pybind11; print(pybind11.get_cmake_dir())" 2>/dev/null \
+            "$VENV_PYTHON" -c "import pybind11; print(pybind11.get_cmake_dir())" 2>/dev/null \
             || python3 -c "import pybind11; print(pybind11.get_cmake_dir())" 2>/dev/null \
             || echo ""
         )
