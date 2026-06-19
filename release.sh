@@ -51,8 +51,8 @@ info "Running tests with coverage …"
 uv run pytest \
     || die "Tests failed — fix before releasing"
 
-info "Running ty type checker …"
-ty check \
+info "Running pyright type checker …"
+pyright \
     || die "Type checking failed — fix before releasing"
 
 # --- verify type stubs are up to date ---------------------------------------
