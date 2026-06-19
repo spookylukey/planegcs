@@ -976,6 +976,10 @@ class SketchSolver:
         """
         Internal alignment: point to hyperbola.
         """
+    def is_param_driven(self, param_id: typing.SupportsInt | typing.SupportsIndex) -> bool:
+        """
+        Check if a parameter is driven (value param of a non-driving constraint).
+        """
     def is_param_fixed(self, param_id: typing.SupportsInt | typing.SupportsIndex) -> bool:
         """
         Check if a parameter is fixed (not an unknown).
@@ -1157,6 +1161,12 @@ class SketchSolver:
     ) -> None:
         """
         Set the value of a parameter.
+        """
+    def set_param_driven(
+        self, param_id: typing.SupportsInt | typing.SupportsIndex, driven: bool = True
+    ) -> None:
+        """
+        Set whether a parameter is driven.
         """
     def set_param_fixed(
         self, param_id: typing.SupportsInt | typing.SupportsIndex, fixed: bool

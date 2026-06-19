@@ -70,6 +70,10 @@ PYBIND11_MODULE(_planegcs, m) {
              "Check if a parameter is fixed (not an unknown).")
         .def("set_param_fixed", &SketchSolver::set_param_fixed, py::arg("param_id"), py::arg("fixed"),
              "Set whether a parameter is fixed.")
+        .def("is_param_driven", &SketchSolver::is_param_driven, py::arg("param_id"),
+             "Check if a parameter is driven (value param of a non-driving constraint).")
+        .def("set_param_driven", &SketchSolver::set_param_driven, py::arg("param_id"), py::arg("driven") = true,
+             "Set whether a parameter is driven.")
         .def("get_param", &SketchSolver::get_param, py::arg("param_id"),
              "Get the current value of a parameter.")
         .def("set_param", &SketchSolver::set_param, py::arg("param_id"), py::arg("value"),

@@ -1130,6 +1130,17 @@ class Sketch:
 
     # ── Constraints ────────────────────────────────────────────────
 
+    def _mark_driven(self, param_id: ParamId, driving: bool) -> None:
+        """Mark a constraint-value param as driven when the constraint is non-driving.
+
+        When a constraint is non-driving (``driving=False``), its value
+        parameter is an output that the solver should compute, not an
+        input that reduces degrees of freedom.  Marking it as *driven*
+        excludes it from the DOF calculation in :meth:`diagnose`.
+        """
+        if not driving:
+            self._solver.set_param_driven(param_id, True)
+
     def coincident(
         self, pt1_id: PointId, pt2_id: PointId, *, driving: bool = True
     ) -> ConstraintTag:
@@ -1140,12 +1151,14 @@ class Sketch:
         self, pt_id: PointId, x_id: ParamId, *, driving: bool = True
     ) -> ConstraintTag:
         """Fix the X coordinate of a point to a parameter value."""
+        self._mark_driven(x_id, driving)
         return ConstraintTag(self._solver.coordinate_x(pt_id, x_id, driving))
 
     def coordinate_y(
         self, pt_id: PointId, y_id: ParamId, *, driving: bool = True
     ) -> ConstraintTag:
         """Fix the Y coordinate of a point to a parameter value."""
+        self._mark_driven(y_id, driving)
         return ConstraintTag(self._solver.coordinate_y(pt_id, y_id, driving))
 
     def fix_point(
@@ -1189,6 +1202,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_p2p_distance`.
         """
+        self._mark_driven(distance_id, driving)
         return ConstraintTag(self._solver.p2p_distance(pt1_id, pt2_id, distance_id, driving))
 
     def set_p2p_distance(
@@ -1216,6 +1230,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_p2p_angle`.
         """
+        self._mark_driven(angle_id, driving)
         return ConstraintTag(self._solver.p2p_angle(pt1_id, pt2_id, angle_id, driving))
 
     def set_p2p_angle(
@@ -1241,6 +1256,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_p2l_distance`.
         """
+        self._mark_driven(distance_id, driving)
         return ConstraintTag(self._solver.p2l_distance(pt_id, line_id, distance_id, driving))
 
     def set_p2l_distance(
@@ -1330,6 +1346,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_l2l_angle`.
         """
+        self._mark_driven(angle_id, driving)
         return ConstraintTag(self._solver.l2l_angle(l1_id, l2_id, angle_id, driving))
 
     def set_l2l_angle(
@@ -1387,6 +1404,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_circle_radius`.
         """
+        self._mark_driven(radius_id, driving)
         return ConstraintTag(self._solver.circle_radius(circle_id, radius_id, driving))
 
     def set_circle_radius(
@@ -1408,6 +1426,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_circle_diameter`.
         """
+        self._mark_driven(diameter_id, driving)
         return ConstraintTag(self._solver.circle_diameter(circle_id, diameter_id, driving))
 
     def set_circle_diameter(
@@ -1427,6 +1446,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_arc_radius`.
         """
+        self._mark_driven(radius_id, driving)
         return ConstraintTag(self._solver.arc_radius(arc_id, radius_id, driving))
 
     def set_arc_radius(
@@ -1446,6 +1466,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_arc_diameter`.
         """
+        self._mark_driven(diameter_id, driving)
         return ConstraintTag(self._solver.arc_diameter(arc_id, diameter_id, driving))
 
     def set_arc_diameter(
@@ -1470,6 +1491,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_arc_angle`.
         """
+        self._mark_driven(angle_id, driving)
         return ConstraintTag(self._solver.arc_angle(arc_id, angle_id, driving))
 
     def set_arc_angle(self, arc_id: ArcId, angle: float, *, driving: bool = True) -> ConstraintTag:
@@ -1560,6 +1582,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_p2c_distance`.
         """
+        self._mark_driven(distance_id, driving)
         return ConstraintTag(self._solver.p2c_distance(pt_id, circle_id, distance_id, driving))
 
     def set_p2c_distance(
@@ -1589,6 +1612,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_c2c_distance`.
         """
+        self._mark_driven(dist_id, driving)
         return ConstraintTag(self._solver.c2c_distance(c1_id, c2_id, dist_id, driving))
 
     def set_c2c_distance(
@@ -1618,6 +1642,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_c2l_distance`.
         """
+        self._mark_driven(dist_id, driving)
         return ConstraintTag(self._solver.c2l_distance(circle_id, line_id, dist_id, driving))
 
     def set_c2l_distance(
@@ -1652,6 +1677,7 @@ class Sketch:
         For a simpler API that takes a float directly, see
         :meth:`set_p2a_distance`.
         """
+        self._mark_driven(distance_id, driving)
         return ConstraintTag(self._solver.p2a_distance(pt_id, arc_id, distance_id, driving))
 
     def set_p2a_distance(
@@ -1685,6 +1711,7 @@ class Sketch:
         For a simpler API that takes a float directly, see
         :meth:`set_a2l_distance`.
         """
+        self._mark_driven(dist_id, driving)
         return ConstraintTag(self._solver.a2l_distance(arc_id, line_id, dist_id, driving))
 
     def set_a2l_distance(
@@ -1719,6 +1746,7 @@ class Sketch:
         For a simpler API that takes a float directly, see
         :meth:`set_c2a_distance`.
         """
+        self._mark_driven(dist_id, driving)
         return ConstraintTag(self._solver.c2a_distance(circle_id, arc_id, dist_id, driving))
 
     def set_c2a_distance(
@@ -1753,6 +1781,7 @@ class Sketch:
         For a simpler API that takes a float directly, see
         :meth:`set_a2a_distance`.
         """
+        self._mark_driven(dist_id, driving)
         return ConstraintTag(self._solver.a2a_distance(a1_id, a2_id, dist_id, driving))
 
     def set_a2a_distance(
@@ -1777,6 +1806,7 @@ class Sketch:
 
         For a simpler API that takes a float directly, see :meth:`set_arc_length`.
         """
+        self._mark_driven(length_id, driving)
         return ConstraintTag(self._solver.arc_length(arc_id, length_id, driving))
 
     def set_arc_length(
@@ -1827,6 +1857,7 @@ class Sketch:
         Use :meth:`get_point_param_ids` to obtain the x/y parameter
         IDs for a point.
         """
+        self._mark_driven(diff_id, driving)
         return ConstraintTag(self._solver.difference(param1_id, param2_id, diff_id, driving))
 
     def internal_alignment_point2ellipse(
@@ -2048,6 +2079,7 @@ class Sketch:
         Returns:
             Constraint tag.
         """
+        self._mark_driven(angle_id, driving)
         return ConstraintTag(
             self._solver.angle_via_point(crv1_id, crv2_id, pt_id, angle_id, driving)
         )
@@ -2093,6 +2125,7 @@ class Sketch:
         Returns:
             Constraint tag.
         """
+        self._mark_driven(angle_id, driving)
         return ConstraintTag(
             self._solver.angle_via_two_points(crv1_id, crv2_id, pt1_id, pt2_id, angle_id, driving)
         )
@@ -2137,6 +2170,7 @@ class Sketch:
         Returns:
             Constraint tag.
         """
+        self._mark_driven(angle_id, driving)
         return ConstraintTag(
             self._solver.angle_via_point_and_param(
                 crv1_id, crv2_id, pt_id, cparam_id, angle_id, driving
@@ -2168,6 +2202,7 @@ class Sketch:
         Returns:
             Constraint tag.
         """
+        self._mark_driven(angle_id, driving)
         return ConstraintTag(
             self._solver.angle_via_point_and_two_params(
                 crv1_id, crv2_id, pt_id, cparam1_id, cparam2_id, angle_id, driving

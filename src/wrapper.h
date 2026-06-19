@@ -7,6 +7,7 @@
 
 #include <deque>
 #include <map>
+#include <set>
 #include <stdexcept>
 #include <vector>
 #include <variant>
@@ -45,6 +46,18 @@ public:
 
     void set_param_fixed(int id, bool fixed) {
         param_fixed_[id] = fixed;
+    }
+
+    void set_param_driven(int id, bool driven = true) {
+        if (driven) {
+            driven_params_.insert(id);
+        } else {
+            driven_params_.erase(id);
+        }
+    }
+
+    bool is_param_driven(int id) const {
+        return driven_params_.count(id) > 0;
     }
 
     double* param_ptr(int id) {
@@ -428,13 +441,18 @@ public:
     // ── Solving ─────────────────────────────────────────────────────
     void declare_unknowns() {
         GCS::VEC_pD params;
+        GCS::VEC_pD driven;
         // Only non-fixed params are unknowns
         for (auto& [id, idx] : param_index_) {
             if (!is_param_fixed(id)) {
                 params.push_back(&params_[idx]);
+                if (is_param_driven(id)) {
+                    driven.push_back(&params_[idx]);
+                }
             }
         }
         system_.declareUnknowns(params);
+        system_.declareDrivenParams(driven);
     }
 
     void init_solution(GCS::Algorithm alg = GCS::DogLeg) {
@@ -495,6 +513,7 @@ public:
         params_.clear();
         param_index_.clear();
         param_fixed_.clear();
+        driven_params_.clear();
         points_.clear();
         point_param_ids_.clear();
         lines_.clear();
@@ -1174,6 +1193,7 @@ private:
     std::deque<double> params_;  // pointer-stable storage
     std::map<int, size_t> param_index_;  // param_id -> index in params_
     std::map<int, bool> param_fixed_;  // param_id -> is fixed (not an unknown)
+    std::set<int> driven_params_;  // param_ids that are driven (value params of non-driving constraints)
     std::map<int, GCS::Point> points_;
     std::map<int, std::pair<int,int>> point_param_ids_;  // point_id -> (px_id, py_id)
     std::map<int, GCS::Line> lines_;
