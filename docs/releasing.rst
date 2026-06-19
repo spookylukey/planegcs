@@ -19,8 +19,10 @@ What gets built:
 Step-by-step release process
 ----------------------------
 
-The ``release.sh`` script automates the local steps (version bump, commit, tag,
-push).  Run it from the repository root:
+First, update the changelog in ``docs/history.rst``, and commit.
+
+For the rest, the ``release.sh`` script automates the local steps (version bump,
+commit, tag, push). Run it from the repository root:
 
 .. code-block:: bash
 

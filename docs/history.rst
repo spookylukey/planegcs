@@ -3,6 +3,12 @@
  History/change log
 ====================
 
+* 0.7 (2026-06-19)
+
+  - Fix bugs with reference constraints adding to the reported degrees of
+    freedom.
+  - Added C++ linters and fixed some small performance issues.
+
 * 0.6 (2026-04-01)
 
   - Support for conic arcs (parabolas, ellipses, hyperbolas) and BSplines
