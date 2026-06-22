@@ -3,6 +3,11 @@
  History/change log
 ====================
 
+* 0.8 (2026-06-06)
+
+  - Fix bugs in upstream planegcs code that caused some failures relating
+    to radius/diameter constraints.
+
 * 0.7 (2026-06-19)
 
   - Fix bugs with reference constraints adding to the reported degrees of
