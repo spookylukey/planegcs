@@ -219,3 +219,84 @@ def test_mixed_driving_and_reference_dof():
     diag = s.diagnose()
     assert diag.dof == 0  # fully constrained by driving constraints
     assert abs(s.get_param(angle_param) - 0.0) < 1e-8  # horizontal → angle ≈ 0
+
+
+# ── Circle radius/diameter reference constraints ──────────────────
+
+
+def test_reference_circle_radius_fixed_param():
+    """Reference circle_radius with fixed radius param reads back radius."""
+    s = Sketch()
+    point = s.add_fixed_point(0, 0)
+    radius = s.add_fixed_param(50)
+    circle = s.add_circle(point, radius)
+    ref = s.add_param()
+    s.circle_radius(circle, ref, driving=False)
+
+    assert s.diagnose().dof == 0
+    assert s.solve() == SolveStatus.Success
+    assert abs(s.get_param(ref) - 50.0) < 1e-8
+
+
+def test_reference_circle_diameter_fixed_param():
+    """Reference circle_diameter with fixed radius param reads back diameter.
+
+    This is a regression test: the solver previously failed due to an
+    incorrect gradient in ConstraintEqual when ratio != 1.0.
+    """
+    s = Sketch()
+    point = s.add_fixed_point(0, 0)
+    radius = s.add_fixed_param(50)
+    circle = s.add_circle(point, radius)
+    ref = s.add_param()
+    s.circle_diameter(circle, ref, driving=False)
+
+    assert s.diagnose().dof == 0
+    assert s.solve() == SolveStatus.Success
+    assert abs(s.get_param(ref) - 100.0) < 1e-8
+
+
+def test_reference_circle_diameter_with_driving_radius():
+    """Reference circle_diameter when radius is set via a driving constraint.
+
+    This is a regression test: the parameter reduction step previously
+    treated proportional ConstraintEqual (ratio != 1.0) as a simple
+    equality, causing the diameter to be reported as the radius value.
+    """
+    s = Sketch()
+    point = s.add_fixed_point(0, 0)
+    radius = s.add_param()
+    circle = s.add_circle(point, radius)
+    s.set_circle_radius(circle, 50)
+    ref = s.add_param()
+    s.circle_diameter(circle, ref, driving=False)
+
+    assert s.diagnose().dof == 0
+    assert s.solve() == SolveStatus.Success
+    assert abs(s.get_param(ref) - 100.0) < 1e-8
+
+
+def test_driving_circle_diameter_sets_radius():
+    """Driving circle_diameter correctly sets the radius to half the diameter."""
+    s = Sketch()
+    point = s.add_fixed_point(0, 0)
+    radius = s.add_param(10)
+    circle = s.add_circle(point, radius)
+    s.set_circle_diameter(circle, 80)
+
+    assert s.solve() == SolveStatus.Success
+    assert abs(s.get_param(radius) - 40.0) < 1e-8
+
+
+def test_reference_arc_diameter():
+    """Reference arc_diameter reads back correct diameter."""
+    s = Sketch()
+    center = s.add_fixed_point(0, 0)
+    start = s.add_fixed_point(30, 0)
+    end = s.add_fixed_point(0, 30)
+    arc = s.add_arc_cse(center, start, end, radius=30, start_angle=0, end_angle=math.pi / 2)
+    ref = s.add_param()
+    s.arc_diameter(arc, ref, driving=False)
+
+    assert s.solve() == SolveStatus.Success
+    assert abs(s.get_param(ref) - 60.0) < 1e-8

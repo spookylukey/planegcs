@@ -1785,6 +1785,11 @@ void System::initSolution(Algorithm alg)
             if (!(constr->getTag() >= 0 && constr->getTypeId() == Equal)) {
                 continue;
             }
+            // Proportional constraints (ConstraintEqual with ratio != 1.0)
+            // cannot be reduced to simple parameter substitution.
+            if (!static_cast<ConstraintEqual*>(constr)->isExactEquality()) {
+                continue;
+            }
             const auto it1 = pIndex.find(constr->params()[0]);
             const auto it2 = pIndex.find(constr->params()[1]);
             if (it1 == pIndex.end() || it2 == pIndex.end()) {

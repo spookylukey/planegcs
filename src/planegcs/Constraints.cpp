@@ -131,7 +131,7 @@ double ConstraintEqual::grad(double* param)
         deriv += 1;
     }
     if (param == param2()) {
-        deriv += -1;
+        deriv += -ratio;
     }
     return scale * deriv;
 }

@@ -227,6 +227,7 @@ private:
 public:
     ConstraintEqual(double* p1, double* p2, double p1p2ratio = 1.0);
     ConstraintType getTypeId() override;
+    bool isExactEquality() const { return ratio == 1.0; }
     double error() override;
     double grad(double*) override;
 };
