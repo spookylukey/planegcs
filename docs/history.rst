@@ -3,7 +3,7 @@
  History/change log
 ====================
 
-* Unreleased
+* 0.9 (2026-10-10)
 
   - Made solver results reproducible: parameters are now allocated from an
     arena with strictly increasing addresses, so planegcs' address-ordered
