@@ -415,7 +415,7 @@ wheels = [
 
 [[package]]
 name = "planegcs"
-version = "0.9.0"
+version = "0.9.3"
 source = { editable = "." }
 
 [package.optional-dependencies]
@@ -438,6 +438,13 @@ dev = [
     { name = "sphinx-rtd-theme" },
     { name = "toml" },
 ]
+test = [
+    { name = "pillow" },
+    { name = "pybind11-stubgen" },
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "ruff" },
+]
 
 [package.metadata]
 requires-dist = [{ name = "pillow", marker = "extra == 'graphics'", specifier = ">=10.0" }]
@@ -448,7 +455,7 @@ dev = [
     { name = "pillow", specifier = ">=10.0" },
     { name = "pre-commit", specifier = ">=4.3.0" },
     { name = "pybind11", specifier = ">=2.12" },
-    { name = "pybind11-stubgen", specifier = ">=2.5" },
+    { name = "pybind11-stubgen", specifier = ">=2.5,<3" },
     { name = "pyright", specifier = ">=1.1.408" },
     { name = "pytest", specifier = ">=8.0" },
     { name = "pytest-cov", specifier = ">=7.0" },
@@ -457,6 +464,13 @@ dev = [
     { name = "sphinx", specifier = ">=7.0" },
     { name = "sphinx-rtd-theme", specifier = ">=2.0" },
     { name = "toml", specifier = ">=0.10.2" },
+]
+test = [
+    { name = "pillow", specifier = ">=10.0" },
+    { name = "pybind11-stubgen", specifier = ">=2.5,<3" },
+    { name = "pytest", specifier = ">=8.0" },
+    { name = "pytest-cov", specifier = ">=7.0" },
+    { name = "ruff", specifier = ">=0.15.0" },
 ]
 
 [[package]]
