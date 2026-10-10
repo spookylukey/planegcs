@@ -52,7 +52,7 @@ uv run pytest \
     || die "Tests failed — fix before releasing"
 
 info "Running pyright type checker …"
-pyright \
+uv run pyright \
     || die "Type checking failed — fix before releasing"
 
 # --- verify type stubs are up to date ---------------------------------------
