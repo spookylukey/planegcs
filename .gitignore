@@ -26,3 +26,5 @@ _skbuild/
 *~
 # Visual test output (one-off debugging images)
 visual_test_output/
+
+.coverage
