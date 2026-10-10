@@ -1062,6 +1062,10 @@ class SketchSolver:
         """
         Add parallel constraint.
         """
+    def params_are_ordered(self) -> bool:
+        """
+        True if parameter addresses increase with declaration order, which is what makes the solver's results reproducible. Only false if the parameter arena had to grow and the OS would not place the new region above the old one.
+        """
     def perpendicular(
         self,
         l1_id: typing.SupportsInt | typing.SupportsIndex,

@@ -181,3 +181,25 @@ for a patch to either project.
   addresses", which is exactly what both halves of the evidence show.
 * Results are from one machine, glibc malloc, GCC 20-standard build. The
   *specific* outputs will differ elsewhere; the non-reproducibility will not.
+
+## What planegcs-py does about it
+
+This wrapper does not patch the vendored solver (see `CONTRIBUTING.md`);
+instead it removes the ambiguity from the input side. `src/param_arena.h`
+allocates every parameter from a bump arena over a large reservation of
+address space, so parameter addresses increase strictly with declaration
+order. Each of sites 1–4 above then sees the caller's declaration order, which
+is exactly the order the "suggested upstream fix" would impose — without
+touching `src/planegcs`.
+
+Measured with `tools/determinism/run_checks.sh 12` on the 100-sided
+under-constrained polygon, before and after:
+
+| configuration | distinct results before | after |
+|---|---|---|
+| plain solve | 10 of 12 | 1 |
+| with equality reductions | 10 of 12 | 1 |
+| with recycled constraint objects | 7 of 12 | 1 |
+| both | 9 of 12 | 1 |
+
+See `docs/determinism.rst` for the user-facing description.

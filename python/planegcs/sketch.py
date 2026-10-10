@@ -2320,6 +2320,21 @@ class Sketch:
 
     # ── Solving ────────────────────────────────────────────────────
 
+    @property
+    def results_are_reproducible(self) -> bool:
+        """Whether this sketch's results are reproducible from run to run.
+
+        PlaneGCS orders its unknowns by the memory address of each parameter,
+        so the solution it finds depends on where the parameters live.  This
+        wrapper allocates parameters from an arena whose addresses increase
+        with declaration order, which removes the dependency.
+
+        This is ``True`` except in the pathological case where the arena had
+        to grow (many millions of parameters) and the operating system would
+        not place the new region above the old one.
+        """
+        return self._solver.params_are_ordered()
+
     def solve(self, algorithm: Algorithm = Algorithm.DogLeg) -> SolveStatus:
         """Solve the constraint system.
 

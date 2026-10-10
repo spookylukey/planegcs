@@ -13,6 +13,7 @@ find a configuration satisfying all constraints.
    quickstart
    examples
    graphics
+   determinism
    api
    history
    releasing

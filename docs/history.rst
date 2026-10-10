@@ -3,6 +3,14 @@
  History/change log
 ====================
 
+* Unreleased
+
+  - Made solver results reproducible: parameters are now allocated from an
+    arena with strictly increasing addresses, so planegcs' address-ordered
+    containers follow declaration order instead of the heap layout.  Solving
+    the same sketch twice now gives bit-for-bit identical results.  See
+    :doc:`determinism`.
+
 * 0.8 (2026-06-06)
 
   - Fix bugs in upstream planegcs code that caused some failures relating

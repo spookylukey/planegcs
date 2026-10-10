@@ -78,6 +78,10 @@ PYBIND11_MODULE(_planegcs, m) {
              "Get the current value of a parameter.")
         .def("set_param", &SketchSolver::set_param, py::arg("param_id"), py::arg("value"),
              "Set the value of a parameter.")
+        .def("params_are_ordered", &SketchSolver::params_are_ordered,
+             "True if parameter addresses increase with declaration order, which is what "
+             "makes the solver's results reproducible. Only false if the parameter arena "
+             "had to grow and the OS would not place the new region above the old one.")
 
         // Geometry: Points
         .def("add_point", &SketchSolver::add_point, py::arg("x"), py::arg("y"),

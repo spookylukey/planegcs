@@ -4,8 +4,8 @@
 #include "planegcs/GCS.h"
 #include "planegcs/Geo.h"
 #include "planegcs/Constraints.h"
+#include "param_arena.h"
 
-#include <deque>
 #include <map>
 #include <set>
 #include <stdexcept>
@@ -61,8 +61,14 @@ public:
     }
 
     double* param_ptr(int id) {
-        return &params_[param_index_.at(id)];
+        return params_.ptr(param_index_.at(id));
     }
+
+    // False only if the parameter arena could not keep parameter addresses
+    // increasing (see param_arena.h); in that case the solver's
+    // address-ordered containers are no longer in declaration order and
+    // results may vary between runs.
+    bool params_are_ordered() const { return params_.monotonic(); }
 
     // ── Geometry: Points ──────────────────────────────────────────────
     int add_point(double x, double y) {
@@ -445,9 +451,9 @@ public:
         // Only non-fixed params are unknowns
         for (auto& [id, idx] : param_index_) {
             if (!is_param_fixed(id)) {
-                params.push_back(&params_[idx]);
+                params.push_back(params_.ptr(idx));
                 if (is_param_driven(id)) {
-                    driven.push_back(&params_[idx]);
+                    driven.push_back(params_.ptr(idx));
                 }
             }
         }
@@ -1190,7 +1196,9 @@ public:
 
 private:
     GCS::System system_;
-    std::deque<double> params_;  // pointer-stable storage
+    // Pointer-stable storage with strictly increasing addresses; the
+    // address order is what planegcs uses to order its unknowns.
+    planegcs_wrapper::ParamArena params_;
     std::map<int, size_t> param_index_;  // param_id -> index in params_
     std::map<int, bool> param_fixed_;  // param_id -> is fixed (not an unknown)
     std::set<int> driven_params_;  // param_ids that are driven (value params of non-driving constraints)
