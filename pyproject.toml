@@ -64,8 +64,9 @@ test-requires = "pytest pytest-cov pybind11-stubgen ty ruff pillow toml"
 test-command = "pytest {project}/tests -x --no-cov"
 
 [tool.cibuildwheel.linux]
+manylinux-x86_64-image = "manylinux_2_28"
 before-all = """
-yum install -y boost-devel || apt-get update && apt-get install -y libboost-dev
+dnf install -y boost-devel || apt-get update && apt-get install -y libboost-dev
 curl -L https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz | tar xz -C /opt
 cmake -S /opt/eigen-3.4.0 -B /opt/eigen-3.4.0/build -DCMAKE_INSTALL_PREFIX=/opt/eigen3-installed -DBUILD_TESTING=OFF
 cmake --install /opt/eigen-3.4.0/build
