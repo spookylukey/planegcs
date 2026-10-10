@@ -92,6 +92,7 @@ skip_covered = true
 target-version = "py312"
 line-length = 99
 src = ["python", "tests"]
+ignore = ["E501"]
 
 [tool.ruff.lint]
 select = [
